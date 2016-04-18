@@ -5,6 +5,14 @@ define("MESSAGING_URL", "https://us-gmsg.np.community.playstation.net/groupMessa
 
 class Messaging
 {
+
+    private $oauth;
+
+    public function __construct($AccessToken)
+    {
+        $this->oauth = $AccessToken;
+    }
+
     public function Message($PSN, $Message)
     {
 
