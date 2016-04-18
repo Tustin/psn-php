@@ -179,67 +179,10 @@ class Auth
         $this->npsso .= $data->npsso;
         return true;
     }
-    //Returns the currently logged in user's information
-    public function GetInfo()
-    {
-        $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://us-prof.np.community.playstation.net/userProfile/v1/users/me/profile2?fields=npId,onlineId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s");
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        curl_setopt($ch, CURLOPT_COOKIE, $this->npsso);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization: Bearer ' . $this->oauth,
-        ));
-
-        $output = curl_exec($ch);
-
-        curl_close($ch);
-
-        $data = json_decode($output, false);
-
-        return $data;
-    }
     //Returns the current OAuth token (required for other classes)
     public function GetAccessToken()
     {
         return $this->oauth;
-    }
-    //Uploads an image for profile picture (still a WIP)
-    public function UploadPicture($URL)
-    {
-        $bytes = file_get_contents($URL);
-        $request = '--abcdefghijklmnopqrstuvwxyz
-Content-Disposition: form-data; name="source"; filename=image.png
-Content-Type: image/png
-
-' . $bytes . '
---abcdefghijklmnopqrstuvwxyz--';
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, PROFILE_PIC_URL);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        $headers = array(
-            'Authorization: Bearer ' . $this->oauth,
-            'Content-Type: multipart/form-data; boundary=abcdefghijklmnopqrstuvwxyz'
-        );
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
-
-        $output = curl_exec($ch);
-
-        curl_close($ch);
-
-        $data = json_decode($output, false);
-
-        return $data;
-
     }
 }
