@@ -80,4 +80,34 @@ class Friend
 
         return $data;
     }
+    //Removes a friend from your friends list.
+    public function Remove($PSN)
+    {
+        $ch = curl_init();
+
+        $_friend = new \PSN\Users\User($this->oauth);
+        $_onlineId = $_friend->Me()->profile->onlineId;
+
+        curl_setopt($ch, CURLOPT_URL, USERS_URL . $_onlineId . "/friendList/" . $PSN);
+
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $output = curl_exec($ch);
+
+        curl_close($ch);
+
+        $data = json_decode($output, false);
+
+        return $data;
+    }
 }

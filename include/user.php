@@ -87,7 +87,31 @@ class User
 
         return $data;
     }
-    
+
+    public function Unblock($PSN)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, USERS_URL . $this->Me()->profile->onlineId . "/blockList/" . $PSN . "?blockingUsersLimitType=1");
+
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $output = curl_exec($ch);
+
+        curl_close($ch);
+
+        $data = json_decode($output, false);
+
+        return $data;
+    }
     public function GetActivity($PSN)
     {
         $ch = curl_init();
