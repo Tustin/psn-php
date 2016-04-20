@@ -112,7 +112,11 @@ class Auth
         $header = substr($output, 0, $header_size);
         $headers = $this->get_headers_from_curl_response($header);
         curl_close($ch);
-
+        $http_code = explode(" ", $headers[0]["http_code"]);
+        if ($http_code[1] == 503){
+            $this->last_error = "Service unavailable. Possible IP block.";
+            return false;
+        }
         if (!$headers[0]["X-NP-GRANT-CODE"]){
             $this->last_error = "Failed to obtain X-NP-GRANT-CODE";
             return false;
