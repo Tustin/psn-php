@@ -1,7 +1,15 @@
 <?php
 require_once("autoload.php");
 
-$account = new \PSN\Auth\Auth("test@psn.com", "password");
+try 
+{
+    $account = new \PSN\Auth\Auth("test@psn.com", "password");
+} 
+catch (\PSN\Auth\PSNAuthException $e)
+{
+    header("Content-Type: application/json");
+    die($e->GetError());
+}
 
 $user = new \PSN\Users\User($account->GetAccessToken());
 

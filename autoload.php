@@ -1,5 +1,6 @@
 <?php
 //Includes necessary for functionality
+require_once("include/exception.php");
 require_once("include/auth.php");
 require_once("include/messaging.php");
 require_once("include/trophies.php");

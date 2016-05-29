@@ -50,17 +50,11 @@ class Auth
         $this->login_request['username'] = $Email;
         $this->login_request['password'] = $Password;
 
-        //Tries fetching the NPSSO Id
-        if (!$this->GrabNPSSO())
-            die($this->GetLastError());
-
-        //Tries fetching X-NP-GRANT-CODE
-        if (!$this->GrabCode())
-            die($this->GetLastError());
-
-        //Tries fetching an OAuth token
-        if (!$this->GrabOAuth())
-            die($this->GetLastError());
+        //Throws a PSNAuthException if any form of authentication has failed
+        if (!$this->GrabNPSSO() || !$this->GrabCode() || !$this->GrabOAuth())
+        {
+            throw new PSNAuthException($this->last_error);
+        }
     }
     //Function to return cURL headers in an array
     //http://stackoverflow.com/a/18682872
@@ -113,12 +107,26 @@ class Auth
         $headers = $this->get_headers_from_curl_response($header);
         curl_close($ch);
         $http_code = explode(" ", $headers[0]["http_code"]);
-        if ($http_code[1] == 503){
-            $this->last_error = "Service unavailable. Possible IP block.";
+
+        //Needs custom error handling due to the type of response (or lack thereof)
+        //HTTP code that will be given due to too many requests from a single IP
+        if ($http_code[1] == 503) {
+            $error = [
+                'error' => 'service_unavailable',
+                'error_description' => 'Service unavailable. Possible IP block.',
+                'error_code' => 20
+            ];
+            $this->last_error = json_encode($error);
             return false;
         }
-        if (!$headers[0]["X-NP-GRANT-CODE"]){
-            $this->last_error = "Failed to obtain X-NP-GRANT-CODE";
+        //If the grant code does not exist in the response header
+        if (!$headers[0]["X-NP-GRANT-CODE"]) {
+            $error = [
+                'error' => 'invalid_np_grant',
+                'error_description' => 'Failed to obtain X-NP-GRANT-CODE',
+                'error_code' => 20
+            ];
+            $this->last_error = json_encode($error);
             return false;
         }
 
@@ -148,7 +156,7 @@ class Auth
         $data = json_decode($output, false);
 
         if (property_exists($data, "error")){
-            $this->last_error = $data->error_description;
+            $this->last_error = $output;
             return false;
         }
 
@@ -176,7 +184,7 @@ class Auth
         $data = json_decode($output, false);
 
         if (property_exists($data, "error")){
-            $this->last_error = $data->error_description;
+            $this->last_error = $output;
             return false;
         }
 
