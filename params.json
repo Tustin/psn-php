@@ -1,0 +1,6 @@
+{
+  "name": "psn-php",
+  "tagline": "A PHP wrapper for the PSN API",
+  "body": "# PHP Interface for PSN API\r\nThese tools allow you to interface with the official (private) PSN API created by Sony.\r\n\r\n## Usage\r\n### Setting up\r\nDownload the project files, and place them on your server or localhost. Create an index.php file.\r\n\r\nRequire the autoload.php file like so:\r\n```php\r\nrequire_once(\"autoload.php\");\r\n```\r\nYou're now ready to begin.\r\n### Authenticating\r\nIt's smooth like butter (well, it should be anyways!). Firstly, create a new instance of the Auth class, like so:\r\n```php\r\n$account = new \\PSN\\Auth\\Auth(\"example@email.com\", \"password\");\r\n```\r\nWhere **example@email.com** is your email, and **password** is, well, your password. Assuming everything is setup properly and your PSN credentials are correct, you shouldn't see any text on the screen. Good stuff!\r\n\r\nNow let's try grabbing our info. Try something like so:\r\n```php\r\necho \"<h1>Welcome, \" . $account->GetInfo()->profile->onlineId . \"!</h1>\";\r\n```\r\nThis should display your PSN name in big text on the screen.\r\n\r\n#### More functionality will be added soon, such as interacting with friends, viewing trophy data, messaging and more. Stay tuned.",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}

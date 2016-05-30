@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>psn-php by Tustin</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>psn-php</h1>
+        <p>A PHP wrapper for the PSN API</p>
+
+        <p class="view"><a href="https://github.com/Tustin/psn-php">View the Project on GitHub <small>Tustin/psn-php</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/Tustin/psn-php/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Tustin/psn-php/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Tustin/psn-php">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="php-interface-for-psn-api" class="anchor" href="#php-interface-for-psn-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PHP Interface for PSN API</h1>
+
+<p>These tools allow you to interface with the official (private) PSN API created by Sony.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a id="setting-up" class="anchor" href="#setting-up" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting up</h3>
+
+<p>Download the project files, and place them on your server or localhost. Create an index.php file.</p>
+
+<p>Require the autoload.php file like so:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">require_once</span>(<span class="pl-s"><span class="pl-pds">"</span>autoload.php<span class="pl-pds">"</span></span>);</span></pre></div>
+
+<p>You're now ready to begin.</p>
+
+<h3>
+<a id="authenticating" class="anchor" href="#authenticating" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authenticating</h3>
+
+<p>It's smooth like butter (well, it should be anyways!). Firstly, create a new instance of the Auth class, like so:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$account</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">\PSN\Auth\</span><span class="pl-c1">Auth</span>(<span class="pl-s"><span class="pl-pds">"</span>example@email.com<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>password<span class="pl-pds">"</span></span>);</span></pre></div>
+
+<p>Where <strong><a href="mailto:example@email.com">example@email.com</a></strong> is your email, and <strong>password</strong> is, well, your password. Assuming everything is setup properly and your PSN credentials are correct, you shouldn't see any text on the screen. Good stuff!</p>
+
+<p>Now let's try grabbing our info. Try something like so:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;h1&gt;Welcome, <span class="pl-pds">"</span></span> <span class="pl-k">.</span> <span class="pl-smi">$account</span><span class="pl-k">-&gt;</span>GetInfo()<span class="pl-k">-&gt;</span><span class="pl-smi">profile</span><span class="pl-k">-&gt;</span><span class="pl-smi">onlineId</span> <span class="pl-k">.</span> <span class="pl-s"><span class="pl-pds">"</span>!&lt;/h1&gt;<span class="pl-pds">"</span></span>;</span></pre></div>
+
+<p>This should display your PSN name in big text on the screen.</p>
+
+<h4>
+<a id="more-functionality-will-be-added-soon-such-as-interacting-with-friends-viewing-trophy-data-messaging-and-more-stay-tuned" class="anchor" href="#more-functionality-will-be-added-soon-such-as-interacting-with-friends-viewing-trophy-data-messaging-and-more-stay-tuned" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>More functionality will be added soon, such as interacting with friends, viewing trophy data, messaging and more. Stay tuned.</h4>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Tustin">Tustin</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
