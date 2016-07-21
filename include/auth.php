@@ -15,14 +15,14 @@ class Auth
     private $refresh_token;
 
     //POST data for the initial request (for the NPSSO Id)
-    private $login_request = [
+    private $login_request = array(
         "authentication_type" => "password",
         "username" => null,
         "password" => null,
         "client_id" => "71a7beb8-f21a-47d9-a604-2e71bee24fe0",
-    ];
+    );
     //POST data for the oauth token
-    private $oauth_request = [
+    private $oauth_request = array(
         "app_context" => "inapp_ios",
         "client_id" => "b7cbf451-6bb6-4a5a-8913-71e61f462787",
         "client_secret" => "zsISsjmCx85zgCJg",
@@ -30,18 +30,18 @@ class Auth
         "duid" => "0000000d000400808F4B3AA3301B4945B2E3636E38C0DDFC",
         "grant_type" => "authorization_code",
         "scope" => "capone:report_submission,psn:sceapp,user:account.get,user:account.settings.privacy.get,user:account.settings.privacy.update,user:account.realName.get,user:account.realName.update,kamaji:get_account_hash,kamaji:ugc:distributor,oauth:manage_device_usercodes"
-    ];
+    );
     //GET data for the X-NP-GRANT-CODE
-    private $code_request = [
+    private $code_request = array(
         "state" => "06d7AuZpOmJAwYYOWmVU63OMY",
         "duid" => "0000000d000400808F4B3AA3301B4945B2E3636E38C0DDFC",
         "app_context" => "inapp_ios",
         "client_id" => "b7cbf451-6bb6-4a5a-8913-71e61f462787",
         "scope" => "capone:report_submission,psn:sceapp,user:account.get,user:account.settings.privacy.get,user:account.settings.privacy.update,user:account.realName.get,user:account.realName.update,kamaji:get_account_hash,kamaji:ugc:distributor,oauth:manage_device_usercodes",
         "response_type" => "code"
-    ];
+    );
     //POST data for the refresh oauth token (allows user to stay signed in without entering info again (assuming you've kept the refresh token))
-    private static $refresh_oauth_request = [
+    private static $refresh_oauth_request = array(
         "app_context" => "inapp_ios",
         "client_id" => "b7cbf451-6bb6-4a5a-8913-71e61f462787",
         "client_secret" => "zsISsjmCx85zgCJg",
@@ -49,7 +49,7 @@ class Auth
         "duid" => "0000000d000400808F4B3AA3301B4945B2E3636E38C0DDFC",
         "grant_type" => "refresh_token",
         "scope" => "capone:report_submission,psn:sceapp,user:account.get,user:account.settings.privacy.get,user:account.settings.privacy.update,user:account.realName.get,user:account.realName.update,kamaji:get_account_hash,kamaji:ugc:distributor,oauth:manage_device_usercodes"
-    ];
+    );
     
     public function __construct($Email, $Password)
     {
@@ -80,21 +80,21 @@ class Auth
         //Needs custom error handling due to the type of response (or lack thereof)
         //HTTP code that will be given due to too many requests from a single IP
         if ($http_code == 503) {
-            $error = [
+            $error = array(
                 'error' => 'service_unavailable',
                 'error_description' => 'Service unavailable. Possible IP block.',
                 'error_code' => 20
-            ];
+            );
             $this->last_error = json_encode($error);
             return false;
         }
         //If the grant code does not exist in the response header
         if (!$response["headers"][0]["X-NP-GRANT-CODE"]) {
-            $error = [
+            $error = array(
                 'error' => 'invalid_np_grant',
                 'error_description' => 'Failed to obtain X-NP-GRANT-CODE',
                 'error_code' => 20
-            ];
+            );
             $this->last_error = json_encode($error);
             return false;
         }
@@ -141,28 +141,18 @@ class Auth
 
         Auth::$refresh_oauth_request["refresh_token"] = $RefreshToken;
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, OAUTH_URL);
+        $response = \Utilities::SendRequest(OAUTH_URL, null, false, null, "POST", http_build_query(Auth::$refresh_oauth_request));
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(Auth::$refresh_oauth_request));
-
-        $output = curl_exec($ch);
-
-        curl_close($ch);
-
-        $data = json_decode($output, false);
+        $data = json_decode($response['body'], false);
 
         if (property_exists($data, "error")){
             return false;
         }
 
-        return [
+        return array(
             "oauth" => $data->access_token,
             "refresh" => $data->refresh_token
-        ];
+        );
     }
 
     //Grabs the NPSSO Id
@@ -186,9 +176,9 @@ class Auth
     //refresh => used for generating a new oauth token without logging in each time
     public function GetTokens()
     {
-        return [
+        return array(
             "oauth" => $this->oauth,
             "refresh" => $this->refresh_token
-        ];
+        );
     }
 }

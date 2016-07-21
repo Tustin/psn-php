@@ -51,7 +51,7 @@ class Utilities
     public static function SendRequest($URL, $Headers = null, $OutputHeader = false, $Cookie = null, $RequestMethod = "GET", $RequestArgs = null)
     {
         $ch = curl_init();
-        $final = [];
+        $final = array();
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
