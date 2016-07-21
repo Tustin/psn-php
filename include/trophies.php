@@ -1,59 +1,41 @@
 <?php
-namespace PSN\Trophies;
-
-define("TROPHY_URL", "https://us-tpy.np.community.playstation.net/trophy/v1/");
+namespace PSN;
 
 class Trophy
 {
     private $oauth;
+    private $refresh_token;
 
-    public function __construct($AccessToken)
+    public function __construct($tokens)
     {
-        $this->oauth = $AccessToken;
+        $this->oauth = $tokens["oauth"];
+        $this->refresh_token = $tokens["refresh"];
     }
 
-    public function Get($Limit = 36)
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, TROPHY_URL . "trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset=0&limit=" . $Limit);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
+    //Returns all the trophies that the current logged in user has earned
+    public function GetMyTrophies($Limit = 36)
+    {        
         $headers = array(
             'Authorization: Bearer ' . $this->oauth,
         );
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $output = curl_exec($ch);
+        $response = \Utilities::SendRequest(TROPHY_URL . "trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset=0&limit=" . $Limit, $headers, false, null, "GET", null);
 
-        curl_close($ch);
-
-        $data = json_decode($output, false);
+        $data = json_decode($response['body'], false);
 
         return $data;
     }
     
+    //Returns all trophies from a game based on it's game ID (ex. NPWR07466_00)
     public function GetGameTrophies($GameID)
     {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, TROPHY_URL . "trophyTitles/" . $GameID . "/trophyGroups/all/trophies?fields=@default,trophyRare,trophyEarnedRate&npLanguage=en&sortKey=trophyId&iconSize=m");
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
         $headers = array(
             'Authorization: Bearer ' . $this->oauth,
         );
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $output = curl_exec($ch);
+        $response = \Utilities::SendRequest(TROPHY_URL . "trophyTitles/" . $GameID . "/trophyGroups/all/trophies?fields=@default,trophyRare,trophyEarnedRate&npLanguage=en&sortKey=trophyId&iconSize=m", $headers, false, null, "GET", null);
 
-        curl_close($ch);
-
-        $data = json_decode($output, false);
+        $data = json_decode($response['body'], false);
 
         return $data;
     }
