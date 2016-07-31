@@ -12,6 +12,61 @@ class Messaging
         $this->refresh_token = $tokens["refresh"];
     }
 
+    public function Get($MessageGroupID)
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+        $response = \Utilities::SendRequest(MESSAGE_URL . '/' . $MessageGroupID . '/messages', $headers, false, null, "GET", null);
+
+
+        $data = json_decode($response['body'], false);
+
+        return $data;       
+    }
+
+    public function Remove($MessageGroupID)
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+
+        $tokens = array(
+            "oauth" => $this->oauth,
+            "refresh" => $this->refresh
+        );
+        
+        $_user = new \PSN\User($tokens);
+        $_onlineId = $_user->Me()->profile->onlineId;
+
+        $response = \Utilities::SendRequest(MESSAGE_URL . "/" . $MessageGroupID . "/users/" . $_onlineId, $headers, false, null, "DELETE", null);
+
+        $data = json_decode($response['body'], false);
+
+        return $data;
+    }
+    public function GetAll()
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+        $tokens = array(
+            "oauth" => $this->oauth,
+            "refresh" => $this->refresh
+        );
+        $_user = new \PSN\User($tokens);
+        $_onlineId = $_user->Me()->profile->onlineId;
+
+        $response = \Utilities::SendRequest(MESSAGE_USERS_URL . $_onlineId ."/messageGroups?fields=@default,messageGroupDetail,totalUnseenMessages,totalMessages,myGroupDetail,newMessageDetail,takedownDetail&includeEmptyMessageGroup=true", $headers, false, null, "GET", null);
+
+        $data = json_decode($response['body'], false);
+
+        return $data;    
+    }
+
     public function Message($PSN, $Message)
     {
         $headers = array(

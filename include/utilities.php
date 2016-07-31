@@ -1,12 +1,13 @@
 <?php
 //Definitions for API endpoints
-define("ACTIVITY_URL",  "https://activity.api.np.km.playstation.net/activity/api/v1/users/");
-define("OAUTH_URL",     "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/token");
-define("SSO_URL",       "https://auth.api.sonyentertainmentnetwork.com/2.0/ssocookie");
-define("CODE_URL",      "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize");
-define("USERS_URL",     "https://us-prof.np.community.playstation.net/userProfile/v1/users/");
-define("MESSAGE_URL",   "https://us-gmsg.np.community.playstation.net/groupMessaging/v1/messageGroups");
-define("TROPHY_URL",    "https://us-tpy.np.community.playstation.net/trophy/v1/");
+define("ACTIVITY_URL",      "https://activity.api.np.km.playstation.net/activity/api/v1/users/");
+define("OAUTH_URL",         "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/token");
+define("SSO_URL",           "https://auth.api.sonyentertainmentnetwork.com/2.0/ssocookie");
+define("CODE_URL",          "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize");
+define("USERS_URL",         "https://us-prof.np.community.playstation.net/userProfile/v1/users/");
+define("MESSAGE_URL",       "https://us-gmsg.np.community.playstation.net/groupMessaging/v1/messageGroups");
+define("MESSAGE_USERS_URL", "https://us-gmsg.np.community.playstation.net/groupMessaging/v1/users/");
+define("TROPHY_URL",        "https://us-tpy.np.community.playstation.net/trophy/v1/");
 
 class Utilities 
 {
