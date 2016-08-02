@@ -18,7 +18,7 @@ class Messaging
             'Authorization: Bearer ' . $this->oauth,
             'Content-Type: application/json; charset=utf-8'
         );
-        $response = \Utilities::SendRequest(MESSAGE_URL . '/' . $MessageGroupID . '/messages', $headers, false, null, "GET", null);
+        $response = \Utilities::SendRequest(MESSAGE_URL . '/' . $MessageGroupID . '/messages?fields=@default,messageGroup,stickerDetail,thumbnailDetail,body,takedownDetail,eventDetail,partyDetail&npLanguage=en-GB', $headers, false, null, "GET", null);
 
 
         $data = json_decode($response['body'], false);
@@ -55,7 +55,7 @@ class Messaging
         );
         $tokens = array(
             "oauth" => $this->oauth,
-            "refresh" => $this->refresh
+            "refresh" => $this->refresh_token
         );
         $_user = new \PSN\User($tokens);
         $_onlineId = $_user->Me()->profile->onlineId;
