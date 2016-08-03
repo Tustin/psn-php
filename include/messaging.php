@@ -112,4 +112,57 @@ Content-Description: message
 
         return $data;
     }
+
+    public function MessageAttachment($PSN, $image)
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: multipart/mixed; boundary="gc0p4Jq0M2Yt08jU534c0p"',
+        );
+
+        $json_body = array(
+            "to" => array(
+                $PSN
+            ),
+            "message" => array(
+                "fakeMessageUid" => 1234,
+                "body" => '',
+                "messageKind" => 3
+            )
+        );
+
+        // If $image is a url or file path, we'll grab the content, else assume we're parsing raw image data and send that instead.
+        if (file_exists($image) || filter_var($image, FILTER_VALIDATE_URL) == true) {
+            $imageContent = file_get_contents($image);
+            $imageLength  = strlen($imageContent);
+        } else {
+            $imageContent = $image;
+            $imageLength  = strlen($imageContent);
+        }
+
+        // var_dump($imageContent, $imageLength);
+        // exit;
+
+        //This formatting is bad but if you try to change it, the request will fail.
+        $message = '--gc0p4Jq0M2Yt08jU534c0p
+Content-Type: application/json; charset=utf-8
+Content-Description: message
+
+' . json_encode($json_body) . '
+--gc0p4Jq0M2Yt08jU534c0p
+Content-Type: image/jpeg
+Content-Disposition: attachment
+Content-Description: image-data-0
+Content-Transfer-Encoding: binary
+Content-Length: ' . $imageLength . '
+
+' . $imageContent . '
+--gc0p4Jq0M2Yt08jU534c0p--';
+
+        $response = \Utilities::SendRequest(MESSAGE_URL, $headers, false, null, "POST", $message);
+
+        $data = json_decode($response['body'], false);
+
+        return $data;
+    }
 }
