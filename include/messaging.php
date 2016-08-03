@@ -26,6 +26,21 @@ class Messaging
         return $data;       
     }
 
+    public function GetAttachment($MessageGroupID, $MessageUid)
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: image/jpeg',
+            'Content-Transfer-Encoding: binary'
+        );
+        $response = \Utilities::SendRequest(MESSAGE_URL . '/' . $MessageGroupID . '/messages/' . $MessageUid . '?contentKey=image-data-0', $headers, false, null, "GET", null);
+
+
+        $data = base64_encode($response['body']);
+
+        return $data; 
+    }
+
     public function Remove($MessageGroupID)
     {
         $headers = array(
