@@ -7,4 +7,4 @@ For all feature requests please [create an issue](https://github.com/Tustin/psn-
 Visit the [wiki](https://github.com/Tustin/psn-php/wiki) for this project to see how to setup and use this wrapper.
 
 ## Todo
- - Send message attachments (images & other if possible)
+ - Send message attachments (video, audio clips, etc)
