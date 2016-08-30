@@ -26,14 +26,22 @@ class Messaging
         return $data;       
     }
 
-    public function GetAttachment($MessageGroupID, $MessageUid)
+    public function GetAudioAttachment($MessageGroupID, $MessageUid, $ContentKey = "image-data-0", $ContentType = "image/jpeg")
+    {
+        return GetAudioAttachment($MessageGroupID, $MessageUid, "voice-data-0", "audio/mpeg"); 
+    }
+    public function GetImageAttachment($MessageGroupID, $MessageUid, $ContentKey = "image-data-0", $ContentType = "image/jpeg")
+    {
+        return GetAudioAttachment($MessageGroupID, $MessageUid, "image-data-0", "image/jpeg");
+    }
+    public function GetAttachment($MessageGroupID, $MessageUid, $ContentKey, $ContentType)
     {
         $headers = array(
             'Authorization: Bearer ' . $this->oauth,
-            'Content-Type: image/jpeg',
+            'Content-Type: ' . $ContentType,
             'Content-Transfer-Encoding: binary'
         );
-        $response = \Utilities::SendRequest(MESSAGE_URL . '/' . $MessageGroupID . '/messages/' . $MessageUid . '?contentKey=image-data-0', $headers, false, null, "GET", null);
+        $response = \Utilities::SendRequest(MESSAGE_URL . '/' . $MessageGroupID . '/messages/' . $MessageUid . '?contentKey=' . $ContentKey, $headers, false, null, "GET", null);
 
 
         $data = base64_encode($response['body']);
