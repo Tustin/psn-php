@@ -50,12 +50,21 @@ class Auth
         "grant_type" => "refresh_token",
         "scope" => "capone:report_submission,psn:sceapp,user:account.get,user:account.settings.privacy.get,user:account.settings.privacy.update,user:account.realName.get,user:account.realName.update,kamaji:get_account_hash,kamaji:ugc:distributor,oauth:manage_device_usercodes"
     );
+    //POST data for the 2FA request (for the NPSSO Id)
+    private $two_factor_auth_request = array(
+        "authentication_type" => "two_step",
+        "ticket_uuid" => null,
+        "code" => null,
+        "client_id" => "b7cbf451-6bb6-4a5a-8913-71e61f462787",
+    );
     
-    public function __construct($Email, $Password)
+    public function __construct($Email, $Password, $Ticket = "", $Code = "")
     {
         //Store login data in the array
         $this->login_request['username'] = $Email;
         $this->login_request['password'] = $Password;
+        $this->two_factor_auth_request['ticket_uuid'] = $Ticket;
+        $this->two_factor_auth_request['code'] = $Code;
 
         //Throws a PSNAuthException if any form of authentication has failed
         if (!$this->GrabNPSSO() || !$this->GrabCode() || !$this->GrabOAuth())
@@ -100,7 +109,7 @@ class Auth
         }
 
         $this->grant_code = $response["headers"][0]["X-NP-GRANT-CODE"];
-
+        
         return true;
     }
 
@@ -158,11 +167,27 @@ class Auth
     //Grabs the NPSSO Id
     public function GrabNPSSO()
     {
-        $response = \Utilities::SendRequest(SSO_URL, null, false, false, "POST", http_build_query($this->login_request));
+        if ($this->two_factor_auth_request['ticket_uuid'] && $this->two_factor_auth_request['code'])
+        {
+            $response = \Utilities::SendRequest(SSO_URL, null, false, false, "POST", http_build_query($this->two_factor_auth_request));
+        }
+        else
+        {
+            $response = \Utilities::SendRequest(SSO_URL, null, false, false, "POST", http_build_query($this->login_request));
+        }
         $data = json_decode($response["body"], false);
-
+        
         if (property_exists($data, "error")){
             $this->last_error = $response["body"];
+            return false;
+        }
+        if (property_exists($data, "ticket_uuid")){
+            $error = array(
+                'error' => '2fa_code_required',
+                'error_description' => '2FA Code Required',
+                'ticket' => $data->ticket_uuid
+            );
+            $this->last_error = json_encode($error);
             return false;
         }
 
