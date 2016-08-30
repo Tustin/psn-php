@@ -83,7 +83,7 @@ class Messaging
         $_user = new \PSN\User($tokens);
         $_onlineId = $_user->Me()->profile->onlineId;
 
-        $response = \Utilities::SendRequest(MESSAGE_USERS_URL . $_onlineId ."/messageGroups?fields=@default,messageGroupDetail,totalUnseenMessages,totalMessages,myGroupDetail,newMessageDetail,takedownDetail&includeEmptyMessageGroup=true", $headers, false, null, "GET", null);
+        $response = \Utilities::SendRequest(MESSAGE_USERS_URL . $_onlineId ."/messageGroups?fields=@default,messageGroupDetail,totalUnseenMessages,totalMessages,myGroupDetail,newMessageDetail,latestMessage,takedownDetail&includeEmptyMessageGroup=true", $headers, false, null, "GET", null);
 
         $data = json_decode($response['body'], false);
 
