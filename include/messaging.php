@@ -116,14 +116,14 @@ class Messaging
     // Send Text Messages
     public function TextMessage($PSN, $Message)
     {
-        return $this->Message($PSN, $Message, 1);
+        return $this->Message($PSN, $Message, "", 1);
     }
     public function TextMessageGroup($GroupID, $Message)
     {
-        return $this->MessageGroup($GroupID, $Message, 1);
+        return $this->MessageGroup($GroupID, $Message, "", 1);
     }
     // Send Message to New Group
-    public function Message($PSN, $MessageText = "", $Attachment = "", $MessageType = 1, $AudioLength = "")
+    private function Message($PSN, $MessageText = "", $Attachment = "", $MessageType = 1, $AudioLength = "")
     {
         $headers = array(
             'Authorization: Bearer ' . $this->oauth,
@@ -165,7 +165,7 @@ class Messaging
         {
             // Audio
             $ContentKey = "voice-data-0";
-            $ContentType = "audio/mpeg";
+            $ContentType = "audio/3gpp";
         }
         else if ($MessageType == 3)
         {
@@ -177,28 +177,43 @@ class Messaging
         // Build Message With or Without Content
         if ($Attachment)
         {
-            $message = '--gc0p4Jq0M2Yt08jU534c0p';
-            $message .= 'Content-Type: application/json; charset=utf-8';
-            $message .= 'Content-Description: message';  
-            $message .= json_encode($json_body);
-            $message .= '--gc0p4Jq0M2Yt08jU534c0p';
-            $message .= 'Content-Type: ' . $ContentType;
-            $message .= 'Content-Disposition: attachment';
-            $message .= 'Content-Description: ' . $ContentKey;
-            $message .= 'Content-Transfer-Encoding: binary';
-            $message .= 'Content-Length: ' . $AttachmentLength;
-            $message .= $AttachmentContent;
-            $message .= '--gc0p4Jq0M2Yt08jU534c0p--';
+            $message = "\n";
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p\n";
+            $message .= "Content-Type: application/json; charset=utf-8\n";
+            $message .= "Content-Description: message\n";
+            $message .= "\n";
+            
+            $message .= json_encode($json_body) . "\n";
+            
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p\n";
+            $message .= "Content-Type: $ContentType\n";
+            $message .= "Content-Disposition: attachment\n";
+            $message .= "Content-Description: $ContentKey\n";
+            $message .= "Content-Transfer-Encoding: binary\n";
+            $message .= "Content-Length: $AttachmentLength\n";
+            if ($MessageType == 1011)
+            {
+                $message .= "Content-Voice-Data-Playback-Time: $AudioLength\n";
+            }
+            $message .= "\n";
+            
+            $message .= $AttachmentContent . "\n";
+            
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p--\n\n";
         }
         else
         {
-            $message = '--gc0p4Jq0M2Yt08jU534c0p';
-            $message .= 'Content-Type: application/json; charset=utf-8';
-            $message .= 'Content-Description: message';  
-            $message .= json_encode($json_body);
-            $message .= '--gc0p4Jq0M2Yt08jU534c0p--';
+            $message = "\n";
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p\n";
+            $message .= "Content-Type: application/json; charset=utf-8\n";
+            $message .= "Content-Description: message\n";
+            $message .= "\n";
+            
+            $message .= json_encode($json_body) . "\n";
+            
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p--\n\n";
         }
-
+        
         $response = \Utilities::SendRequest(MESSAGE_URL, $headers, false, null, "POST", $message);
 
         $data = json_decode($response['body'], false);
@@ -263,8 +278,8 @@ class Messaging
             if ($MessageType == 1011)
             {
                 $message .= "Content-Voice-Data-Playback-Time: $AudioLength\n";
-                $message .= "\n";
             }
+            $message .= "\n";
             
             $message .= $AttachmentContent . "\n";
             
@@ -283,8 +298,6 @@ class Messaging
             $message .= "--gc0p4Jq0M2Yt08jU534c0p--\n\n";
         }
         
-        echo $message;
-
         $response = \Utilities::SendRequest(MESSAGE_URL . '/' . $GroupID . '/messages', $headers, false, null, "POST", $message);
 
         $data = json_decode($response['body'], false);
