@@ -26,13 +26,13 @@ class Messaging
         return $data;       
     }
 
-    public function GetAudioAttachment($MessageGroupID, $MessageUid, $ContentKey = "image-data-0", $ContentType = "image/jpeg")
+    public function GetAudioAttachment($MessageGroupID, $MessageUid)
     {
-        return GetAudioAttachment($MessageGroupID, $MessageUid, "voice-data-0", "audio/mpeg"); 
+        return $this->GetAttachment($MessageGroupID, $MessageUid, "voice-data-0", "audio/mpeg"); 
     }
-    public function GetImageAttachment($MessageGroupID, $MessageUid, $ContentKey = "image-data-0", $ContentType = "image/jpeg")
+    public function GetImageAttachment($MessageGroupID, $MessageUid)
     {
-        return GetAudioAttachment($MessageGroupID, $MessageUid, "image-data-0", "image/jpeg");
+        return $this->GetAttachment($MessageGroupID, $MessageUid, "image-data-0", "image/jpeg");
     }
     public function GetAttachment($MessageGroupID, $MessageUid, $ContentKey, $ContentType)
     {
@@ -90,87 +90,205 @@ class Messaging
         return $data;    
     }
 
-    public function Message($PSN, $Message)
+
+
+
+
+
+    // Send Audio Messages
+    public function AudioMessage($PSN, $Audio, $AudioLength)
     {
-        $headers = array(
-            'Authorization: Bearer ' . $this->oauth,
-            'Content-Type: multipart/mixed; boundary="gc0p4Jq0M2Yt08jU534c0p"',
-        );
-        $json_body = array(
-            "to" => array(
-                $PSN
-            ),
-            "message" => array(
-                "fakeMessageUid" => 1234,
-                "body" => $Message,
-                "messageKind" => 1
-            )
-        );
-        //This formatting is bad but if you try to change it, the request will fail.
-        $message = '--gc0p4Jq0M2Yt08jU534c0p
-Content-Type: application/json; charset=utf-8
-Content-Description: message
-
-' . json_encode($json_body) .'
---gc0p4Jq0M2Yt08jU534c0p--';
-
-        $response = \Utilities::SendRequest(MESSAGE_URL, $headers, false, null, "POST", $message);
-
-        $data = json_decode($response['body'], false);
-
-        return $data;
+        return $this->Message($PSN, "", $Audio, 1011, $AudioLength);
     }
-
-    public function MessageAttachment($PSN, $image)
+    public function AudioMessageGroup($GroupID, $Audio, $AudioLength)
+    {
+        return $this->MessageGroup($GroupID, "", $Audio, 1011, $AudioLength);
+    }
+    // Send Image Messages
+    public function ImageMessage($PSN, $Image, $Message = "")
+    {
+        return $this->Message($PSN, $Message, $Image, 3);
+    }
+    public function ImageMessageGroup($GroupID, $Image, $Message = "")
+    {
+        return $this->MessageGroup($GroupID, $Message, $Image, 3);
+    }    
+    // Send Text Messages
+    public function TextMessage($PSN, $Message)
+    {
+        return $this->Message($PSN, $Message, 1);
+    }
+    public function TextMessageGroup($GroupID, $Message)
+    {
+        return $this->MessageGroup($GroupID, $Message, 1);
+    }
+    // Send Message to New Group
+    public function Message($PSN, $MessageText = "", $Attachment = "", $MessageType = 1, $AudioLength = "")
     {
         $headers = array(
             'Authorization: Bearer ' . $this->oauth,
             'Content-Type: multipart/mixed; boundary="gc0p4Jq0M2Yt08jU534c0p"',
         );
-
         $json_body = array(
-            "to" => array(
-                $PSN
-            ),
+            "to" => array(),
             "message" => array(
                 "fakeMessageUid" => 1234,
-                "body" => '',
-                "messageKind" => 3
+                "body" => $MessageText,
+                "messageKind" => $MessageType
             )
         );
-
-        // If $image is a url or file path, we'll grab the content, else assume we're parsing raw image data and send that instead.
-        if (file_exists($image) || filter_var($image, FILTER_VALIDATE_URL) == true) {
-            $imageContent = file_get_contents($image);
-            $imageLength  = strlen($imageContent);
+        
+        // Handle List of PSN Names
+        if (is_array($PSN))
+        {
+            foreach ($PSN as $Name)
+            {
+                $json_body["to"][] = $Name;
+            }
+        }
+        else
+        {
+            $json_body["to"][] = $PSN;
+        }
+        
+        // Get Attachment Content and Length
+        if (file_exists($Attachment) || filter_var($Attachment, FILTER_VALIDATE_URL) == true) {
+            $AttachmentContent = file_get_contents($Attachment);
+            $AttachmentLength  = strlen($AttachmentContent);
         } else {
-            $imageContent = $image;
-            $imageLength  = strlen($imageContent);
+            $AttachmentContent = $Attachment;
+            $AttachmentLength  = strlen($AttachmentContent);
+        }
+        
+        // Handle Attachment Types
+        if ($MessageType == 1011)
+        {
+            // Audio
+            $ContentKey = "voice-data-0";
+            $ContentType = "audio/mpeg";
+        }
+        else if ($MessageType == 3)
+        {
+            // Image
+            $ContentKey = "image-data-0";
+            $ContentType = "image/jpeg";
+        }
+        
+        // Build Message With or Without Content
+        if ($Attachment)
+        {
+            $message = '--gc0p4Jq0M2Yt08jU534c0p';
+            $message .= 'Content-Type: application/json; charset=utf-8';
+            $message .= 'Content-Description: message';  
+            $message .= json_encode($json_body);
+            $message .= '--gc0p4Jq0M2Yt08jU534c0p';
+            $message .= 'Content-Type: ' . $ContentType;
+            $message .= 'Content-Disposition: attachment';
+            $message .= 'Content-Description: ' . $ContentKey;
+            $message .= 'Content-Transfer-Encoding: binary';
+            $message .= 'Content-Length: ' . $AttachmentLength;
+            $message .= $AttachmentContent;
+            $message .= '--gc0p4Jq0M2Yt08jU534c0p--';
+        }
+        else
+        {
+            $message = '--gc0p4Jq0M2Yt08jU534c0p';
+            $message .= 'Content-Type: application/json; charset=utf-8';
+            $message .= 'Content-Description: message';  
+            $message .= json_encode($json_body);
+            $message .= '--gc0p4Jq0M2Yt08jU534c0p--';
         }
 
-        // var_dump($imageContent, $imageLength);
-        // exit;
-
-        //This formatting is bad but if you try to change it, the request will fail.
-        $message = '--gc0p4Jq0M2Yt08jU534c0p
-Content-Type: application/json; charset=utf-8
-Content-Description: message
-
-' . json_encode($json_body) . '
---gc0p4Jq0M2Yt08jU534c0p
-Content-Type: image/jpeg
-Content-Disposition: attachment
-Content-Description: image-data-0
-Content-Transfer-Encoding: binary
-Content-Length: ' . $imageLength . '
-
-' . $imageContent . '
---gc0p4Jq0M2Yt08jU534c0p--';
-
         $response = \Utilities::SendRequest(MESSAGE_URL, $headers, false, null, "POST", $message);
 
         $data = json_decode($response['body'], false);
+        
+        return $data;
+    }
+    // Send Message to Existing Group
+    public function MessageGroup($GroupID, $MessageText = "", $Attachment = "", $MessageType = 1, $AudioLength = "")
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: multipart/mixed; boundary="gc0p4Jq0M2Yt08jU534c0p"',
+        );
+        $json_body = array(
+            "message" => array(
+                "fakeMessageUid" => 1234,
+                "body" => $MessageText,
+                "messageKind" => $MessageType
+            )
+        );
+        
+        // Get Attachment Content and Length
+        if (file_exists($Attachment) || filter_var($Attachment, FILTER_VALIDATE_URL) == true) {
+            $AttachmentContent = file_get_contents($Attachment);
+            $AttachmentLength  = strlen($AttachmentContent);
+        } else {
+            $AttachmentContent = $Attachment;
+            $AttachmentLength  = strlen($AttachmentContent);
+        }
+        
+        // Handle Attachment Types
+        if ($MessageType == 1011)
+        {
+            // Audio
+            $ContentKey = "voice-data-0";
+            $ContentType = "audio/3gpp";
+        }
+        else if ($MessageType == 3)
+        {
+            // Image
+            $ContentKey = "image-data-0";
+            $ContentType = "image/jpeg";
+        }
+        
+        // Build Message With or Without Content
+        if ($Attachment)
+        {
+            $message = "\n";
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p\n";
+            $message .= "Content-Type: application/json; charset=utf-8\n";
+            $message .= "Content-Description: message\n";
+            $message .= "\n";
+            
+            $message .= json_encode($json_body) . "\n";
+            
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p\n";
+            $message .= "Content-Type: $ContentType\n";
+            $message .= "Content-Disposition: attachment\n";
+            $message .= "Content-Description: $ContentKey\n";
+            $message .= "Content-Transfer-Encoding: binary\n";
+            $message .= "Content-Length: $AttachmentLength\n";
+            if ($MessageType == 1011)
+            {
+                $message .= "Content-Voice-Data-Playback-Time: $AudioLength\n";
+                $message .= "\n";
+            }
+            
+            $message .= $AttachmentContent . "\n";
+            
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p--\n\n";
+        }
+        else
+        {
+            $message = "\n";
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p\n";
+            $message .= "Content-Type: application/json; charset=utf-8\n";
+            $message .= "Content-Description: message\n";
+            $message .= "\n";
+            
+            $message .= json_encode($json_body) . "\n";
+            
+            $message .= "--gc0p4Jq0M2Yt08jU534c0p--\n\n";
+        }
+        
+        echo $message;
 
+        $response = \Utilities::SendRequest(MESSAGE_URL . '/' . $GroupID . '/messages', $headers, false, null, "POST", $message);
+
+        $data = json_decode($response['body'], false);
+        
         return $data;
     }
 }
