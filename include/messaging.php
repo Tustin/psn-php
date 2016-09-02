@@ -11,7 +11,6 @@ class Messaging
         $this->oauth = $tokens["oauth"];
         $this->refresh_token = $tokens["refresh"];
     }
-
     public function Get($MessageGroupID)
     {
         $headers = array(
@@ -25,7 +24,49 @@ class Messaging
 
         return $data;       
     }
+    public function GetAll()
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+        $tokens = array(
+            "oauth" => $this->oauth,
+            "refresh" => $this->refresh_token
+        );
+        $_user = new \PSN\User($tokens);
+        $_onlineId = $_user->Me()->profile->onlineId;
 
+        $response = \Utilities::SendRequest(MESSAGE_USERS_URL . $_onlineId ."/messageGroups?fields=@default,messageGroupDetail,totalUnseenMessages,totalMessages,myGroupDetail,newMessageDetail,latestMessage,takedownDetail&includeEmptyMessageGroup=true", $headers, false, null, "GET", null);
+
+        $data = json_decode($response['body'], false);
+
+        return $data;    
+    }
+    public function GetFavorites()
+    {        
+        // Favorites Filter
+        $MessageGroups = $this->GetAll();
+        $MessageGroupsFavorite = array();
+        for ($i = 0; $i < count($MessageGroups->messageGroups); $i++)
+        {
+            // Check Favorite Group Status
+            $FavoriteStatus = (int)$MessageGroups->messageGroups[$i]->messageGroupDetail->myGroupDetail->myGroupFlag;
+            if ($FavoriteStatus == 1)
+            {
+                $MessageGroupsFavorite[] = $MessageGroups->messageGroups[$i];
+            }
+        }
+        
+        // Update Data
+        $MessageGroups->messageGroups = $MessageGroupsFavorite;
+        $MessageGroups->size = count($MessageGroupsFavorite);
+        $MessageGroups->totalResults = count($MessageGroupsFavorite);
+        
+        // Return Favorites
+        return $MessageGroups;
+    }
+    
     public function GetAudioAttachment($MessageGroupID, $MessageUid)
     {
         return $this->GetAttachment($MessageGroupID, $MessageUid, "voice-data-0", "audio/mpeg"); 
@@ -48,7 +89,6 @@ class Messaging
 
         return $data; 
     }
-
     public function Remove($MessageGroupID)
     {
         $headers = array(
@@ -70,30 +110,17 @@ class Messaging
 
         return $data;
     }
-    public function GetAll()
+    
+    // Read Messages
+    public function Read($MessageGroupID, $MessageIDList)
     {
         $headers = array(
             'Authorization: Bearer ' . $this->oauth,
             'Content-Type: application/json; charset=utf-8'
         );
-        $tokens = array(
-            "oauth" => $this->oauth,
-            "refresh" => $this->refresh_token
-        );
-        $_user = new \PSN\User($tokens);
-        $_onlineId = $_user->Me()->profile->onlineId;
 
-        $response = \Utilities::SendRequest(MESSAGE_USERS_URL . $_onlineId ."/messageGroups?fields=@default,messageGroupDetail,totalUnseenMessages,totalMessages,myGroupDetail,newMessageDetail,latestMessage,takedownDetail&includeEmptyMessageGroup=true", $headers, false, null, "GET", null);
-
-        $data = json_decode($response['body'], false);
-
-        return $data;    
+        \Utilities::SendRequest(MESSAGE_URL . "/" . $MessageGroupID . "/messages?messageUid=" . implode (",", $MessageIDList), $headers, false, null, "PUT", json_encode(array("seenFlag" => true)));
     }
-
-
-
-
-
 
     // Send Audio Messages
     public function AudioMessage($PSN, $Audio, $AudioLength)
@@ -104,6 +131,7 @@ class Messaging
     {
         return $this->MessageGroup($GroupID, "", $Audio, 1011, $AudioLength);
     }
+    
     // Send Image Messages
     public function ImageMessage($PSN, $Image, $Message = "")
     {
@@ -112,7 +140,8 @@ class Messaging
     public function ImageMessageGroup($GroupID, $Image, $Message = "")
     {
         return $this->MessageGroup($GroupID, $Message, $Image, 3);
-    }    
+    }
+
     // Send Text Messages
     public function TextMessage($PSN, $Message)
     {
@@ -122,6 +151,7 @@ class Messaging
     {
         return $this->MessageGroup($GroupID, $Message, "", 1);
     }
+    
     // Send Message to New Group
     private function Message($PSN, $MessageText = "", $Attachment = "", $MessageType = 1, $AudioLength = "")
     {
@@ -220,6 +250,7 @@ class Messaging
         
         return $data;
     }
+    
     // Send Message to Existing Group
     public function MessageGroup($GroupID, $MessageText = "", $Attachment = "", $MessageType = 1, $AudioLength = "")
     {
@@ -303,5 +334,98 @@ class Messaging
         $data = json_decode($response['body'], false);
         
         return $data;
+    }
+    
+    // Add Users to Group
+    public function GroupAddUsers($MessageGroupID, $PSN)
+    {
+        // Set Headers
+        $headers = array(
+            'Content-Type: application/json; charset=utf-8',
+            'Authorization: Bearer ' . $this->oauth
+        );
+        
+        // Handle List of PSN Names
+        $Names = array();
+        if (is_array($PSN))
+        {
+            foreach ($PSN as $Name)
+            {
+                $Names[] = $Name;
+            }
+        }
+        else
+        {
+            $Names[] = $PSN;
+        }
+            
+        // Send Request
+        \Utilities::SendRequest(MESSAGE_URL . '/' . $MessageGroupID . '/users', $headers, false, null, "POST", json_encode(array("members" => $Names)));
+    }
+    
+    // Favorite Group
+    public function FavoriteGroup($MessageGroupID)
+    {
+        $this->SetFavoriteGroupStatus($MessageGroupID, true);
+    }
+    // Unfavorite Group
+    public function UnfavoriteGroup($MessageGroupID)
+    {
+        $this->SetFavoriteGroupStatus($MessageGroupID, false);
+    }
+    private function SetFavoriteGroupStatus($MessageGroupID, $Flag)
+    {
+        // Get PSN Name
+        $tokens = array(
+            'oauth' => $this->oauth,
+            'refresh' => $this->refresh
+        );
+        $_user = new \PSN\User($tokens);
+        $_onlineId = $_user->Me()->profile->onlineId;
+        
+        // Set Headers
+        $headers = array(
+            'Content-Type: application/json; charset=utf-8',
+            'Authorization: Bearer ' . $this->oauth
+        );
+        
+        // Send Request
+        \Utilities::SendRequest(MESSAGE_USERS_URL . $_onlineId . "/messageGroups/" . $MessageGroupID . "/myGroup", $headers, false, null, "PUT", json_encode(array("myGroupFlag" => $Flag))); 
+    }
+    
+    // Group Image
+    public function SetGroupImage($MessageGroupID, $Image)
+    {
+        // Set Headers
+        $headers = array(
+            'Content-Type: image/png',
+            'Content-Description: image-data-0',
+            'Authorization: Bearer ' . $this->oauth
+        );
+        
+        // Get Attachment Content and Length
+        if (file_exists($Image) || filter_var($Image, FILTER_VALIDATE_URL) == true) {
+            $ImageContent = file_get_contents($Image);
+            $ImageLength  = strlen($ImageContent);
+        } else {
+            $ImageContent = $Image;
+            $ImageLength  = strlen($AttachmentContent);
+        }
+        
+        // Send Request
+        \Utilities::SendRequest(MESSAGE_URL . "/" . $MessageGroupID . "/thumbnail", $headers, false, null, "PUT", $ImageContent); 
+    }
+
+    // Group Name
+    public function SetGroupName($MessageGroupID, $Name)
+    {
+        // Set Headers
+        $headers = array(
+            'Content-Type: application/json; charset=utf-8',
+            'Authorization: Bearer ' . $this->oauth
+        );
+        
+        // Send Request
+        \Utilities::SendRequest(MESSAGE_URL . "/" . $MessageGroupID . "/name", $headers, false, null, "PUT", json_encode(array("messageGroupName" => $Name))); 
     }
 }
