@@ -98,7 +98,7 @@ class Messaging
 
         $tokens = array(
             "oauth" => $this->oauth,
-            "refresh" => $this->refresh
+            "refresh" => $this->refresh_token
         );
         
         $_user = new \PSN\User($tokens);
@@ -378,7 +378,7 @@ class Messaging
         // Get PSN Name
         $tokens = array(
             'oauth' => $this->oauth,
-            'refresh' => $this->refresh
+            'refresh' => $this->refresh_token
         );
         $_user = new \PSN\User($tokens);
         $_onlineId = $_user->Me()->profile->onlineId;
