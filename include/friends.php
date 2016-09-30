@@ -18,7 +18,7 @@ class Friend
         $headers = array(
             'Authorization: Bearer ' . $this->oauth
         );
-        $response = \Utilities::SendRequest(USERS_URL . "me/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId&userFilter=" . $Filter ."&avatarSizes=m&profilePictureSizes=m&offset=0&limit=" . $Limit, $headers, false, null, "GET", null);
+        $response = \Utilities::SendRequest(USERS_URL . "me/friends/profiles2?fields=onlineId,avatarUrls,following,friendRelation,isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,plus,presences(@titleInfo,hasBroadcastData,lastOnlineDate),primaryOnlineStatus,trophySummary(@default)&sort=name-onlineId&userFilter=" . $Filter ."&avatarSizes=m&profilePictureSizes=m&offset=0&limit=" . $Limit, $headers, false, null, "GET", null);
 
         $data = json_decode($response['body'], false);
 
