@@ -65,7 +65,7 @@ class Utilities
         }
 
         //Pretty dirty, but it allows us to send custom requests
-        if (($RequestMethod == "POST" || $RequestMethod == "PUT") && $RequestArgs != null)
+        if (($RequestMethod == "POST" || $RequestMethod == "PUT" || $RequestMethod == "DELETE") && $RequestArgs != null)
             curl_setopt($ch, CURLOPT_POSTFIELDS, $RequestArgs);
         else if ($RequestArgs != null)
             $URL .= "?" . $RequestArgs;

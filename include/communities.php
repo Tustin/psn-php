@@ -133,4 +133,61 @@ class Communities
                         
         return $data;
     }
+    public function SearchCommunities($titleId, $limit = 10) 
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $response = \Utilities::SendRequest("https://communities.api.playstation.com/v1/recommendations?includeFields=backgroundImage%2CtilebackgroundImage%2Cdescription%2Cid%2Cmembers%2Cname%2CprofileImage%2Crole%2CunreadMessageCount%2Csessions%2Ctype%2Clanguage%2Ctimezone%2CtitleName%2C%20titleId%2CnameLastModifiedBy%2CdescriptionLastModifiedBy%2CgriefReportableItems%2CgameSessions%2Cparties&limit=" . $limit . "&state=basedOnOneOfMyGames&titleId=" . $titleId, $headers);
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    public function DeleteMessage($communityId, $threadId, $messageId)
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/threads/" . $threadId . "/messages/" . $messageId, $headers, false, null, "DELETE");
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    public function LeaveCommunity($communityId) 
+    {
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        //this method needs an empty json object... not sure why Sony did that
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/members", $headers, false, null, "DELETE", "{}");
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    public function JoinCommunity($communityId)
+    {
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $body = array(
+            'onlineIds' => array ()
+        );
+
+        //don't know why this isnt a PUT request but whatever, it's literally just like inviting but without any onlineIds passed.
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/members", $headers, false, null, "POST", json_encode($body));
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+
 }
