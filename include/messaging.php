@@ -467,62 +467,6 @@ class Messaging
         return $data;
     }
     
-    // Add Users to Group
-    public function GroupAddUsers($MessageGroupID, $PSN)
-    {
-        // Set Headers
-        $headers = array(
-            'Content-Type: application/json; charset=utf-8',
-            'Authorization: Bearer ' . $this->oauth
-        );
-        
-        // Handle List of PSN Names
-        $Names = array();
-        if (is_array($PSN))
-        {
-            foreach ($PSN as $Name)
-            {
-                $Names[] = $Name;
-            }
-        }
-        else
-        {
-            $Names[] = $PSN;
-        }
-            
-        // Send Request
-        \Utilities::SendRequest(MESSAGE_URL . '/' . $MessageGroupID . '/users', $headers, false, null, "POST", json_encode(array("members" => $Names)));
-    }
-    
-    // Favorite Group
-    public function FavoriteGroup($MessageGroupID)
-    {
-        $this->SetFavoriteGroupStatus($MessageGroupID, true);
-    }
-    // Unfavorite Group
-    public function UnfavoriteGroup($MessageGroupID)
-    {
-        $this->SetFavoriteGroupStatus($MessageGroupID, false);
-    }
-    private function SetFavoriteGroupStatus($MessageGroupID, $Flag)
-    {
-        // Get PSN Name
-        $tokens = array(
-            'oauth' => $this->oauth,
-            'refresh' => $this->refresh_token
-        );
-        $_user = new \PSN\User($tokens);
-        $_onlineId = $_user->Me()->profile->onlineId;
-        
-        // Set Headers
-        $headers = array(
-            'Content-Type: application/json; charset=utf-8',
-            'Authorization: Bearer ' . $this->oauth
-        );
-        
-        // Send Request
-        \Utilities::SendRequest(MESSAGE_USERS_URL . $_onlineId . "/messageGroups/" . $MessageGroupID . "/myGroup", $headers, false, null, "PUT", json_encode(array("myGroupFlag" => $Flag))); 
-    }
     
     // Group Image
     public function SetGroupImage($MessageGroupID, $Image)
@@ -545,18 +489,5 @@ class Messaging
         
         // Send Request
         \Utilities::SendRequest(MESSAGE_URL . "/" . $MessageGroupID . "/thumbnail", $headers, false, null, "PUT", $ImageContent); 
-    }
-
-    // Group Name
-    public function SetGroupName($MessageGroupID, $Name)
-    {
-        // Set Headers
-        $headers = array(
-            'Content-Type: application/json; charset=utf-8',
-            'Authorization: Bearer ' . $this->oauth
-        );
-        
-        // Send Request
-        \Utilities::SendRequest(MESSAGE_URL . "/" . $MessageGroupID . "/name", $headers, false, null, "PUT", json_encode(array("messageGroupName" => $Name))); 
     }
 }
