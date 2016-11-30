@@ -46,12 +46,10 @@ class Communities
 
     public function GetCommunity($communityId, $limit = 100)
     {
-        // Set Headers
         $headers = array(
             'Authorization: Bearer ' . $this->community_oauth
         );
 
-        // Send Request
         $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/members?limit=" . $limit, $headers);
 
         $data = json_decode($response['body'], false);
@@ -61,13 +59,75 @@ class Communities
 
     public function GetMyCommunities($limit = 100) 
     {
-        // Set Headers
         $headers = array(
             'Authorization: Bearer ' . $this->community_oauth,
         );
 
-        // Send Request
         $response = \Utilities::SendRequest(COMMUNITIES_URL ."?fields=backgroundImage%2CtilebackgroundImage%2Cdescription%2Cid%2Cmembers%2Cname%2CprofileImage%2Crole%2CunreadMessageCount%2Csessions%2Ctype%2Clanguage%2Ctimezone%2CtitleName%2C%20titleId%2CnameLastModifiedBy%2CdescriptionLastModifiedBy%2CgriefReportableItems%2CgameSessions%2Cparties%26includeFields%3DgameSessions%2Cparties&limit=" . $limit, $headers);
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    public function GetCommunityThreads($communityId) 
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/threads", $headers);
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    public function GetMessagesInThread($communityId, $threadId, $limit = 100) 
+    {        
+        $headers = array(
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/threads/" . $threadId . "/messages?limit=" . $limit, $headers);
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    public function SubmitNewMessage($communityId, $threadId, $message) 
+    {
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+        //TODO: add image support
+        $body = array(
+            'message' => $message,
+            'images' => []
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/threads/" . $threadId . "/messages", $headers, false, null, "POST", json_encode($body));
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+
+    }
+    public function InviteToCommunity($communityId, $onlineIds) 
+    {
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+        $body = array(
+            'onlineIds' => array ()
+        );  
+        if (is_array($onlineIds)) {
+            $body['onlineIds'] = $onlineIds;
+        } else {
+            $body['onlineIds'][0] = $onlineIds;
+        }
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/members", $headers, false, null, "POST", json_encode($body));
 
         $data = json_decode($response['body'], false);
                         
