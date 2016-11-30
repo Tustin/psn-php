@@ -9,7 +9,7 @@ define("MESSAGE_URL",         "https://us-gmsg.np.community.playstation.net/grou
 define("MESSAGE_THREADS_URL", "https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads");
 define("MESSAGE_USERS_URL",   "https://us-gmsg.np.community.playstation.net/groupMessaging/v1/users/");
 define("TROPHY_URL",          "https://us-tpy.np.community.playstation.net/trophy/v1/");
-define("COMMUNITIES_URL",     "https://communities.api.playstation.com/v1/communities/")
+define("COMMUNITIES_URL",     "https://communities.api.playstation.com/v1/communities/");
 
 class Utilities 
 {
