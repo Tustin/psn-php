@@ -157,6 +157,18 @@ class Communities
                         
         return $data;
     }
+    public function DeleteMessageReply($communityId, $threadId, $parentId, $messageId)
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/threads/" . $threadId . "/messages/" . $parentId . "/replies/" . $messageId, $headers, false, null, "DELETE");
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
     public function LeaveCommunity($communityId) 
     {
         $headers = array(
