@@ -201,5 +201,43 @@ class Communities
                         
         return $data;
     }
+    public function KickMembers($communityId, $onlineIds)
+    {
+        //for onlineids it requires array
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
 
+        $body = array(
+            'onlineIds' => $onlineIds
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/members?role=kicked", $headers, false, null, "DELETE", json_encode($body));
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    
+    public function ModifyNotification($communityId, $replies = FALSE, $wall = FALSE)
+    {
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $body = array(
+            'repliesNotification' => $replies,
+            'wallNotification' => $wall
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/preferences", $headers, false, null, "POST", json_encode($body));
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    
+    
 }
