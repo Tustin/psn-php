@@ -240,4 +240,35 @@ class Communities
     }
     
     
+    public function PromoteMember($communityId, $onlineIds, $promotion = 1)
+    {
+        // 1 == Moderator (Promote)
+        // 0 == Member (Demote)
+        
+        if($promotion)
+        {
+            $role = "moderator";
+        }
+        else
+        {
+            $role = "member";
+        }
+
+        //for onlineids it requires array
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $body = array(
+            'onlineIds' => $onlineIds
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/members?role=" . $role, $headers, false, null, "PUT", json_encode($body));
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    
 }
