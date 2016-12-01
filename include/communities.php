@@ -133,13 +133,25 @@ class Communities
                         
         return $data;
     }
-    public function SearchCommunities($titleId, $limit = 10) 
+    public function SearchCommunitiesByGame($titleId, $limit = 10) 
     {
         $headers = array(
             'Authorization: Bearer ' . $this->community_oauth
         );
 
-        $response = \Utilities::SendRequest("https://communities.api.playstation.com/v1/recommendations?includeFields=backgroundImage%2CtilebackgroundImage%2Cdescription%2Cid%2Cmembers%2Cname%2CprofileImage%2Crole%2CunreadMessageCount%2Csessions%2Ctype%2Clanguage%2Ctimezone%2CtitleName%2C%20titleId%2CnameLastModifiedBy%2CdescriptionLastModifiedBy%2CgriefReportableItems%2CgameSessions%2Cparties&limit=" . $limit . "&state=basedOnOneOfMyGames&titleId=" . $titleId, $headers);
+        $response = \Utilities::SendRequest("https://communities.api.playstation.com/v1/recommendations?includeFields=backgroundImage%2CtilebackgroundImage%2Cdescription%2Cid%2Cmembers%2Cname%2CprofileImage%2Crole%2CunreadMessageCount%2Csessions%2Ctype%2Clanguage%2Ctimezone%2CtitleName%2C%20titleId%2CnameLastModifiedBy%2CdescriptionLastModifiedBy%2CgriefReportableItems%2CgameSessions%2Cparties&limit=" . $limit . "&state=basedOnOneOfMyGames&titleId=" . urlencode($titleId), $headers);
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    public function SearchCommunities($SearchTXT, $limit = 10) 
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $response = \Utilities::SendRequest("https://communities.api.playstation.com/v1/search?query=" . urlencode($SearchTXT) . "&limit=" . $limit, $headers);
 
         $data = json_decode($response['body'], false);
                         
