@@ -251,6 +251,25 @@ class Communities
         return $data;
     }
     
+    public function GetUserRole($communityId, $onlineIds)
+    {
+
+        //for onlineids it requires array
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $body = array(
+            'onlineIds' => $onlineIds
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/members", $headers, false, null, "POST", json_encode($body));
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
     
     public function PromoteMember($communityId, $onlineIds, $promotion = 1)
     {
