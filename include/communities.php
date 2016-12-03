@@ -81,6 +81,76 @@ class Communities
                         
         return $data;
     }
+    
+    public function GetMessageReplies($communityId, $threadId, $replyId, $limit = 100)
+    {
+
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/threads/" . $threadId . "/messages/" . $replyId . "/replies?sharedMedia=events&limit=" . $limit, $headers);
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    
+    public function GetCommunityInfo($communityId)
+    {
+
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "?includeFields=members(size)", $headers);
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    
+    public function PostMessageReply($communityId, $threadId, $replyId, $message)
+    {
+
+        //for onlineids it requires array
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $body = array(
+            'images' => array(),
+            'message' => $message
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/threads/" . $threadId . "/messages/" . $replyId . "/replies?action=create", $headers, false, null, "POST", json_encode($body));
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
+    public function GetNotifications($communityId, $replies = FALSE, $wall = FALSE)
+    {
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->community_oauth
+        );
+
+        $body = array(
+            'repliesNotification' => $replies,
+            'wallNotification' => $wall
+        );
+
+        $response = \Utilities::SendRequest(COMMUNITIES_URL  . $communityId . "/preferences", $headers, false, null, "POST", json_encode($body));
+
+        $data = json_decode($response['body'], false);
+                        
+        return $data;
+    }
     public function GetMessagesInThread($communityId, $threadId, $limit = 100) 
     {        
         $headers = array(
