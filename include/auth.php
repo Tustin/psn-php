@@ -139,7 +139,6 @@ class Auth
     //Otherwise the new tokens will be returned as an array, just like GetTokens().
     public static function GrabNewTokens($refreshToken)
     {
-
         Auth::$refresh_oauth_request["refresh_token"] = $refreshToken;
 
         $response = \Utilities::SendRequest(OAUTH_URL, null, false, null, "POST", http_build_query(Auth::$refresh_oauth_request));
@@ -190,6 +189,7 @@ class Auth
     //Returns the current OAuth tokens (required for other classes)
     //oauth => used for requests to the API
     //refresh => used for generating a new oauth token without logging in each time
+    //npsso => required for the Communities class
     public function GetTokens()
     {
         return array(
