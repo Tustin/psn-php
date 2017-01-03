@@ -55,6 +55,20 @@ class Friend
         return $data;
     }
 
+    //Grabs the mutual friends.
+    public function GetMutualFriends($PSN, $Limit = 36)
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth
+        );
+
+        $response = \Utilities::SendRequest(USERS_URL . $PSN ."/friends/profiles2?fields=onlineId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),primaryOnlineStatus,presences(@titleInfo,hasBroadcastData)&sort=name-onlineId&userFilter=mutualFriends&avatarSizes=m&profilePictureSizes=m,xl&extendPersonalDetailTarget=true&offset=0&limit=" . $Limit, $headers, false, null, "GET", null);
+
+        $data = json_decode($response['body'], false);
+
+        return $data;
+    }
+
     //Adds a user to your friends list, with an optional message.
     public function Add($PSN, $RequestMessage = "")
     {
