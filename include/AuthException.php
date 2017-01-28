@@ -1,7 +1,7 @@
 <?php
 namespace PSN;
 
-class PSNAuthException extends \Exception
+class AuthException extends \Exception
 {
     private $_error;
 

@@ -1,0 +1,9 @@
+{
+    "name": "tustin/psn-php",
+    "license": "MIT",
+    "autoload": {
+        "classmap": [
+            "include/"
+        ]
+    }
+}
