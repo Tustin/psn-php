@@ -60,7 +60,7 @@ class Utilities
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         if ($OutputHeader){
-            curl_setopt($ch, CURLOPT_VERBOSE, 1);
+            curl_setopt($ch, CURLOPT_VERBOSE, 0);
             curl_setopt($ch, CURLOPT_HEADER, 1);
         }
 
