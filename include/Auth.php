@@ -66,10 +66,10 @@ class Auth
         $this->two_factor_auth_request['ticket_uuid'] = $ticket;
         $this->two_factor_auth_request['code'] = $code;
 
-        //Throws a PSNAuthException if any form of authentication has failed
+        //Throws a AuthException if any form of authentication has failed
         if (!$this->GrabNPSSO() || !$this->GrabCode() || !$this->GrabOAuth())
         {
-            throw new PSNAuthException($this->last_error);
+            throw new AuthException($this->last_error);
         }
     }
 
@@ -85,7 +85,7 @@ class Auth
         $response = \Utilities::SendRequest(CODE_URL, null, true, $this->npsso, "GET", http_build_query($this->code_request));
 
         $http_code = \Utilities::get_response_code($response["headers"]);
-        
+
         //Needs custom error handling due to the type of response (or lack thereof)
         //HTTP code that will be given due to too many requests from a single IP
         if ($http_code == 503) {
@@ -109,7 +109,7 @@ class Auth
         }
 
         $this->grant_code = $response["headers"][0]["X-NP-GRANT-CODE"];
-        
+
         return true;
     }
 
@@ -167,7 +167,7 @@ class Auth
             $response = \Utilities::SendRequest(SSO_URL, null, false, false, "POST", http_build_query($this->login_request));
         }
         $data = json_decode($response["body"], false);
-        
+
         if (property_exists($data, "error")){
             $this->last_error = $response["body"];
             return false;
