@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <title>psn-php by Tustin</title>
+    <title>psn-php by Tustin | Authentication with PSN</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -77,24 +77,33 @@
     </nav>
 
     <div class="container">
-      <h3>Installing</h3>
+      <h3>Authenticating</h3>
       <hr>
-      <p>psn-php can be installed using <a href="https://getcomposer.org/" target="_blank">Composer</a>. It's as easy as running this command:</p>
-      <pre>composer require tustin/psn-php</pre>
-      or if you want to use the dev branch:
-      <pre>composer require tustin/psn-php=dev-master</pre>
-      <br>
-      Composer will download all the files required for the API wrapper.
-
-      <h3>Setting Up</h3>
+      <p>Authenticating is easy. The \PSN\Auth class has a custom exception that can be caught whenever there was an error with the authentication process (such as bad credentials, suspensions from PSN, or other issues) which you can use to display an appropriate error. Try authenticating like so:</p>
+      <pre>try 
+{
+    $account = new \PSN\Auth("test@psn.com", "password");
+} 
+catch (\PSN\PSNAuthException $e)
+{
+    header("Content-Type: application/json");
+    die($e->GetError());
+}</pre>
+      <p>You can customize how the exception is handled, but by default this will just output the plaintext json to the screen.</p><br>
+      <p>If the process was successful, you can use $account to grab the OAuth tokens for the account:</p>
+      <pre>$tokens = $account->GetTokens();</pre>
+      <p>$tokens will now contain an array with two types of OAuth tokens:</p>
+      <ul>
+        <li>Authorization token ["oauth"] - Used when making requests on behalf of the user</li>
+        <li>Refresh token ["refresh"] - Used for generating a new pair of Authorization and Refresh tokens without needing to login with account credentials</li>
+      </ul>
+      <p>With your set of OAuth tokens, you can now beging making API requests.</p>
+      <h3>Obtaining New OAuth Tokens</h3>
       <hr>
-      <p>Once all the files have been downloaded, you can include the API into your project. Require the Composer autoloader at the beginning of your script(s):
-      <pre>require "vendor/autoload.php"</pre><br>
-      <p>You now have access to the API wrapper.</p>
-      <a href="auth.html" class="btn btn-default">Authenticating with PSN</a>
+      <p>If you've already logged in with your account details and saved your OAuth tokens, you can obtain fresh new tokens without needing to login again using your existing Refresh token:</p>
+      <pre>$new_tokens = \PSN\Auth::GrabNewTokens('2c4e014b-xxxx-47d4-xxxx-b274107457f2');</pre>
+      <p>The string passed into GrabNewTokens is your refresh token. Ideally, you would store this value in a database or external file, and then grab the token and pass it into the GrabNewTokens function. $new_tokens will now contain brand new Authorization and Refresh tokens.</p>
     </div>
-
-
   </body>
   <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"

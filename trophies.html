@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <title>psn-php by Tustin</title>
+    <title>psn-php by Tustin | Trophies</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -77,24 +77,29 @@
     </nav>
 
     <div class="container">
-      <h3>Installing</h3>
-      <hr>
-      <p>psn-php can be installed using <a href="https://getcomposer.org/" target="_blank">Composer</a>. It's as easy as running this command:</p>
-      <pre>composer require tustin/psn-php</pre>
-      or if you want to use the dev branch:
-      <pre>composer require tustin/psn-php=dev-master</pre>
-      <br>
-      Composer will download all the files required for the API wrapper.
-
       <h3>Setting Up</h3>
       <hr>
-      <p>Once all the files have been downloaded, you can include the API into your project. Require the Composer autoloader at the beginning of your script(s):
-      <pre>require "vendor/autoload.php"</pre><br>
-      <p>You now have access to the API wrapper.</p>
-      <a href="auth.html" class="btn btn-default">Authenticating with PSN</a>
+      <p>Use the array of tokens you obtained, either from GetTokens or GrabNewTokens, to create a new instance of the Trophy class:</p>
+      <pre>$trophy = new \PSN\Trophy($tokens);</pre><br>
+      <p>You can now use $trophy to make requests related to the logged in user's trophies.</p>
+
+      <h3>GetMyTrophies([ $Limit = 36 ])</h3>
+      <hr>
+      <p>GetMyTrophies takes no arguments and will return an object with multiple arrays containing all your trophies and information regarding them. There is an optional argument $Limit that will limit how many trophies get returned:</p>
+      <pre>$my_trophies = $trophy->GetMyTrophies();
+//you can use var_dump to see the contents of this object
+var_dump($my_trophies);     
+</pre>
+      <h3>GetGameTrophies($GameID)</h3>
+      <hr>
+      <p>GetGameTrophies takes one argument, which is the ID for the game you want to get the trophies for. A normal game ID will look something like NPWR07466_00, which is Rocket League:</p>
+      <pre>$game_trophies = $trophy->GetGameTrophies("NPWR07466_00");
+//you can use var_dump to see the contents of this object
+var_dump($game_trophies);     
+</pre><br>
+      
+      <i>This class is still a WIP.</i>
     </div>
-
-
   </body>
   <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <title>psn-php by Tustin</title>
+    <title>psn-php by Tustin | User</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -77,24 +77,31 @@
     </nav>
 
     <div class="container">
-      <h3>Installing</h3>
-      <hr>
-      <p>psn-php can be installed using <a href="https://getcomposer.org/" target="_blank">Composer</a>. It's as easy as running this command:</p>
-      <pre>composer require tustin/psn-php</pre>
-      or if you want to use the dev branch:
-      <pre>composer require tustin/psn-php=dev-master</pre>
-      <br>
-      Composer will download all the files required for the API wrapper.
-
       <h3>Setting Up</h3>
       <hr>
-      <p>Once all the files have been downloaded, you can include the API into your project. Require the Composer autoloader at the beginning of your script(s):
-      <pre>require "vendor/autoload.php"</pre><br>
-      <p>You now have access to the API wrapper.</p>
-      <a href="auth.html" class="btn btn-default">Authenticating with PSN</a>
+      <p>Use the array of tokens you obtained, either from GetTokens or GrabNewTokens, to create a new instance of the User class:</p>
+      <pre>$user = new \PSN\User($tokens);</pre><br>
+      <p>You can now use $user to make requests related to the user.</p>
+      <h3>Me()</h3>
+      <hr>
+      <p>Me() will return an object containing your account information:</p>
+      <pre>$me = $user->Me();
+//you can use var_dump to see the contents of this object
+var_dump($me);     
+</pre>
+      <h3>Block($PSN)</h3>
+      <hr>
+      <p>Block($PSN) takes one argument, which is the PSN you want to block on the logged in account:</p>
+      <pre>$user->Block("foobar");</pre>
+      <h3>Unblock($PSN)</h3>
+      <hr>
+      <p>Unblock($PSN) takes one argument, which is the PSN you want to unblock on the logged in account:</p>
+      <pre>$user->Unblock("foobar");</pre>
+      <h3>GetUserActivity($PSN)</h3>
+      <hr>
+      <p>GetUserActivity($PSN) takes one argument, which is the PSN of the user you want to view the activity for. Note that this function won't work for certain users depending on their privacy settings. This function returns a large object with multiple arrays and values that is best viewed using var_dump:</p>
+      <pre>var_dump($user->GetUserActivity("foobar"));</pre>
     </div>
-
-
   </body>
   <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"

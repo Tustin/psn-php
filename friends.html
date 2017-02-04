@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <title>psn-php by Tustin</title>
+    <title>psn-php by Tustin | Friends</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -77,24 +77,44 @@
     </nav>
 
     <div class="container">
-      <h3>Installing</h3>
-      <hr>
-      <p>psn-php can be installed using <a href="https://getcomposer.org/" target="_blank">Composer</a>. It's as easy as running this command:</p>
-      <pre>composer require tustin/psn-php</pre>
-      or if you want to use the dev branch:
-      <pre>composer require tustin/psn-php=dev-master</pre>
-      <br>
-      Composer will download all the files required for the API wrapper.
-
       <h3>Setting Up</h3>
       <hr>
-      <p>Once all the files have been downloaded, you can include the API into your project. Require the Composer autoloader at the beginning of your script(s):
-      <pre>require "vendor/autoload.php"</pre><br>
-      <p>You now have access to the API wrapper.</p>
-      <a href="auth.html" class="btn btn-default">Authenticating with PSN</a>
+      <p>Use the array of tokens you obtained, either from GetTokens or GrabNewTokens, to create a new instance of the Friend class:</p>
+      <pre>$friends = new \PSN\Friend($tokens);</pre><br>
+      <p>You can now use $friends to make requests related to the logged in user's friends list.</p>
+      <h3>MyFriends([$Filter = "online", $Limit = 36])</h3>
+      <hr>
+      <p>My Friends takes zero arguments, but you can pass two optional arguments:
+      <ul>
+        <li>$Filter - used to filter which friends get returned. By default, this will grab online friends only.</li>
+        <li>$Limit - the amount of friends to return. 36 is the standard value used by Sony but you can adjust it.</li>
+      </ul>
+      </p>
+      <pre>$my_friends = $friends->MyFriends();
+//you can use var_dump to see the contents of this object
+var_dump($my_friends);     
+</pre>
+      <h3>GetInfo($PSN)</h3>
+      <hr>
+      <p>GetInfo takes one argument, which is the name of the account you want to grab the info for. Note that this function might fail based on the user's privacy settings:</p>
+      <pre>$my_friend = $friends->GetInfo("tustin25");
+//you can use var_dump to see the contents of this object
+var_dump($my_friend);</pre>
+      <h3>GetFriendsOfFriend($PSN [, $Limit = 36])</h3>
+      <hr>
+      <p>GetFriendsOfFriend requires one argument, which is the PSN you want to get the friends of. You can pass an optional second argument to limit how many friends get returned. Note that this function might failed based on the user's privacy settings:</p>
+      <pre>$friends_of_my_friend = $friends->GetFriendsOfFriend("tustin25");
+//you can use var_dump to see the contents of this object
+var_dump($friends_of_my_friend);</pre>
+      <h3>Add($PSN [, $RequestMessage = ""])</h3>
+      <hr>
+      <p>Add requires one argument, which is the PSN you want to add to your friends list. You can pass an optional second argument to send a message along with your friend request:</p>
+      <pre>$friends->Add("foobar", "add me plz!");</pre>
+      <h3>Remove($PSN)</h3>
+      <hr>
+      <p>Remove takes one argument, which is the PSN you want to remove from your friends list. Note that this user obviously must be on your friends list, otherwise it will fail:</p>
+      <pre>$friends->Remove("foobar");</pre>
     </div>
-
-
   </body>
   <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
