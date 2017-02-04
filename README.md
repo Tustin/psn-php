@@ -1,6 +1,9 @@
 # PSN-PHP Wrapper
 This is a very easy to use PHP wrapper for the PSN API.
 
+## Usage
+Documentation for this library can be found here: [psn-php Documentation](https://tustin.github.io/psn-php/)
+
 ## Features
 - Authenticate with PSN
 - Get user information
@@ -11,6 +14,3 @@ This is a very easy to use PHP wrapper for the PSN API.
 
 ## Requests
 For all feature requests, please [create an Issue](https://github.com/Tustin/psn-php/issues).
-
-## Usage
-Visit the [Wiki](https://github.com/Tustin/psn-php/wiki) for documentation and how to set it up.
