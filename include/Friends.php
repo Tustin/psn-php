@@ -69,6 +69,54 @@ class Friend
         return $data;
     }
 
+    //Compare all games user trophies
+    public function CompareUserTrophies($PSN, $Limit = 36)
+    {
+        $URL = TROPHY_URL . "trophyTitles?fields=@default&npLanguage=en&iconSize=m&platform=PS3,PSVITA,PS4&offset=0&comparedUser=" . $PSN . "&limit=" . $Limit;
+
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth
+        );
+
+        $response = \Utilities::SendRequest($URL, $headers, false, null, "GET", null);
+
+        $data = json_decode($response['body'], false);
+
+        return $data;
+    }
+
+    //Compare specific game trophies - Short Version
+    public function CompareGameUserTrophiesSimple($NPid ,$PSN)
+    {
+        $URL = TROPHY_URL . "trophyTitles/" . $NPid . "/trophyGroups/?npLanguage=en&comparedUser=" . $PSN;
+
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth
+        );
+
+        $response = \Utilities::SendRequest($URL, $headers, false, null, "GET", null);
+
+        $data = json_decode($response['body'], false);
+
+        return $data;
+    }
+
+    //Compare specific game trophies - Extended Version
+    public function CompareGameUserTrophiesExtended($NPid ,$PSN)
+    {
+        $URL = TROPHY_URL . "trophyTitles/" . $NPid . "/trophyGroups/default/trophies?npLanguage=en&comparedUser=" . $PSN;
+
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth
+        );
+
+        $response = \Utilities::SendRequest($URL, $headers, false, null, "GET", null);
+
+        $data = json_decode($response['body'], false);
+
+        return $data;
+    }
+
     //Adds a user to your friends list, with an optional message.
     public function Add($PSN, $RequestMessage = "")
     {
