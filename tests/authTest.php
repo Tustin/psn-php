@@ -1,7 +1,4 @@
 <?php
-
-require_once '../vendor/autoload.php';
-
 try {
     $account = new \PSN\Auth('email@psn.com', 'password');
 } catch (\PSN\AuthException $e) {

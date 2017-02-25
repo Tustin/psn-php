@@ -4,5 +4,4 @@ php:
 - '5.6'
 - '7.0'
 - '7.1'
-before_script: composer require tustin/psn-php
-script: phpunit tests/index.php
+script: phpunit --configuration phpunit.xml
