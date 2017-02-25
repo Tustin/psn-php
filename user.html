@@ -84,22 +84,22 @@
       <p>You can now use $user to make requests related to the user.</p>
       <h3>Me()</h3>
       <hr>
-      <p>Me() will return an object containing your account information:</p>
+      <p>Me requires no arguments and will return an object containing your account information:</p>
       <pre>$me = $user->Me();
 //you can use var_dump to see the contents of this object
 var_dump($me);     
 </pre>
       <h3>Block($PSN)</h3>
       <hr>
-      <p>Block($PSN) takes one argument, which is the PSN you want to block on the logged in account:</p>
+      <p>Block requires one argument, which is the PSN you want to block on the logged in account:</p>
       <pre>$user->Block("foobar");</pre>
       <h3>Unblock($PSN)</h3>
       <hr>
-      <p>Unblock($PSN) takes one argument, which is the PSN you want to unblock on the logged in account:</p>
+      <p>Unblock requires one argument, which is the PSN you want to unblock on the logged in account:</p>
       <pre>$user->Unblock("foobar");</pre>
       <h3>GetUserActivity($PSN)</h3>
       <hr>
-      <p>GetUserActivity($PSN) takes one argument, which is the PSN of the user you want to view the activity for. Note that this function won't work for certain users depending on their privacy settings. This function returns a large object with multiple arrays and values that is best viewed using var_dump:</p>
+      <p>GetUserActivity requires one argument, which is the PSN of the user you want to view the activity for. Note that this function won't work for certain users depending on their privacy settings. This function returns a large object with multiple arrays and values that is best viewed using var_dump:</p>
       <pre>var_dump($user->GetUserActivity("foobar"));</pre>
     </div>
   </body>

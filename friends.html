@@ -84,7 +84,7 @@
       <p>You can now use $friends to make requests related to the logged in user's friends list.</p>
       <h3>MyFriends([$Filter = "online", $Limit = 36])</h3>
       <hr>
-      <p>My Friends takes zero arguments, but you can pass two optional arguments:
+      <p>MyFriends takes zero arguments, but you can pass two optional arguments:
       <ul>
         <li>$Filter - used to filter which friends get returned. By default, this will grab online friends only.</li>
         <li>$Limit - the amount of friends to return. 36 is the standard value used by Sony but you can adjust it.</li>
@@ -102,7 +102,7 @@ var_dump($my_friends);
 var_dump($my_friend);</pre>
       <h3>GetFriendsOfFriend($PSN [, $Limit = 36])</h3>
       <hr>
-      <p>GetFriendsOfFriend requires one argument, which is the PSN you want to get the friends of. You can pass an optional second argument to limit how many friends get returned. Note that this function might failed based on the user's privacy settings:</p>
+      <p>GetFriendsOfFriend requires one argument, which is the PSN you want to get the friends of. You can pass an optional second argument to limit how many friends get returned. Note that this function might fail based on the user's privacy settings:</p>
       <pre>$friends_of_my_friend = $friends->GetFriendsOfFriend("tustin25");
 //you can use var_dump to see the contents of this object
 var_dump($friends_of_my_friend);</pre>
@@ -112,7 +112,7 @@ var_dump($friends_of_my_friend);</pre>
       <pre>$friends->Add("foobar", "add me plz!");</pre>
       <h3>Remove($PSN)</h3>
       <hr>
-      <p>Remove takes one argument, which is the PSN you want to remove from your friends list. Note that this user obviously must be on your friends list, otherwise it will fail:</p>
+      <p>Remove requres one argument, which is the PSN you want to remove from your friends list. Note that this user obviously must be on your friends list, otherwise it will fail:</p>
       <pre>$friends->Remove("foobar");</pre>
     </div>
   </body>
