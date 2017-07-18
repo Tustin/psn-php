@@ -84,7 +84,7 @@
 {
     $account = new \PSN\Auth("test@psn.com", "password");
 } 
-catch (\PSN\PSNAuthException $e)
+catch (\PSN\AuthException $e)
 {
     header("Content-Type: application/json");
     die($e->GetError());
