@@ -30,6 +30,33 @@ class Messaging
 
         return $data;    
     }
+
+    /**
+     * Get the GroupID (threadId) by the Group Name
+     *
+     * @param  string  $sGroupName  Name of Group you are searching for within your Groups
+     * @throws
+     * @return string  $sThreadId   GroupID or null if not found
+     */
+
+    public function GetGroupIdByName($sGroupName)
+    {
+       $oAllgroups = $this->GetAll();
+
+       $sThreadId = null;
+
+       foreach( $oAllgroups->threads as $iKey =>  $aGroupDetails)
+       {
+          if ($aGroupDetails->threadNameDetail->threadName == trim($sGroupName))
+          {
+             $sThreadId = $aGroupDetails->threadId;
+             break;
+          }
+
+       }
+       return $sThreadId;
+    }
+
     // Get Favorite Groups
     public function GetFavorites()
     {
