@@ -12,13 +12,35 @@ class Friend
         $this->refresh_token = $tokens["refresh"];
     }
     
-    //Grabs the logged in user's friends, with a status filter and the amount of users to return.
+    /**
+     * Grabs the logged in user's friends, with a status filter and the amount of users to return.
+     *
+     * @param  string  $Filter Possible values  online =  return only Friends that are currently online
+     *                                          all    =  return all friends
+     *                         Default value = online
+     * @param  numeric $Limit  limit the list of returned Friends to x  Default 36
+     * @throws
+     * @return object  $data   Object of Friends or PSN error code / msg
+     */
+
     public function MyFriends($Filter = "online", $Limit = 36)
     {
-        $headers = array(
-            'Authorization: Bearer ' . $this->oauth
-        );
-        $response = \Utilities::SendRequest(USERS_URL . "me/friends/profiles2?fields=onlineId,avatarUrls,following,friendRelation,isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,plus,presences(@titleInfo,hasBroadcastData,lastOnlineDate),primaryOnlineStatus,trophySummary(@default)&sort=name-onlineId&userFilter=" . $Filter ."&avatarSizes=m&profilePictureSizes=m&offset=0&limit=" . $Limit, $headers, false, null, "GET", null);
+        $headers = array('Authorization: Bearer ' . $this->oauth);
+
+        $Filter = strtolower($Filter);
+
+        switch ($Filter)
+        {
+           case 'all':
+              $sFilter = '';
+           break;
+
+           case 'online':
+              $sFilter = 'userFilter=online&';
+           break;
+        }
+
+        $response = \Utilities::SendRequest(USERS_URL . "me/friends/profiles2?fields=onlineId,avatarUrls,following,friendRelation,isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,plus,presences(@titleInfo,hasBroadcastData,lastOnlineDate),primaryOnlineStatus,trophySummary(@default)&sort=name-onlineId&" . $sFilter ."avatarSizes=m&profilePictureSizes=m&offset=0&limit=" . $Limit, $headers, false, null, "GET", null);
 
         $data = json_decode($response['body'], false);
 
