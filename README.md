@@ -16,3 +16,6 @@ Documentation for this library can be found here: [psn-php Documentation](https:
 
 ## Requests
 For all feature requests, please [create an Issue](https://github.com/Tustin/psn-php/issues).
+
+## Disclaimer
+This project was not intended to be used for spam, abuse, or anything of the sort. Any use of this project for those purposes is not endorsed. Please keep this in mind when creating applications using this API wrapper.
