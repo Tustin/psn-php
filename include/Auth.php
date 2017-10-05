@@ -146,7 +146,8 @@ class Auth
         $data = json_decode($response['body'], false);
 
         if (property_exists($data, "error")){
-            return false;
+            throw new AuthException(sprintf('[%s]: %s', $data->error_code,
+                                                        $data->error_description));
         }
 
         return array(
