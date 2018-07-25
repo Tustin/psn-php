@@ -65,4 +65,18 @@ class Trophy
 
         return $data;
     }
+
+    //Fetch trophy titles using game id from presences (e.g. CUSA03952_00), usefull for connecting trophies and online status
+    public function FetchTrophyTitles($GameID)
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+        );
+
+        $response = \Utilities::SendRequest(TROPHY_URL . "apps/trophyTitles?npLanguage=en&npTitleIds=$GameID", $headers, false, null, "GET", null);
+
+        $data = json_decode($response['body'], false);
+
+        return $data;
+    }
 }
