@@ -72,4 +72,32 @@ class User
 
         return $data;
     }
+
+    public function UpdateBackgroundColor($Color) 
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+
+        $body = (object)(array(
+            'ops' => 
+           array (
+             (object)(array(
+                'op' => 'replace',
+                'path' => '/color',
+                'value' => $Color,
+             )),
+           ),
+         ));
+
+        $response = \Utilities::SendRequest(PROFILE_URL . "me/profile/backgroundImage", $headers, false, null, "PATCH", json_encode($body));
+
+        $data = json_decode($response['body']);
+
+        if ($data === null) return;
+
+        // This should be a custom exception in the future. @Tustin 7/26/2018
+        throw new \Exception(sprintf('[%s]: %s', $data->code, $data->data));
+    }
 }

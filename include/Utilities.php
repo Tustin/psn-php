@@ -10,6 +10,7 @@ define("MESSAGE_THREADS_URL", "https://us-gmsg.np.community.playstation.net/grou
 define("MESSAGE_USERS_URL",   "https://us-gmsg.np.community.playstation.net/groupMessaging/v1/users/");
 define("TROPHY_URL",          "https://us-tpy.np.community.playstation.net/trophy/v1/");
 define("COMMUNITIES_URL",     "https://communities.api.playstation.com/v1/communities/");
+define("PROFILE_URL",         "https://profile.api.playstation.com/v1/users/");
 
 class Utilities 
 {
@@ -58,14 +59,16 @@ class Utilities
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1:8888');
 
         if ($OutputHeader){
             curl_setopt($ch, CURLOPT_VERBOSE, 0);
             curl_setopt($ch, CURLOPT_HEADER, 1);
         }
 
-        //Pretty dirty, but it allows us to send custom requests
-        if (($RequestMethod == "POST" || $RequestMethod == "PUT" || $RequestMethod == "DELETE") && $RequestArgs != null)
+        // Pretty dirty, but it allows us to send custom requests
+        // Can we just change to make sure it's not GET? Or could there be issues? @Tustin 7/26/2018
+        if (($RequestMethod == "POST" || $RequestMethod == "PUT" || $RequestMethod == "DELETE" || $RequestMethod == "PATCH") && $RequestArgs != null)
             curl_setopt($ch, CURLOPT_POSTFIELDS, $RequestArgs);
         else if ($RequestArgs != null)
             $URL .= "?" . $RequestArgs;
