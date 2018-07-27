@@ -101,6 +101,14 @@ var_dump($me);
       <hr>
       <p>GetUserActivity requires one argument, which is the PSN of the user you want to view the activity for. Note that this function won't work for certain users depending on their privacy settings. This function returns a large object with multiple arrays and values that is best viewed using var_dump:</p>
       <pre>var_dump($user->GetUserActivity("foobar"));</pre>
+      <h3>UpdateBackgroundColor($Color)</h3>
+      <hr>
+      <p>UpdateBackgroundColor accepts a RGB value in string format, like 'f3f3f3'. This will change the color of your profile and this endpoint accepts any RGB values.</p>
+      <pre>$user->UpdateBackgroundColor("f3f3f3");</pre>
+      <h3>UpdateBackgroundImage($Image)</h3>
+      <hr>
+      <p>UpdateBackgroundImage accepts either a URL to an image, or the string data of an image directly. This image is then uploaded to Sony's CDN to be saved as your profile background image.</p>
+      <pre>$user->UpdateBackgroundImage("https://wallpapercave.com/wp/wp1866931.jpg");</pre>
     </div>
   </body>
   <script
