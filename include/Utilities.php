@@ -11,6 +11,7 @@ define("MESSAGE_USERS_URL",   "https://us-gmsg.np.community.playstation.net/grou
 define("TROPHY_URL",          "https://us-tpy.np.community.playstation.net/trophy/v1/");
 define("COMMUNITIES_URL",     "https://communities.api.playstation.com/v1/communities/");
 define("PROFILE_URL",         "https://profile.api.playstation.com/v1/users/");
+define("SATCHEL_URL",         "https://satchel.api.playstation.com/v1/item/generic/permanent/psapp/");
 
 class Utilities 
 {
@@ -59,7 +60,6 @@ class Utilities
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1:8888');
 
         if ($OutputHeader){
             curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -96,5 +96,12 @@ class Utilities
         curl_close($ch);
 
         return $final;
+    }
+
+    public static function CreateGuid() {
+        $data = openssl_random_pseudo_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 }
