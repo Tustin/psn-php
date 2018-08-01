@@ -72,4 +72,123 @@ class User
 
         return $data;
     }
+
+    public function UpdateBackgroundColor($Color) 
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+        
+        $body = (object)(array(
+            'ops' => 
+           array (
+             (object)(array(
+                'op' => 'replace',
+                'path' => '/color',
+                'value' => $Color,
+             )),
+           ),
+        ));
+
+        $response = \Utilities::SendRequest(PROFILE_URL . "me/profile/backgroundImage", $headers, false, null, "PATCH", json_encode($body));
+
+        $data = json_decode($response['body']);
+
+        if ($data === null) return;
+
+        // This should be a custom exception in the future. @Tustin 7/26/2018
+        throw new \Exception(sprintf('[%s]: %s', $data->code, $data->data));
+    }
+
+    public function UpdateBackgroundImage($Image) 
+    {
+        if (file_exists($Image) || filter_var($Image, FILTER_VALIDATE_URL) == true) {
+            $ImageContent = file_get_contents($Image);
+            $ImageLength  = strlen($ImageContent);
+        } else {
+            $ImageContent = $Image;
+            $ImageLength  = strlen($ImageContent);
+        }
+
+        $guid = \Utilities::CreateGuid();
+
+        $headers = array(
+            'Content-Type: multipart/form-data; boundary="RNFetchBlob-796778496"',
+            'Authorization: Bearer ' . $this->oauth,
+        );
+
+        // No idea how the numeric value after RNFetchBlob is obtained, but it seems to work with existing values.
+        // It could just be random so that may be worth trying.
+        // If anyone knows, feel free to update this. @Tustin 7/26/2018
+        $body = "\n";
+        $body .= "--RNFetchBlob-796778496\n";
+        $body .= "Content-Disposition: form-data; name=\"file\"; filename=\"" . $guid . "\"\n";
+        $body .= "Content-Type: image/jpeg\n";
+        $body .= "\n";
+        $body .= $ImageContent . "\n";
+        $body .= "--RNFetchBlob-796778496\n";
+        $body .= "Content-Disposition: form-data; name=\"mimeType\"\n";
+        $body .= "Content-Type: text/plain\n";
+        $body .= "\n";
+        $body .= "image/jpeg\n";
+        $body .= "--RNFetchBlob-796778496--";
+
+        $response = \Utilities::SendRequest(SATCHEL_URL . $guid, $headers, false, null, "POST", $body);
+
+        $data = json_decode($response['body']);
+        $sourceUrl = $data->url;
+
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+
+        $body = (object)(array(
+            'ops' => 
+           array (
+             (object)(array(
+                'op' => 'replace',
+                'path' => '/sourceUrl',
+                'value' => $sourceUrl,
+             )),
+           ),
+        ));
+
+        $response = \Utilities::SendRequest(PROFILE_URL . "me/profile/backgroundImage", $headers, false, null, "PATCH", json_encode($body));
+
+        $data = json_decode($response['body']);
+
+        if ($data === null) return;
+
+        // This should be a custom exception in the future. @Tustin 7/26/2018
+        throw new \Exception(sprintf('[%s]: %s', $data->code, $data->data));
+    }
+
+    public function RemoveBackgroundImage() 
+    {
+        $headers = array(
+            'Authorization: Bearer ' . $this->oauth,
+            'Content-Type: application/json; charset=utf-8'
+        );
+
+        $body = (object)(array(
+            'ops' => 
+           array (
+             (object)(array(
+                'op' => 'remove',
+                'path' => '/sourceUrl'
+             )),
+           ),
+        ));
+
+        $response = \Utilities::SendRequest(PROFILE_URL . "me/profile/backgroundImage", $headers, false, null, "PATCH", json_encode($body));
+
+        $data = json_decode($response['body']);
+
+        if ($data === null) return;
+
+        // This should be a custom exception in the future. @Tustin 7/26/2018
+        throw new \Exception(sprintf('[%s]: %s', $data->code, $data->data));
+    }
 }

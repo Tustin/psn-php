@@ -10,6 +10,8 @@ define("MESSAGE_THREADS_URL", "https://us-gmsg.np.community.playstation.net/grou
 define("MESSAGE_USERS_URL",   "https://us-gmsg.np.community.playstation.net/groupMessaging/v1/users/");
 define("TROPHY_URL",          "https://us-tpy.np.community.playstation.net/trophy/v1/");
 define("COMMUNITIES_URL",     "https://communities.api.playstation.com/v1/communities/");
+define("PROFILE_URL",         "https://profile.api.playstation.com/v1/users/");
+define("SATCHEL_URL",         "https://satchel.api.playstation.com/v1/item/generic/permanent/psapp/");
 
 class Utilities 
 {
@@ -64,8 +66,9 @@ class Utilities
             curl_setopt($ch, CURLOPT_HEADER, 1);
         }
 
-        //Pretty dirty, but it allows us to send custom requests
-        if (($RequestMethod == "POST" || $RequestMethod == "PUT" || $RequestMethod == "DELETE") && $RequestArgs != null)
+        // Pretty dirty, but it allows us to send custom requests
+        // Can we just change to make sure it's not GET? Or could there be issues? @Tustin 7/26/2018
+        if (($RequestMethod == "POST" || $RequestMethod == "PUT" || $RequestMethod == "DELETE" || $RequestMethod == "PATCH") && $RequestArgs != null)
             curl_setopt($ch, CURLOPT_POSTFIELDS, $RequestArgs);
         else if ($RequestArgs != null)
             $URL .= "?" . $RequestArgs;
@@ -93,5 +96,12 @@ class Utilities
         curl_close($ch);
 
         return $final;
+    }
+
+    public static function CreateGuid() {
+        $data = openssl_random_pseudo_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 }
