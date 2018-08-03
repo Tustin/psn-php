@@ -6,21 +6,54 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit553014886668ebfb5373abf55af386e1
 {
-    public static $classMap = array (
-        'PSN\\Auth' => __DIR__ . '/../..' . '/include/Auth.php',
-        'PSN\\AuthException' => __DIR__ . '/../..' . '/include/AuthException.php',
-        'PSN\\Communities' => __DIR__ . '/../..' . '/include/Communities.php',
-        'PSN\\Friend' => __DIR__ . '/../..' . '/include/Friends.php',
-        'PSN\\Messaging' => __DIR__ . '/../..' . '/include/Messaging.php',
-        'PSN\\Trophy' => __DIR__ . '/../..' . '/include/Trophies.php',
-        'PSN\\User' => __DIR__ . '/../..' . '/include/User.php',
-        'Utilities' => __DIR__ . '/../..' . '/include/Utilities.php',
+    public static $files = array (
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+    );
+
+    public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Psr\\Http\\Message\\' => 17,
+            'PlayStation\\' => 12,
+        ),
+        'G' => 
+        array (
+            'GuzzleHttp\\Psr7\\' => 16,
+            'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\' => 11,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'PlayStation\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
+        'GuzzleHttp\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GuzzleHttp\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+        ),
+        'GuzzleHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit553014886668ebfb5373abf55af386e1::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit553014886668ebfb5373abf55af386e1::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit553014886668ebfb5373abf55af386e1::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

@@ -6,12 +6,4 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'PSN\\Auth' => $baseDir . '/include/Auth.php',
-    'PSN\\AuthException' => $baseDir . '/include/AuthException.php',
-    'PSN\\Communities' => $baseDir . '/include/Communities.php',
-    'PSN\\Friend' => $baseDir . '/include/Friends.php',
-    'PSN\\Messaging' => $baseDir . '/include/Messaging.php',
-    'PSN\\Trophy' => $baseDir . '/include/Trophies.php',
-    'PSN\\User' => $baseDir . '/include/User.php',
-    'Utilities' => $baseDir . '/include/Utilities.php',
 );
