@@ -1,21 +1,10 @@
 # PSN-PHP Wrapper
 This is a very easy to use PHP wrapper for the PSN API.
 
-[![Build Status](https://travis-ci.org/Tustin/psn-php.svg?branch=master)](https://travis-ci.org/Tustin/psn-php)
+[![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
-## Usage
-Documentation for this library can be found here: [psn-php Documentation](https://tustin.github.io/psn-php/)
-
-## Features
-- Authenticate with PSN
-- Get user information
-- View and manage your friends list
-- Manage and send messages through PSN
-- View trophies and trophies for a specific game
-- Create, manage, and view communities
-
-## Requests
-For all feature requests, please [create an Issue](https://github.com/Tustin/psn-php/issues).
+## Warning
+This is a development branch that is not meant for production use. Only use this in a dev environment until the code is stable.
 
 ## Disclaimer
 This project was not intended to be used for spam, abuse, or anything of the sort. Any use of this project for those purposes is not endorsed. Please keep this in mind when creating applications using this API wrapper.
