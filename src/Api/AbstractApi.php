@@ -22,9 +22,51 @@ abstract class AbstractApi {
         return ResponseParser::parse($response);
     }
 
-    public function post(string $path, array $parameters = [], array $headers = []) 
+    public function post(string $path, $parameters, array $headers = []) 
     {
-        $response = $this->client->getHttpClient()->post($path, $parameters, $headers);
+        $response = $this->client->getHttpClient()->post($path, $parameters, false, $headers);
+
+        return ResponseParser::parse($response);
+    }
+
+    public function postJson(string $path, $parameters, array $headers = []) 
+    {
+        $response = $this->client->getHttpClient()->post($path, $parameters, true, $headers);
+
+        return ResponseParser::parse($response);
+    }
+
+    public function delete(string $path, array $headers = []) 
+    {
+        $response = $this->client->getHttpClient()->delete($path, $headers);
+
+        return ResponseParser::parse($response);
+    }
+
+    public function patch(string $path, $parameters, array $headers = [])
+    {
+        $response = $this->client->getHttpClient()->patch($path, $parameters, false, $headers);
+
+        return ResponseParser::parse($response);
+    }
+
+    public function patchJson(string $path, $parameters, array $headers = [])
+    {
+        $response = $this->client->getHttpClient()->patch($path, $parameters, true, $headers);
+
+        return ResponseParser::parse($response);
+    }
+
+    public function put(string $path, $parameters, array $headers = [])
+    {
+        $response = $this->client->getHttpClient()->put($path, $parameters, false, $headers);
+
+        return ResponseParser::parse($response);
+    }
+
+    public function putJson(string $path, $parameters, array $headers = [])
+    {
+        $response = $this->client->getHttpClient()->put($path, $parameters, true, $headers);
 
         return ResponseParser::parse($response);
     }

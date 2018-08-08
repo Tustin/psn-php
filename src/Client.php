@@ -18,6 +18,8 @@ class Client {
     private const SCOPE         = 'kamaji:get_players_met kamaji:get_account_hash kamaji:activity_feed_submit_feed_story kamaji:activity_feed_internal_feed_submit_story kamaji:activity_feed_get_news_feed kamaji:communities kamaji:game_list kamaji:ugc:distributor oauth:manage_device_usercodes psn:sceapp user:account.profile.get user:account.attributes.validate user:account.settings.privacy.get kamaji:activity_feed_set_feed_privacy kamaji:satchel kamaji:satchel_delete user:account.profile.update';
 
     private $httpClient;
+    private $onlineId;
+    private $messageThreads;
 
     public function __construct(HttpClient $httpClient = null)
     {
@@ -51,10 +53,37 @@ class Client {
         return $this->httpClient;
     }
 
+    public function getOnlineId() 
+    {
+        if ($this->onlineId === null) {
+            $response = $this->httpClient->get(sprintf(Api\User::USERS_ENDPOINT . 'profile2', 'me'), [
+                'fields' => 'onlineId'
+            ]);
+
+            $response = ResponseParser::parse($response);
+            $this->onlineId = $response->profile->onlineId;
+        }
+        return $this->onlineId;
+    }
+
+    public function getMessageThreads(int $limit = 20, int $offset = 0) 
+    {
+        if ($this->messageThreads === null) {
+            $response = $this->httpClient->get(Api\MessageThread::MESSAGE_THREAD_ENDPONT, [
+                'fields' => 'threadMembers',
+                'limit' => $limit,
+                'offset' => $offset,
+                'sinceReceivedDate' => '1970-01-01T00:00:00Z' // Don't hardcode
+            ]);
+
+            $response = ResponseParser::parse($response);
+            $this->messageThreads = $response;
+        }
+        return $this->messageThreads;
+    }
 
     public function user(string $onlineId = null) 
     {
         return new Api\User($this, $onlineId);
     }
-
 }
