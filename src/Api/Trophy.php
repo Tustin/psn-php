@@ -45,6 +45,10 @@ class Trophy extends AbstractApi
         return $this->trophy->trophyTitlePlatfrom;
     }
 
+    public function getNpCommunicationId() {
+        return $this->trophy->npCommunicationId;
+    }
+
     public function getTotalEarnedTrophies() {
         return $this->calculateTrophies(
             ($this->isCompared) ?
@@ -62,7 +66,7 @@ class Trophy extends AbstractApi
     {
         if ($this->user->getOnlineId() != null) return;
 
-        return $this->delete(sprintf(self::TROPHY_ENDPOINT . '%s/trophyTitles/%s', $this->client->getOnlineId(), $gameContentId));
+        return $this->delete(sprintf(self::TROPHY_ENDPOINT . '%s/trophyTitles/%s', $this->client->getOnlineId(), $this->getNpCommunicationId()));
     }
 
 
