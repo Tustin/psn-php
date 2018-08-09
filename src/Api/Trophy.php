@@ -10,36 +10,64 @@ class Trophy extends AbstractApi
 
     public const TROPHY_ENDPOINT    = 'https://us-tpy.np.community.playstation.net/trophy/v1/';
 
+    private $trophy;
     private $user;
 
-    public function __construct(Client $client, User $user) 
+    private $isCompared;
+
+    public function __construct(Client $client, object $trophy, User $user, bool $isCompared) 
     {
         parent::__construct($client);
 
+        $this->trophy = $trophy;
         $this->user = $user;
+        $this->isCompared = $isCompared;
     }
 
-    public function getAll(int $limit = 36) 
+    public function getInfo()
     {
-        $data = [
-            'fields' => '@default',
-            'npLanguage' => 'en',
-            'iconSize' => 'm',
-            'platform' => 'PS3,PSVITA,PS4',
-            'offset' => 0,
-            'limit' => $limit
-        ];
-
-        if ($this->user->getOnlineId() != null) {
-            $data['comparedUser'] = $this->user->getOnlineId();
-        }
-        return $this->get(self::TROPHY_ENDPOINT . 'trophyTitles', $data);
+        return $this->trophy;
     }
 
-    public function deleteTrophy(string $gameContentId) 
+    public function getName() {
+        return $this->trophy->trophyTitleName;
+    }
+
+    public function getDetail() {
+        return $this->trophy->trophyTitleDetail;
+    }
+
+    public function getIconUrl() {
+        return $this->trophy->trophyTitleIconUrl;
+    }
+
+    public function getPlatform() {
+        return $this->trophy->trophyTitlePlatfrom;
+    }
+
+    public function getTotalEarnedTrophies() {
+        return $this->calculateTrophies(
+            ($this->isCompared) ?
+            $this->trophy->comparedUser->earnedTrophies : 
+            $this->trophy->fromUser->earnedTrophies
+        );
+    }
+    
+    public function getTotalGameTrophies() {
+        return $this->calculateTrophies($this->trophy->definedTrophies);
+    }
+
+
+    public function deleteTrophySet() 
     {
         if ($this->user->getOnlineId() != null) return;
 
-        return $this->delete(sprintf(self::TROPHY_ENDPOINT . '%s/trophyTitles/%s', $this->client->getOnlineId(), $gameContentId))
+        return $this->delete(sprintf(self::TROPHY_ENDPOINT . '%s/trophyTitles/%s', $this->client->getOnlineId(), $gameContentId));
+    }
+
+
+    private function calculateTrophies(object $trophyTypes)
+    {
+        return ($trophyTypes->bronze + $trophyTypes->silver + $trophyTypes->gold + $trophyTypes->platinum);
     }
 }

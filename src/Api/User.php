@@ -64,7 +64,7 @@ class User extends AbstractApi {
         return $this->delete(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->getOnlineId(), $this->onlineId));
     }
 
-    public function getFriends($filter = 'online', $limit = 36)
+    public function getFriends($filter = 'online', $limit = 36) : array
     {
         $result = [];
 
@@ -106,13 +106,38 @@ class User extends AbstractApi {
         }
 
   
-
-        result:
         $returnMessages = [];
         foreach ($messageThreads as $thread) {
             $returnMessages[] = new MessageThread($this->client, $thread);
         }
 
         return $returnMessages;
+    }
+
+    
+    public function getTrophies(int $limit = 36) : array
+    {
+        $returnTrophies = [];
+
+        $data = [
+            'fields' => '@default',
+            'npLanguage' => 'en',
+            'iconSize' => 'm',
+            'platform' => 'PS3,PSVITA,PS4',
+            'offset' => 0,
+            'limit' => $limit
+        ];
+
+        if ($this->getOnlineId() != null) {
+            $data['comparedUser'] = $this->getOnlineId();
+        }
+
+        $trophies = $this->get(Trophy::TROPHY_ENDPOINT . 'trophyTitles', $data);
+
+        foreach ($trophies->trophyTitles as $trophy) {
+            $returnTrophies[] = new Trophy($this->client, $trophy, $this, $this->getOnlineId() != null);
+        }
+        
+        return $returnTrophies;
     }
 }
