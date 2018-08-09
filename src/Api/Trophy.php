@@ -24,32 +24,43 @@ class Trophy extends AbstractApi
         $this->isCompared = $isCompared;
     }
 
-    public function getInfo()
+    public function getInfo() : object
     {
         return $this->trophy;
     }
 
-    public function getName() {
+    public function getName() : string 
+    {
         return $this->trophy->trophyTitleName;
     }
 
-    public function getDetail() {
+    public function getDetail() : string 
+    {
         return $this->trophy->trophyTitleDetail;
     }
 
-    public function getIconUrl() {
+    public function getIconUrl() : string 
+    {
         return $this->trophy->trophyTitleIconUrl;
     }
 
-    public function getPlatform() {
+    public function getPlatform() : string 
+    {
         return $this->trophy->trophyTitlePlatfrom;
     }
 
-    public function getNpCommunicationId() {
+    public function getNpCommunicationId() : string 
+    {
         return $this->trophy->npCommunicationId;
     }
 
-    public function getTotalEarnedTrophies() {
+    public function getLastUpdateDate() : \DateTime 
+    {
+        return new \DateTime($this->trophy->lastUpdateDate);
+    }
+
+    public function getTotalEarnedTrophies() : int
+    {
         return $this->calculateTrophies(
             ($this->isCompared) ?
             $this->trophy->comparedUser->earnedTrophies : 
@@ -57,20 +68,21 @@ class Trophy extends AbstractApi
         );
     }
     
-    public function getTotalGameTrophies() {
+    public function getTotalGameTrophies() : int
+    {
         return $this->calculateTrophies($this->trophy->definedTrophies);
     }
 
 
-    public function deleteTrophySet() 
+    public function deleteTrophySet() : void
     {
         if ($this->user->getOnlineId() != null) return;
 
-        return $this->delete(sprintf(self::TROPHY_ENDPOINT . '%s/trophyTitles/%s', $this->client->getOnlineId(), $this->getNpCommunicationId()));
+        $this->delete(sprintf(self::TROPHY_ENDPOINT . '%s/trophyTitles/%s', $this->client->getOnlineId(), $this->getNpCommunicationId()));
     }
 
 
-    private function calculateTrophies(object $trophyTypes)
+    private function calculateTrophies(object $trophyTypes) : int
     {
         return ($trophyTypes->bronze + $trophyTypes->silver + $trophyTypes->gold + $trophyTypes->platinum);
     }
