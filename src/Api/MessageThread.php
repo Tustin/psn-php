@@ -23,7 +23,7 @@ class MessageThread extends AbstractApi
         return $this->delete(sprintf(self::MESSAGE_THREAD_ENDPONT . '/%s/users/me', $this->messageThread->threadId));
     }
 
-    public function getInfo()
+    public function getInfo() : object
     {
         return $this->messageThread;
     }

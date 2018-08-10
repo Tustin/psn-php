@@ -3,7 +3,10 @@
 namespace PlayStation\Api;
 
 use PlayStation\Client;
+use PlayStation\SessionType;
+
 use PlayStation\Api\Trophy;
+use PlayStation\Api\Session;
 
 class User extends AbstractApi {
 
@@ -11,6 +14,8 @@ class User extends AbstractApi {
 
     private $onlineId;
     private $onlineIdParameter;
+
+    private $_sessions = [];
 
     public function __construct(Client $client, string $onlineId = null) 
     {
@@ -81,41 +86,7 @@ class User extends AbstractApi {
         return $result;
     }
 
-    public function trophies() 
-    {
-        return new Trophy($this->client, $this);
-    }
-
-    public function getMessageThreads(int $limit = 20) : array
-    {
-        $messageThreads = [];
-        $threads = $this->client->getMessageThreads($limit);
-        
-        // If this user is the logged in account, just return all the message threads. 
-        foreach ($threads->threads as $thread) {
-            if ($this->onlineId === null) {
-                $messageThreads[] = $thread;
-                continue;
-            }
-
-            foreach ($thread->threadMembers as $member) {
-                if (strtolower($member->onlineId) === strtolower($this->onlineId)) {
-                    $messageThreads[] = $thread;
-                }
-            }
-        }
-
-  
-        $returnMessages = [];
-        foreach ($messageThreads as $thread) {
-            $returnMessages[] = new MessageThread($this->client, $thread);
-        }
-
-        return $returnMessages;
-    }
-
-    
-    public function getTrophies(int $limit = 36) : array
+    public function trophies(int $limit = 36) : array 
     {
         $returnTrophies = [];
 
@@ -139,5 +110,81 @@ class User extends AbstractApi {
         }
         
         return $returnTrophies;
+    }
+
+    public function getMessageThreads(int $limit = 20) : array
+    {
+        $messageThreads = [];
+        $threads = $this->client->getMessageThreads($limit);
+        
+        // If this user is the logged in account, just return all the message threads. 
+        foreach ($threads->threads as $thread) {
+            if ($this->onlineId === null) {
+                $messageThreads[] = $thread;
+                continue;
+            }
+
+            foreach ($thread->threadMembers as $member) {
+                if (strtolower($member->onlineId) === strtolower($this->onlineId)) {
+                    $messageThreads[] = $thread;
+                }
+            }
+        }
+
+        $returnMessages = [];
+        foreach ($messageThreads as $thread) {
+            $returnMessages[] = new MessageThread($this->client, $thread);
+        }
+
+        return $returnMessages;
+    }
+
+    public function partySession() : ?Session 
+    {
+        $sessions = $this->filterSessions(SessionType::Party);
+        
+        return $sessions[0] ?? null;
+    }
+
+    public function gameSession() : ?Session
+    {
+        $sessions = $this->filterSessions(SessionType::Game);
+        
+        return $sessions[0] ?? null;
+    }
+
+    private function filterSessions(int $type) : array
+    {
+        $sessions = $this->sessions();
+        
+        $filteredSession = array_filter($sessions, function($session) use ($type) {
+            if ($session->getTitleType() & $type) return $session;
+        });
+
+        return $filteredSession;
+    }
+
+    private function sessions() : array
+    {
+        if (!empty($_sessions)) return $_sessions;
+
+        $returnSessions = [];
+
+        $sessions = $this->get(sprintf(Session::SESSION_ENDPOINT, $this->onlineIdParameter), [
+            'fields' => '@default,npTitleDetail,npTitleDetail.platform,sessionName,sessionCreateTimestamp,availablePlatforms,members,memberCount,sessionMaxUser',
+            'titleIconSize' => 's',
+            'npLanguage' => 'en'
+        ]);
+
+        if ($sessions->size === 0) return null;
+
+        // Multiple sessions could be used if the user is in a party while playing a game.
+        foreach ($sessions->sessions as $session) {
+            $returnSessions[] = new Session($this->client, $session);
+        }
+
+        $_sessions = $returnSessions;
+
+        return $returnSessions;
     }
 }
