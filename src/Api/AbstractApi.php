@@ -22,12 +22,17 @@ abstract class AbstractApi {
 
     public function post(string $path, $parameters, array $headers = []) 
     {
-        return $this->client->getHttpClient()->post($path, $parameters, false, $headers);
+        return $this->client->getHttpClient()->post($path, $parameters, HttpClient::FORM, $headers);
     }
 
     public function postJson(string $path, $parameters, array $headers = []) 
     {
-        return $this->client->getHttpClient()->post($path, $parameters, true, $headers);
+        return $this->client->getHttpClient()->post($path, $parameters, HttpClient::JSON, $headers);
+    }
+
+    public function postMultiPart(string $path, array $parameters, array $headers = [])
+    {
+        return $this->client->getHttpClient()->post($path, $parameters, HttpClient::MULTI, $headers);
     }
 
     public function delete(string $path, array $headers = []) 

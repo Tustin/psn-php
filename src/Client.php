@@ -2,6 +2,9 @@
 
 namespace PlayStation;
 
+use PlayStation\Api\MessageThread;
+use PlayStation\Api\User;
+
 use PlayStation\Http\HttpClient;
 use PlayStation\Http\ResponseParser;
 use PlayStation\Http\TokenMiddleware;
@@ -54,7 +57,7 @@ class Client {
     public function getOnlineId() 
     {
         if ($this->onlineId === null) {
-            $response = $this->getHttpClient()->get(sprintf(Api\User::USERS_ENDPOINT . 'profile2', 'me'), [
+            $response = $this->getHttpClient()->get(sprintf(User::USERS_ENDPOINT . 'profile2', 'me'), [
                 'fields' => 'onlineId'
             ]);
 
@@ -63,10 +66,10 @@ class Client {
         return $this->onlineId;
     }
 
-    public function getMessageThreads(int $limit = 20, int $offset = 0) 
+    public function getMessageThreads(int $offset = 0, int $limit = 20) 
     {
         if ($this->messageThreads === null) {
-            $response = $this->getHttpClient()->get(Api\MessageThread::MESSAGE_THREAD_ENDPONT, [
+            $response = $this->getHttpClient()->get(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/', [
                 'fields' => 'threadMembers',
                 'limit' => $limit,
                 'offset' => $offset,

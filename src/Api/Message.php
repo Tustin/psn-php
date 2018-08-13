@@ -23,6 +23,11 @@ class Message extends AbstractApi
         return $this->client->user($this->message->sender->onlineId);
     }
 
+    public function thread() : MessageThread
+    {
+        return $this->messageThread;
+    }
+
     public function getBody() : string
     {
         return $this->message->messageDetail->body;
@@ -32,4 +37,5 @@ class Message extends AbstractApi
     {
         return new \DateTime($this->message->postDate);
     }
+
 }

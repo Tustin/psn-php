@@ -113,36 +113,63 @@ class User extends AbstractApi {
         return $returnTrophies;
     }
 
-    public function sendMessage(string $message) : MessageThread 
+    public function sendMessage(string $message) : ?Message 
     {
-        
+        $thread = $this->getMessageGroup();
+
+        if ($thread === null) return null;
+
+        return $thread->sendMessage($message);
     }
 
-    public function getMessageThreads(int $limit = 20) : array
+    public function sendImage(string $imageContents) : ?Message
     {
-        $messageThreads = [];
-        $threads = $this->client->getMessageThreads($limit);
+        $thread = $this->getMessageGroup();
         
-        // If this user is the logged in account, just return all the message threads. 
-        foreach ($threads->threads as $thread) {
-            if ($this->onlineId === null) {
-                $messageThreads[] = $thread;
-                continue;
-            }
+        if ($thread === null) return null;
 
-            foreach ($thread->threadMembers as $member) {
-                if (strtolower($member->onlineId) === strtolower($this->onlineId)) {
-                    $messageThreads[] = $thread;
-                }
+        return $thread->sendImage($imageContents);
+    }
+
+    public function sendAudio(string $audioContents, int $audioLengthSeconds) : ?Message
+    {
+        $thread = $this->getMessageGroup();
+        
+        if ($thread === null) return null;
+
+        return $thread->sendAudio($audioContents, $audioLengthSeconds);
+    }
+
+    public function getMessageThreads() : array
+    {
+        $returnThreads = [];
+
+        $threads = $this->get(MessageThread::MESSAGE_THREAD_ENDPOINT . 'users/me/threadIds', [
+            'withOnlineIds' => $this->getOnlineId()
+        ]);
+
+        if (empty($threads->threadIds)) return [];
+
+        foreach ($threads->threadIds as $thread) {
+            $returnThreads[] = new MessageThread($this->client, $thread->threadId);
+        }
+
+        return $returnThreads;
+    }
+
+    public function getPrivateMessageThread() : ?MessageThread
+    {
+        $threads = $this->getMessageThreads();
+
+        if (count($threads) === 0) return null;
+        
+        foreach ($threads as $thread) {
+            if ($thread->getMemberCount() === 2) {
+                return $thread;
             }
         }
 
-        $returnMessages = [];
-        foreach ($messageThreads as $thread) {
-            $returnMessages[] = new MessageThread($this->client, $thread);
-        }
-
-        return $returnMessages;
+        return null;
     }
 
     public function partySession() : ?Session 
@@ -158,6 +185,40 @@ class User extends AbstractApi {
         
         return $sessions[0] ?? null;
     }
+
+
+    private function getMessageGroup() 
+    {
+        if ($this->getOnlineId() === null) return null;
+
+        $thread = $this->getPrivateMessageThread();
+
+        if ($thread === null) {
+            // If we couldn't find an existing message thread, let's make one.
+            
+            $data = (object)[
+                'threadDetail' => (object)[
+                    'threadMembers' => [
+                        (object)[
+                            'onlineId' => $this->getOnlineId()
+                        ],
+                        (object)[
+                            'onlineId' => $this->client->getOnlineId()
+                        ]
+                    ]
+                ]
+            ];
+
+            $response = $this->postMultiPart(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/', 'threadDetail', json_encode($data, JSON_PRETTY_PRINT), [
+                'Content-Type' => 'application/json; charset=utf-8'
+            ]);
+
+            $thread = new MessageThread($this->client, $response->threadId);
+        }
+
+        return $thread;
+    }
+
 
     private function filterSessions(int $type) : array
     {
