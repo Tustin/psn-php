@@ -18,48 +18,38 @@ class HttpClient {
 
     public function get(string $path, array $body = [], array $headers = []) 
     {
-        try {
-            return $this->request('GET', $path, $body, false, $headers);
-        } catch (\Exception $ex) {
-        }
+        $response = $this->request('GET', $path, $body, false, $headers);
+
+        return ResponseParser::parse($response);
     }
 
     public function post(string $path, $body, bool $json = false, array $headers = []) 
     {
-        try {
-            return $this->request('POST', $path, $body, $json, $headers);
-        } catch (\Exception $ex) {
+        $response = $this->request('POST', $path, $body, $json, $headers);
 
-        }
+        return ResponseParser::parse($response);
     }
 
     public function delete(string $path, array $headers = [])
     {
-        try {
-            return $this->request('DELETE', $path, null, false, $headers);
-        } catch (\Exception $ex) {
-            
-        }
+        $response = $this->request('DELETE', $path, null, false, $headers);
+
+        return ResponseParser::parse($response);
     }
 
     public function patch(string $path, $body = null, bool $json = false, array $headers = [])
     {
-        try {
-            return $this->request('PATCH', $path, $body, $json, $headers);
-        } catch (\Exception $ex) {
-            
-        }
+        $response = $this->request('PATCH', $path, $body, $json, $headers);
+
+        return ResponseParser::parse($response);
     }
 
     public function put(string $path, $body = null, bool $json = false, array $headers = [])
     {
-        try {
-            return $this->request('PUT', $path, $body, $json, $headers);
-        } catch (\Exception $ex) {
-            
-        }
-    }
+        $response = $this->request('PUT', $path, $body, $json, $headers);
 
+        return ResponseParser::parse($response);
+    }
 
     private function request(string $method, string $path, $body = null, bool $json = false, array $headers = []) 
     {
@@ -79,7 +69,7 @@ class HttpClient {
         try {
             return $this->client->request($method, $path, $options);
         } catch (GuzzleException $e) {
-            var_dump($response->getBody()->getContents());
+            throw $e;
         } 
     }
 }

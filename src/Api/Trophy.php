@@ -73,14 +73,12 @@ class Trophy extends AbstractApi
         return $this->calculateTrophies($this->trophy->definedTrophies);
     }
 
-
     public function deleteTrophySet() : void
     {
         if ($this->user->getOnlineId() != null) return;
 
         $this->delete(sprintf(self::TROPHY_ENDPOINT . '%s/trophyTitles/%s', $this->client->getOnlineId(), $this->getNpCommunicationId()));
     }
-
 
     private function calculateTrophies(object $trophyTypes) : int
     {

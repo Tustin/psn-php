@@ -18,7 +18,7 @@ class MessageThread extends AbstractApi
         $this->messageThread = $messageThread;
     }
 
-    public function leave() 
+    public function leave()
     {
         return $this->delete(sprintf(self::MESSAGE_THREAD_ENDPONT . '/%s/users/me', $this->messageThread->threadId));
     }

@@ -17,58 +17,42 @@ abstract class AbstractApi {
 
     public function get(string $path, array $parameters = [], array $headers = []) 
     {
-        $response = $this->client->getHttpClient()->get($path, $parameters, $headers);
-
-        return ResponseParser::parse($response);
+        return $this->client->getHttpClient()->get($path, $parameters, $headers);
     }
 
     public function post(string $path, $parameters, array $headers = []) 
     {
-        $response = $this->client->getHttpClient()->post($path, $parameters, false, $headers);
-
-        return ResponseParser::parse($response);
+        return $this->client->getHttpClient()->post($path, $parameters, false, $headers);
     }
 
     public function postJson(string $path, $parameters, array $headers = []) 
     {
-        $response = $this->client->getHttpClient()->post($path, $parameters, true, $headers);
-
-        return ResponseParser::parse($response);
+        return $this->client->getHttpClient()->post($path, $parameters, true, $headers);
     }
 
     public function delete(string $path, array $headers = []) 
     {
-        $response = $this->client->getHttpClient()->delete($path, $headers);
-
-        return ResponseParser::parse($response);
+        return $this->client->getHttpClient()->delete($path, $headers);
     }
 
     public function patch(string $path, $parameters, array $headers = [])
     {
-        $response = $this->client->getHttpClient()->patch($path, $parameters, false, $headers);
-
-        return ResponseParser::parse($response);
+       return $this->client->getHttpClient()->patch($path, $parameters, false, $headers);
     }
 
     public function patchJson(string $path, $parameters, array $headers = [])
     {
-        $response = $this->client->getHttpClient()->patch($path, $parameters, true, $headers);
-
-        return ResponseParser::parse($response);
+        return $this->client->getHttpClient()->patch($path, $parameters, true, $headers);
     }
 
     public function put(string $path, $parameters, array $headers = [])
     {
-        $response = $this->client->getHttpClient()->put($path, $parameters, false, $headers);
-
-        return ResponseParser::parse($response);
+        return $this->client->getHttpClient()->put($path, $parameters, false, $headers);
     }
 
     public function putJson(string $path, $parameters, array $headers = [])
     {
-        $response = $this->client->getHttpClient()->put($path, $parameters, true, $headers);
-
-        return ResponseParser::parse($response);
+        return $this->client->getHttpClient()->put($path, $parameters, true, $headers);       
     }
 
 }

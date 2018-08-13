@@ -6,9 +6,12 @@ use GuzzleHttp\Psr7\Response;
 
 class ResponseParser {
 
-    public static function parse(Response $response) : object 
+    public static function parse(Response $response) 
     {
-        return json_decode($response->getBody()->getContents());
-    }
+        $contents = $response->getBody()->getContents();
+        
+        $data = json_decode($contents);
 
+        return (json_last_error() === JSON_ERROR_NONE) ? $data : $contents;
+    }
 }

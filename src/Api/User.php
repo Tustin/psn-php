@@ -7,6 +7,7 @@ use PlayStation\SessionType;
 
 use PlayStation\Api\Trophy;
 use PlayStation\Api\Session;
+use PlayStation\Api\MessageThread;
 
 class User extends AbstractApi {
 
@@ -62,7 +63,7 @@ class User extends AbstractApi {
         return $this->post(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->getOnlineId(), $this->onlineId), null);
     }
 
-    public function unblock() 
+    public function unblock()
     {
         if ($this->onlineId === null) return;
 
@@ -110,6 +111,11 @@ class User extends AbstractApi {
         }
         
         return $returnTrophies;
+    }
+
+    public function sendMessage(string $message) : MessageThread 
+    {
+        
     }
 
     public function getMessageThreads(int $limit = 20) : array
