@@ -26,19 +26,35 @@ class User extends AbstractApi {
         $this->onlineIdParameter = $this->onlineId ?? "me";
     }
 
-    public function getInfo() 
+    /**
+     * Gets user's profile information.
+     *
+     * @return object
+     */
+    public function getInfo() : object
     {
         return $this->get(sprintf(self::USERS_ENDPOINT . 'profile2', $this->onlineIdParameter), [
             'fields' => 'npId,onlineId,accountId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s'
         ]);
     }
 
-    public function getOnlineId() 
+    /**
+     * Get user's onlineId
+     *
+     * @return void
+     */
+    public function getOnlineId() : string
     {
         return $this->onlineId;
     }
     
-    public function add(string $requestMessage = null)
+    /**
+     * Add the user to friends list.
+     *
+     * @param string $requestMessage Message to send with the request.
+     * @return void
+     */
+    public function add(string $requestMessage = null) : void
     {
         if ($this->onlineId === null) return;
 
@@ -46,31 +62,53 @@ class User extends AbstractApi {
             "requestMessage" => $requestMessage
         ];
 
-        return $this->postJson(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->getOnlineId(), $this->onlineId), $data);
+        $this->postJson(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->getOnlineId(), $this->onlineId), $data);
     }
 
-    public function remove() 
+    /**
+     * Remove the user from friends list.
+     *
+     * @return void
+     */
+    public function remove() : void
     {
         if ($this->onlineId === null) return;
 
-        return $this->delete(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->getOnlineId(), $this->onlineId));
+        $this->delete(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->getOnlineId(), $this->onlineId));
     }
 
-    public function block()
+    /**
+     * Block the user.
+     *
+     * @return void
+     */
+    public function block() : void
     {
         if ($this->onlineId === null) return;
 
-        return $this->post(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->getOnlineId(), $this->onlineId), null);
+        $this->post(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->getOnlineId(), $this->onlineId), null);
     }
 
-    public function unblock()
+    /**
+     * Unblock the user.
+     *
+     * @return void
+     */
+    public function unblock() : void
     {
         if ($this->onlineId === null) return;
 
-        return $this->delete(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->getOnlineId(), $this->onlineId));
+        $this->delete(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->getOnlineId(), $this->onlineId));
     }
 
-    public function getFriends($filter = 'online', $limit = 36) : array
+    /**
+     * Get the user's friends.
+     *
+     * @param string $filter Online Filter.
+     * @param integer $limit How many users to return.
+     * @return array Array of Api\User.
+     */
+    public function friends($filter = 'online', $limit = 36) : array
     {
         $result = [];
 
@@ -87,6 +125,12 @@ class User extends AbstractApi {
         return $result;
     }
 
+    /**
+     * Get the user's trophies.
+     *
+     * @param integer $limit How many trophies to return.
+     * @return array Array of Api\Trophy.
+     */
     public function trophies(int $limit = 36) : array 
     {
         $returnTrophies = [];
@@ -113,6 +157,12 @@ class User extends AbstractApi {
         return $returnTrophies;
     }
 
+    /**
+     * Send a message to the user.
+     *
+     * @param string $message Message to send.
+     * @return Message|null
+     */
     public function sendMessage(string $message) : ?Message 
     {
         $thread = $this->getMessageGroup();
@@ -122,6 +172,12 @@ class User extends AbstractApi {
         return $thread->sendMessage($message);
     }
 
+    /**
+     * Send an image message to the user.
+     *
+     * @param string $imageContents Raw bytes of the image.
+     * @return Message|null
+     */
     public function sendImage(string $imageContents) : ?Message
     {
         $thread = $this->getMessageGroup();
@@ -131,6 +187,13 @@ class User extends AbstractApi {
         return $thread->sendImage($imageContents);
     }
 
+    /**
+     * Send an audio message to the user.
+     *
+     * @param string $audioContents Raw bytes of the audio.
+     * @param integer $audioLengthSeconds Length of audio file (in seconds).
+     * @return Message|null
+     */
     public function sendAudio(string $audioContents, int $audioLengthSeconds) : ?Message
     {
         $thread = $this->getMessageGroup();
@@ -140,6 +203,11 @@ class User extends AbstractApi {
         return $thread->sendAudio($audioContents, $audioLengthSeconds);
     }
 
+    /**
+     * Get all message threads with the user.
+     *
+     * @return array Array of Api\MessageThread.
+     */
     public function getMessageThreads() : array
     {
         $returnThreads = [];
@@ -157,6 +225,11 @@ class User extends AbstractApi {
         return $returnThreads;
     }
 
+    /**
+     * Get MessageThread with just the logged in account and the current user.
+     *
+     * @return MessageThread|null
+     */
     public function getPrivateMessageThread() : ?MessageThread
     {
         $threads = $this->getMessageThreads();
@@ -172,6 +245,11 @@ class User extends AbstractApi {
         return null;
     }
 
+    /**
+     * Get user's party session.
+     *
+     * @return Session|null
+     */
     public function partySession() : ?Session 
     {
         $sessions = $this->filterSessions(SessionType::Party);
@@ -179,6 +257,11 @@ class User extends AbstractApi {
         return $sessions[0] ?? null;
     }
 
+    /**
+     * Get user's game session.
+     *
+     * @return Session|null
+     */
     public function gameSession() : ?Session
     {
         $sessions = $this->filterSessions(SessionType::Game);
@@ -186,8 +269,12 @@ class User extends AbstractApi {
         return $sessions[0] ?? null;
     }
 
-
-    private function getMessageGroup() 
+    /**
+     * Gets (or creates) the message group with just the logged in account and the current user.
+     *
+     * @return MessageThread
+     */
+    private function getMessageGroup() : MessageThread
     {
         if ($this->getOnlineId() === null) return null;
 
@@ -219,7 +306,12 @@ class User extends AbstractApi {
         return $thread;
     }
 
-
+    /**
+     * Filter user's sessions by SessionType flag.
+     *
+     * @param integer $type SessionType flag.
+     * @return array Array of Api\Session.
+     */
     private function filterSessions(int $type) : array
     {
         $sessions = $this->sessions();
@@ -231,6 +323,11 @@ class User extends AbstractApi {
         return $filteredSession;
     }
 
+    /**
+     * Gets all the user's active sessions.
+     *
+     * @return array Array of Api\Session.
+     */
     private function sessions() : array
     {
         if (!empty($_sessions)) return $_sessions;

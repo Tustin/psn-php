@@ -28,7 +28,14 @@ class Client {
     {
         $this->httpClient = $httpClient ?? new HttpClient();
     }
-
+    
+    /**
+     * Login to PlayStation network using a refresh token or 2FA.
+     *
+     * @param string $ticketUuidOrRefreshToken Ticket UUID for 2FA, or the refresh token.
+     * @param string $code 2FA code sent to your device (ignore if using refresh token).
+     * @return void
+     */
     public function login(string $ticketUuidOrRefreshToken, string $code = null) 
     {
         if ($code === null) {
@@ -49,12 +56,23 @@ class Client {
         }
     }
 
-    public function getHttpClient() 
+
+    /**
+     * Gets the HttpClient.
+     *
+     * @return HttpClient
+     */
+    public function getHttpClient() : HttpClient
     {
         return $this->httpClient;
     }
 
-    public function getOnlineId() 
+    /**
+     * Gets the logged in user's onlineId.
+     *
+     * @return string
+     */
+    public function getOnlineId() : string
     {
         if ($this->onlineId === null) {
             $response = $this->getHttpClient()->get(sprintf(User::USERS_ENDPOINT . 'profile2', 'me'), [
@@ -66,7 +84,14 @@ class Client {
         return $this->onlineId;
     }
 
-    public function getMessageThreads(int $offset = 0, int $limit = 20) 
+    /**
+     * Gets all the logged in user's message threads
+     *
+     * @param integer $offset Where to start.
+     * @param integer $limit Amount of threads.
+     * @return object
+     */
+    public function getMessageThreads(int $offset = 0, int $limit = 20) : object
     {
         if ($this->messageThreads === null) {
             $response = $this->getHttpClient()->get(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/', [
@@ -81,6 +106,12 @@ class Client {
         return $this->messageThreads;
     }
 
+    /**
+     * Creates a new User object.
+     *
+     * @param string $onlineId The user's onlineId (null to get current user's account).
+     * @return void
+     */
     public function user(string $onlineId = null) 
     {
         return new Api\User($this, $onlineId);

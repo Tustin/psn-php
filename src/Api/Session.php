@@ -20,36 +20,71 @@ class Session extends AbstractApi
         $this->session = $session;
     }
 
-    public function getInfo() : array
+    /**
+     * Get Session information.
+     *
+     * @return object
+     */
+    public function getInfo() : object
     {
         return $this->session;
     }
-
+    
+    /**
+     * Get platform the Session is on.
+     *
+     * @return string
+     */
     public function getPlatform() : string 
     {
         return $this->session->platform;
     }
 
+    /**
+     * Get the ID of the Session.
+     *
+     * @return string
+     */
     public function getSessionId() : string 
     {
         return $this->session->sessionId;
     }
 
+    /**
+     * Get the name of the Session.
+     *
+     * @return string
+     */
     public function getSessionName() : string 
     {
         return $this->session->sessionName;
     }
 
+    /**
+     * Get maximum amount of users allowed in the Session.
+     *
+     * @return integer
+     */
     public function getMaxUsers() : int
     {
         return $this->session->sessionMaxUser;
     }
 
+    /**
+     * Get DateTime of when the Session was created.
+     *
+     * @return \DateTime
+     */
     public function getCreationDate() : \DateTime 
     {
         return new \DateTime($this->session->sessionCreateTimestamp);
     }
 
+    /**
+     * Get name of the game the Session is for.
+     *
+     * @return string|null
+     */
     public function getGameName() : ?string
     {
         if ($this->getTitleType() & SessionType::Unknown) return null; 
@@ -57,6 +92,11 @@ class Session extends AbstractApi
         return $this->session->npTitleDetail->npTitleName;
     }
 
+    /**
+     * Get title ID of the game the Session is for.
+     *
+     * @return string|null
+     */
     public function getGameTitleId() : ?string
     {
         if ($this->getTitleType() & SessionType::Unknown) return null; 
@@ -64,6 +104,11 @@ class Session extends AbstractApi
         return $this->session->npTitleDetail->npTitleId;
     }
 
+    /**
+     * Get icon URL of the game the Session is for.
+     *
+     * @return string|null
+     */
     public function getGameIconUrl() : ?string
     {
         if ($this->getTitleType() & SessionType::Unknown) return null; 
@@ -71,6 +116,11 @@ class Session extends AbstractApi
         return $this->session->npTitleDetail->npTitleIconUrl;
     }
 
+    /**
+     * Get Users in the Session.
+     *
+     * @return array|null Array of Api\User.
+     */
     public function members() : ?array
     {
         $members = [];
@@ -84,6 +134,11 @@ class Session extends AbstractApi
         return $members;
     }
 
+    /**
+     * Get SessionType of Session.
+     *
+     * @return integer SessionType flag.
+     */
     public function getTitleType() : int
     {
         if (!isset($this->session->npTitleDetail)) return SessionType::Unknown;

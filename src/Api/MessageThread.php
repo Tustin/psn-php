@@ -25,11 +25,21 @@ class MessageThread extends AbstractApi
         }
     }
 
-    public function leave()
+    /**
+     * Leave the MessageThread.
+     *
+     * @return void
+     */
+    public function leave() : void
     {
-        return $this->delete(sprintf(self::MESSAGE_THREAD_ENDPOINT . 'threads/%s/users/me', $this->messageThreadId));
+        $this->delete(sprintf(self::MESSAGE_THREAD_ENDPOINT . 'threads/%s/users/me', $this->messageThreadId));
     }
 
+    /**
+     * Get members in the MessageThread.
+     *
+     * @return array Array of Api\User.
+     */
     public function members() : array
     {
         $members = [];
@@ -43,6 +53,13 @@ class MessageThread extends AbstractApi
         return $members;
     }
 
+    /**
+     * Get the MessageThread info.
+     *
+     * @param integer $count Amount of messages to return.
+     * @param boolean $force Force an update.
+     * @return object
+     */
     public function getInfo(int $count = 1, bool $force = false) : object
     {
         if ($this->messageThread === null || $force) {
@@ -55,7 +72,13 @@ class MessageThread extends AbstractApi
         return $this->messageThread;
     }
 
-    public function setName(string $name) 
+    /**
+     * Set the name of the MessageThread.
+     *
+     * @param string $name Name of the MessageThread.
+     * @return void
+     */
+    public function setName(string $name) : void
     {
         $data = (object)[
             'threadNameDetail' => (object)[
@@ -66,6 +89,11 @@ class MessageThread extends AbstractApi
         $this->putJson(sprintf(self::MESSAGE_THREAD_ENDPOINT . 'threads/%s/name', $this->messageThreadId), $data);
     }
 
+    /**
+     * Favorite the MessageThread.
+     *
+     * @return void
+     */
     public function favorite() : void
     {
         $data = (object)[
@@ -77,6 +105,11 @@ class MessageThread extends AbstractApi
         $this->putJson(sprintf(self::MESSAGE_THREAD_ENDPOINT . 'users/me/threads/%s/favorites', $this->messageThreadId), $data);
     }
 
+    /**
+     * Unfavorite the MessageThread.
+     *
+     * @return void
+     */
     public function unfavorite() : void
     {
         $data = (object)[
@@ -88,16 +121,32 @@ class MessageThread extends AbstractApi
         $this->putJson(sprintf(self::MESSAGE_THREAD_ENDPOINT . 'users/me/threads/%s/favorites', $this->messageThreadId), $data);
     }
 
+    /**
+     * Get the amount of members.
+     *
+     * @return integer
+     */
     public function getMemberCount() : int 
     {
         return count($this->getInfo()->threadMembers);
     }
 
+    /**
+     * Get the MessageThread name.
+     *
+     * @return string
+     */
     public function getThreadName() : string
     {
         return $this->getInfo()->threadNameDetail->threadName;
     }
 
+    /**
+     * Send a text message.
+     *
+     * @param string $message The message to send.
+     * @return Message|null
+     */
     public function sendMessage(string $message) : ?Message 
     {
         $data = (object)[
@@ -130,6 +179,12 @@ class MessageThread extends AbstractApi
         return new Message($this->client, $messageData->messageEventDetail, $this);
     }
 
+    /**
+     * Send an image message.
+     *
+     * @param string $imageContents Raw bytes of the image.
+     * @return Message|null
+     */
     public function sendImage(string $imageContents) : ?Message
     {
         $data = (object)[
@@ -171,6 +226,13 @@ class MessageThread extends AbstractApi
         return new Message($this->client, $messageData->messageEventDetail, $this);
     }
 
+    /**
+     * Send an audio message.
+     *
+     * @param string $audioContents Raw bytes of the audio.
+     * @param integer $audioLengthSeconds Length of the audio in seconds.
+     * @return Message|null
+     */
     public function sendAudio(string $audioContents, int $audioLengthSeconds) : ?Message
     {
         $data = (object)[
@@ -215,6 +277,12 @@ class MessageThread extends AbstractApi
         return new Message($this->client, $messageData->messageEventDetail, $this);
     }
 
+    /**
+     * Get all the messages.
+     *
+     * @param integer $count Amount of messages to send.
+     * @return array Array of Api\Message.
+     */
     public function getMessages(int $count = 200) : array
     {
         $messages = [];
