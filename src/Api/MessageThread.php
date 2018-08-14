@@ -44,9 +44,9 @@ class MessageThread extends AbstractApi
     {
         $members = [];
 
-        if (!isset($this->getInfo()->threadMembers) || $this->getInfo()->threadMembers <= 0) return null;
+        if (!isset($this->info()->threadMembers) || $this->info()->threadMembers <= 0) return null;
 
-        foreach ($this->getInfo()->threadMembers as $member) {
+        foreach ($this->info()->threadMembers as $member) {
             $members[] = new User($this->client, $member->onlineId);
         }
 
@@ -60,7 +60,7 @@ class MessageThread extends AbstractApi
      * @param boolean $force Force an update.
      * @return object
      */
-    public function getInfo(int $count = 1, bool $force = false) : object
+    public function info(int $count = 1, bool $force = false) : object
     {
         if ($this->messageThread === null || $force) {
             $this->messageThread = $this->get(sprintf(self::MESSAGE_THREAD_ENDPOINT . 'threads/%s', $this->messageThreadId), [
@@ -126,9 +126,9 @@ class MessageThread extends AbstractApi
      *
      * @return integer
      */
-    public function getMemberCount() : int 
+    public function memberCount() : int 
     {
-        return count($this->getInfo()->threadMembers);
+        return count($this->info()->threadMembers);
     }
 
     /**
@@ -136,9 +136,9 @@ class MessageThread extends AbstractApi
      *
      * @return string
      */
-    public function getThreadName() : string
+    public function threadName() : string
     {
-        return $this->getInfo()->threadNameDetail->threadName;
+        return $this->info()->threadNameDetail->threadName;
     }
 
     /**
@@ -170,7 +170,7 @@ class MessageThread extends AbstractApi
 
         $response = $this->postMultiPart(sprintf(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/%s/messages', $this->messageThreadId), $parameters);
 
-        $messageFields = $this->getInfo(1, true);
+        $messageFields = $this->info(1, true);
 
         if (!isset($messageFields->threadEvents)) return null;
 
@@ -217,7 +217,7 @@ class MessageThread extends AbstractApi
 
         $response = $this->postMultiPart(sprintf(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/%s/messages', $this->messageThreadId), $parameters);
 
-        $messageFields = $this->getInfo(1, true);
+        $messageFields = $this->info(1, true);
 
         if (!isset($messageFields->threadEvents)) return null;
 
@@ -268,7 +268,7 @@ class MessageThread extends AbstractApi
 
         $response = $this->postMultiPart(sprintf(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/%s/messages', $this->messageThreadId), $parameters);
 
-        $messageFields = $this->getInfo(1, true);
+        $messageFields = $this->info(1, true);
 
         if (!isset($messageFields->threadEvents)) return null;
 
@@ -283,11 +283,11 @@ class MessageThread extends AbstractApi
      * @param integer $count Amount of messages to send.
      * @return array Array of Api\Message.
      */
-    public function getMessages(int $count = 200) : array
+    public function messages(int $count = 200) : array
     {
         $messages = [];
 
-        $messageFields = $this->getInfo($count, true);
+        $messageFields = $this->info($count, true);
 
         foreach ($messageFields->threadEvents as $message) {
             $messages[] = new Message($this->client, $message->messageEventDetail, $this);

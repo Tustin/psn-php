@@ -43,7 +43,7 @@ class Message extends AbstractApi
      *
      * @return string
      */
-    public function getBody() : string
+    public function body() : string
     {
         return $this->message->messageDetail->body;
     }
@@ -53,7 +53,7 @@ class Message extends AbstractApi
      *
      * @return \DateTime
      */
-    public function getDate() : \DateTime
+    public function sendDate() : \DateTime
     {
         return new \DateTime($this->message->postDate);
     }

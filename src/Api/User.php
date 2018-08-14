@@ -8,10 +8,11 @@ use PlayStation\SessionType;
 use PlayStation\Api\Trophy;
 use PlayStation\Api\Session;
 use PlayStation\Api\MessageThread;
+use PlayStation\Api\Game;
 
 class User extends AbstractApi {
 
-    public const USERS_ENDPOINT = 'https://us-prof.np.community.playstation.net/userProfile/v1/users/%s/';
+    const USERS_ENDPOINT = 'https://us-prof.np.community.playstation.net/userProfile/v1/users/%s/';
 
     private $onlineId;
     private $onlineIdParameter;
@@ -31,7 +32,7 @@ class User extends AbstractApi {
      *
      * @return object
      */
-    public function getInfo() : object
+    public function info() : object
     {
         return $this->get(sprintf(self::USERS_ENDPOINT . 'profile2', $this->onlineIdParameter), [
             'fields' => 'npId,onlineId,accountId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s'
@@ -43,7 +44,7 @@ class User extends AbstractApi {
      *
      * @return void
      */
-    public function getOnlineId() : string
+    public function onlineId() : string
     {
         return $this->onlineId;
     }
@@ -56,13 +57,13 @@ class User extends AbstractApi {
      */
     public function add(string $requestMessage = null) : void
     {
-        if ($this->onlineId === null) return;
+        if ($this->onlineId() === null) return;
 
         $data = ($requestMessage === null) ? new \stdClass() : [
             "requestMessage" => $requestMessage
         ];
 
-        $this->postJson(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->getOnlineId(), $this->onlineId), $data);
+        $this->postJson(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->onlineId(), $this->onlineId), $data);
     }
 
     /**
@@ -72,9 +73,9 @@ class User extends AbstractApi {
      */
     public function remove() : void
     {
-        if ($this->onlineId === null) return;
+        if ($this->onlineId() === null) return;
 
-        $this->delete(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->getOnlineId(), $this->onlineId));
+        $this->delete(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->onlineId(), $this->onlineId));
     }
 
     /**
@@ -84,9 +85,9 @@ class User extends AbstractApi {
      */
     public function block() : void
     {
-        if ($this->onlineId === null) return;
+        if ($this->onlineId() === null) return;
 
-        $this->post(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->getOnlineId(), $this->onlineId), null);
+        $this->post(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->onlineId(), $this->onlineId), null);
     }
 
     /**
@@ -96,9 +97,9 @@ class User extends AbstractApi {
      */
     public function unblock() : void
     {
-        if ($this->onlineId === null) return;
+        if ($this->onlineId() === null) return;
 
-        $this->delete(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->getOnlineId(), $this->onlineId));
+        $this->delete(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->onlineId(), $this->onlineId));
     }
 
     /**
@@ -144,17 +145,44 @@ class User extends AbstractApi {
             'limit' => $limit
         ];
 
-        if ($this->getOnlineId() != null) {
-            $data['comparedUser'] = $this->getOnlineId();
+        if ($this->onlineId() != null) {
+            $data['comparedUser'] = $this->onlineId();
         }
 
         $trophies = $this->get(Trophy::TROPHY_ENDPOINT . 'trophyTitles', $data);
 
         foreach ($trophies->trophyTitles as $trophy) {
-            $returnTrophies[] = new Trophy($this->client, $trophy, $this, $this->getOnlineId() != null);
+            $returnTrophies[] = new Trophy($this->client, $trophy, $this, $this->onlineId() != null);
         }
         
         return $returnTrophies;
+    }
+
+    /**
+     * Gets the user's games played.
+     *
+     * @return array Array of Api\Game.
+     */
+    public function games($limit = 100) : array
+    {
+        $returnGames = [];
+
+        $games = $this->get(sprintf(Game::GAME_ENDPOINT . 'users/%s/titles', $this->onlineIdParameter), [
+            'type'  => 'played',
+            'app'   => 'richProfile', // ??
+            'sort'  => '-lastPlayedDate',
+            'limit' => $limit,
+            'iw'    => 240, // Size of game image width
+            'ih'    => 240  // Size of game image height
+        ]);
+
+        if ($games->size === 0) return $returnGames;
+
+        foreach ($games->titles as $game) {
+            $returnGames[] = new Game($this->client, $game->titleId);
+        }
+
+        return $returnGames;
     }
 
     /**
@@ -165,7 +193,7 @@ class User extends AbstractApi {
      */
     public function sendMessage(string $message) : ?Message 
     {
-        $thread = $this->getMessageGroup();
+        $thread = $this->messageGroup();
 
         if ($thread === null) return null;
 
@@ -180,7 +208,7 @@ class User extends AbstractApi {
      */
     public function sendImage(string $imageContents) : ?Message
     {
-        $thread = $this->getMessageGroup();
+        $thread = $this->messageGroup();
         
         if ($thread === null) return null;
 
@@ -196,7 +224,7 @@ class User extends AbstractApi {
      */
     public function sendAudio(string $audioContents, int $audioLengthSeconds) : ?Message
     {
-        $thread = $this->getMessageGroup();
+        $thread = $this->messageGroup();
         
         if ($thread === null) return null;
 
@@ -208,12 +236,12 @@ class User extends AbstractApi {
      *
      * @return array Array of Api\MessageThread.
      */
-    public function getMessageThreads() : array
+    public function messageThreads() : array
     {
         $returnThreads = [];
 
         $threads = $this->get(MessageThread::MESSAGE_THREAD_ENDPOINT . 'users/me/threadIds', [
-            'withOnlineIds' => $this->getOnlineId()
+            'withOnlineIds' => $this->onlineId()
         ]);
 
         if (empty($threads->threadIds)) return [];
@@ -230,9 +258,9 @@ class User extends AbstractApi {
      *
      * @return MessageThread|null
      */
-    public function getPrivateMessageThread() : ?MessageThread
+    public function privateMessageThread() : ?MessageThread
     {
-        $threads = $this->getMessageThreads();
+        $threads = $this->messageThreads();
 
         if (count($threads) === 0) return null;
         
@@ -274,11 +302,11 @@ class User extends AbstractApi {
      *
      * @return MessageThread
      */
-    private function getMessageGroup() : MessageThread
+    private function messageGroup() : MessageThread
     {
-        if ($this->getOnlineId() === null) return null;
+        if ($this->onlineId() === null) return null;
 
-        $thread = $this->getPrivateMessageThread();
+        $thread = $this->privateMessageThread();
 
         if ($thread === null) {
             // If we couldn't find an existing message thread, let's make one.
@@ -287,10 +315,10 @@ class User extends AbstractApi {
                 'threadDetail' => (object)[
                     'threadMembers' => [
                         (object)[
-                            'onlineId' => $this->getOnlineId()
+                            'onlineId' => $this->onlineId()
                         ],
                         (object)[
-                            'onlineId' => $this->client->getOnlineId()
+                            'onlineId' => $this->client->onlineId()
                         ]
                     ]
                 ]

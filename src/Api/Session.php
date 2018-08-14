@@ -25,7 +25,7 @@ class Session extends AbstractApi
      *
      * @return object
      */
-    public function getInfo() : object
+    public function info() : object
     {
         return $this->session;
     }
@@ -35,7 +35,7 @@ class Session extends AbstractApi
      *
      * @return string
      */
-    public function getPlatform() : string 
+    public function platform() : string 
     {
         return $this->session->platform;
     }
@@ -45,7 +45,7 @@ class Session extends AbstractApi
      *
      * @return string
      */
-    public function getSessionId() : string 
+    public function id() : string 
     {
         return $this->session->sessionId;
     }
@@ -55,7 +55,7 @@ class Session extends AbstractApi
      *
      * @return string
      */
-    public function getSessionName() : string 
+    public function name() : string 
     {
         return $this->session->sessionName;
     }
@@ -65,7 +65,7 @@ class Session extends AbstractApi
      *
      * @return integer
      */
-    public function getMaxUsers() : int
+    public function maxUsers() : int
     {
         return $this->session->sessionMaxUser;
     }
@@ -75,7 +75,7 @@ class Session extends AbstractApi
      *
      * @return \DateTime
      */
-    public function getCreationDate() : \DateTime 
+    public function creationDate() : \DateTime 
     {
         return new \DateTime($this->session->sessionCreateTimestamp);
     }
@@ -85,9 +85,9 @@ class Session extends AbstractApi
      *
      * @return string|null
      */
-    public function getGameName() : ?string
+    public function gameName() : ?string
     {
-        if ($this->getTitleType() & SessionType::Unknown) return null; 
+        if ($this->titleType() & SessionType::Unknown) return null; 
 
         return $this->session->npTitleDetail->npTitleName;
     }
@@ -97,9 +97,9 @@ class Session extends AbstractApi
      *
      * @return string|null
      */
-    public function getGameTitleId() : ?string
+    public function gameTitleId() : ?string
     {
-        if ($this->getTitleType() & SessionType::Unknown) return null; 
+        if ($this->titleType() & SessionType::Unknown) return null; 
 
         return $this->session->npTitleDetail->npTitleId;
     }
@@ -109,9 +109,9 @@ class Session extends AbstractApi
      *
      * @return string|null
      */
-    public function getGameIconUrl() : ?string
+    public function gameIconUrl() : ?string
     {
-        if ($this->getTitleType() & SessionType::Unknown) return null; 
+        if ($this->titleType() & SessionType::Unknown) return null; 
 
         return $this->session->npTitleDetail->npTitleIconUrl;
     }
@@ -139,7 +139,7 @@ class Session extends AbstractApi
      *
      * @return integer SessionType flag.
      */
-    public function getTitleType() : int
+    public function titleType() : int
     {
         if (!isset($this->session->npTitleDetail)) return SessionType::Unknown;
 

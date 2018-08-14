@@ -11,133 +11,54 @@ class Trophy extends AbstractApi
     public const TROPHY_ENDPOINT    = 'https://us-tpy.np.community.playstation.net/trophy/v1/';
 
     private $trophy;
-    private $user;
+    private $trophyGroup;
 
-    private $isCompared;
-
-    public function __construct(Client $client, object $trophy, User $user, bool $isCompared) 
+    public function __construct(Client $client, object $trophy, TrophyGroup $trophyGroup) 
     {
         parent::__construct($client);
-
+        
         $this->trophy = $trophy;
-        $this->user = $user;
-        $this->isCompared = $isCompared;
+        $this->trophyGroup = $trophyGroup;        
     }
 
-    /**
-     * Get the Trophy information.
-     *
-     * @return object
-     */
-    public function getInfo() : object
+    public function id() : int 
     {
-        return $this->trophy;
+        return $this->trophy->trophyId;
     }
 
-    /**
-     * Get the Trophy name.
-     *
-     * @return string
-     */
-    public function getName() : string 
+    public function hidden() : bool 
     {
-        return $this->trophy->trophyTitleName;
+        return $this->trophy->trophyHidden;
     }
 
-    /**
-     * Get the Trophy detail.
-     *
-     * @return string
-     */
-    public function getDetail() : string 
+    public function type() : string
     {
-        return $this->trophy->trophyTitleDetail;
+        return $this->trophy->trophyType;
     }
 
-    /**
-     * Get the Trophy icon URL.
-     *
-     * @return string
-     */
-    public function getIconUrl() : string 
+    public function name() : string
     {
-        return $this->trophy->trophyTitleIconUrl;
+        return $this->trophy->trophyName;
     }
 
-    /**
-     * Get the Trophy platform (PS4, PSVita, PS3)
-     *
-     * @return string
-     */
-    public function getPlatform() : string 
+    public function detail() : string
     {
-        return $this->trophy->trophyTitlePlatfrom;
+        return $this->trophy->trophyDetail;
     }
 
-    /**
-     * Get the NP Communication ID for the Trophy (ex: XXXXYYYYY_ZZ)
-     *
-     * @return string
-     */
-    public function getNpCommunicationId() : string 
+    public function iconUrl() : string
     {
-        return $this->trophy->npCommunicationId;
+        return $this->trophy->trophyIconUrl;
     }
 
-    /**
-     * Get last Trophy earned DateTIme.
-     *
-     * @return \DateTime
-     */
-    public function getLastUpdateDate() : \DateTime 
+    public function earnedRate() : float
     {
-        return new \DateTime($this->trophy->lastUpdateDate);
+        return floatval($this->trophy->trophyEarnedRate);
     }
 
-    /**
-     * Get total amount of Trophies earned for this Trophy.
-     *
-     * @return integer
-     */
-    public function getTotalEarnedTrophies() : int
+    public function trophyGroup() : TrophyGroup
     {
-        return $this->calculateTrophies(
-            ($this->isCompared) ?
-            $this->trophy->comparedUser->earnedTrophies : 
-            $this->trophy->fromUser->earnedTrophies
-        );
-    }
-    
-    /**
-     * Get amount of Trophies the current Trophy set has.
-     *
-     * @return integer
-     */
-    public function getTotalGameTrophies() : int
-    {
-        return $this->calculateTrophies($this->trophy->definedTrophies);
+        return $this->trophyGroup;
     }
 
-    /**
-     * Delete the current Trophy set.
-     *
-     * @return void
-     */
-    public function deleteTrophySet() : void
-    {
-        if ($this->user->getOnlineId() != null) return;
-
-        $this->delete(sprintf(self::TROPHY_ENDPOINT . '%s/trophyTitles/%s', $this->client->getOnlineId(), $this->getNpCommunicationId()));
-    }
-
-    /**
-     * Calculate all the types of Trophies.
-     *
-     * @param object $trophyTypes Trophy type information.
-     * @return integer
-     */
-    private function calculateTrophies(object $trophyTypes) : int
-    {
-        return ($trophyTypes->bronze + $trophyTypes->silver + $trophyTypes->gold + $trophyTypes->platinum);
-    }
 }
