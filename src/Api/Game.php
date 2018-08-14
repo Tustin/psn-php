@@ -13,42 +13,69 @@ class Game extends AbstractApi
     const GAME_ENDPOINT = 'https://gamelist.api.playstation.com/v1/';
 
     private $titleId;
+    private $npCommunicationId;
     private $game;
+    private $user;
 
     /**
      * New instance of Api\Game.
      *
      * @param Client $client 
-     * @param string|object $titleIdOrObject Title ID as a string or an object of title information.
+     * @param string $titleId
      */
-    public function __construct(Client $client, string $titleId)
+    public function __construct(Client $client, string $titleId, User $user = null)
     {
         parent::__construct($client);
 
         $this->titleId = $titleId;
+        $this->user = $user;
     }
 
     public function titleId() : string
     {
-        return $this->info()->titleId;
+        return $this->titleId;
     }
 
     public function name() : string
     {
-        return $this->info()->name;
+        return $this->trophyInfo()->trophyTitleName;
     }
     
     public function imageUrl() : string 
     {
-        return $this->info()->image;
+        return $this->trophyInfo()->trophyTitleIconUrl;
     }
 
     public function communicationId() : string
     {
-        return $this->info()->communcationId;
+        return $this->trophyInfo()->npCommunicationId;
     }
 
-    public function info() : object
+    public function hasTrophies() : bool
+    {
+        return ($this->trophyInfo() !== null);
+    }
+
+    public function earnedPlatinum() : bool
+    {
+        if (
+            $this->trophyInfo() === null || 
+            !isset($this->trophyInfo()->definedTrophies->platinum) || 
+            !$this->trophyInfo()->definedTrophies->platinum
+        ) {
+            return false;
+        }
+
+        $user = $this->hasPlayed();
+
+        if ($user === false) {
+            return false;
+        }
+
+        return boolval($user->earnedTrophies->platinum);
+    }
+
+    public function trophyInfo() : ?object
     {
         if ($this->game === null) {
             // Kind of a hack here.
@@ -60,12 +87,24 @@ class Game extends AbstractApi
                 'fields' => '@default',
                 'npLanguage' => 'en'
             ]);
+            
+            if (!count($game->apps[0]->trophyTitles)) return null;
 
-            $this->game = new \stdClass();
-            $this->game->titleId        = $game->apps[0]->npTitleId;
-            $this->game->name           = $game->apps[0]->trophyTitles[0]->trophyTitleName;
-            $this->game->image          = $game->apps[0]->trophyTitles[0]->trophyTitleIconUrls[1]->trophyTitleIconUrl;
-            $this->game->communcationId = $game->apps[0]->trophyTitles[0]->npCommunicationId;
+            $this->npCommunicationId = $game->apps[0]->trophyTitles[0]->npCommunicationId;
+
+            $data = [
+                'npLanguage' => 'en'
+            ];
+
+            if ($this->comparing()) {
+                $data['comparedUser'] = $this->user()->onlineId();
+            }
+
+            $game = $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s', $this->npCommunicationId), $data);
+
+            if ($game->totalResults !== 1 || !count($game->trophyTitles)) return null;
+
+            $this->game = $game->trophyTitles[0];
         }
 
         return $this->game;
@@ -93,13 +132,89 @@ class Game extends AbstractApi
     }
 
     /**
-     * Gets the TrophySet for this game.
+     * Gets the TrophyGroups for this Game.
      *
-     * @return TrophySet
+     * @return array Array of Api\TrophyGroup
      */
-    public function trophySet() : TrophySet
+    public function groups() : array
     {
-        return new TrophySet($this->client, $this);
+        $returnGroups = [];
+
+        $data = [
+            'fields' => '@default,trophyTitleSmallIconUrl,trophyGroupSmallIconUrl',
+            'iconSize' => 'm',
+            'npLanguage' => 'en'
+        ];
+
+        if ($this->comparing()) {
+            $data['comparedUser'] = $this->user()->onlineId();
+        }
+
+        $groups = $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups', $this->communicationId()), $data);
+
+        foreach ($groups as $group) {
+            $returnGroups[] = new TrophyGroup($this->client, $group, $this);
+        }
+
+        return $returnGroups;
+    }
+    
+
+    /**
+     * Gets all Trophies for this Game.
+     *
+     * @return array Array of Api\Trophy
+     */
+    public function trophies() : array 
+    {
+        $returnTrophies = [];
+
+        $data = [
+            'fields' => '@default,trophyRare,trophyEarnedRate,hasTrophyGroups,trophySmallIconUrl',
+            'iconSize' => 'm',
+            'visibleType' => 1,
+            'npLanguage' => 'en'
+        ];
+
+        if ($this->comparing()) {
+            $data['comparedUser'] = $this->user()->onlineId();
+        }
+
+        $trophies = $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups/all/trophies', $this->trophySet->game()->communicationId()), $data);
+
+        foreach ($trophies->trophies as $trophy) {
+            $returnTrophies[] = new Trophy($this->client, $trophy, $this);
+        }
+
+        return $returnTrophies;
     }
 
+
+    /**
+     * Gets the User who played this game.
+     *
+     * @return User
+     */
+    public function user() : User
+    {
+        return $this->user;
+    }
+
+    public function comparing() : bool
+    {
+        if ($this->user() === null) return false;
+
+        return ($this->user()->onlineId() !== null);
+    }
+
+    public function hasPlayed()
+    {
+        if ($this->comparing() && isset($this->trophyInfo()->comparedUser)) {
+            return $this->trophyInfo()->comparedUser;
+        } else if (isset($this->trophyInfo()->fromUser)) {
+            return $this->trophyInfo()->fromUser;
+        }
+
+        return false;
+    }
 }

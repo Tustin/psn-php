@@ -56,9 +56,53 @@ class Trophy extends AbstractApi
         return floatval($this->trophy->trophyEarnedRate);
     }
 
+    public function earned() : bool
+    {
+        return $this->comparing() ?
+        $this->trophy->comparedUser->earned :
+        $this->trophy->fromUser->earned;
+    }
+
+    public function earnedDate() : ?\DateTime
+    {
+        if (!$this->earned()) return null;
+
+        return new \DateTime(
+            $this->comparing() ?
+            $this->trophy->comparedUser->earnedDate :
+            $this->trophy->fromUser->earnedDate
+        );
+    }
+
     public function trophyGroup() : TrophyGroup
     {
         return $this->trophyGroup;
+    }
+
+    public function game() : Game
+    {
+        return $this->trophyGroup()->game();
+    }
+
+    /**
+     * Returns whether or not the TrophySet is for another user.
+     *
+     * @return boolean
+     */
+    public function comparing() : bool
+    {
+        return ($this->game()->user()->onlineId() !== null);
+    }
+
+    /**	
+     * Calculate all the types of Trophies.	
+     *	
+     * @param object $trophyTypes Trophy type information.	
+     * @return integer	
+     */	
+    private static function calculateTrophies(object $trophyTypes) : int	
+    {	
+        return ($trophyTypes->bronze + $trophyTypes->silver + $trophyTypes->gold + $trophyTypes->platinum);	
     }
 
 }

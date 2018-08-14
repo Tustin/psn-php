@@ -28,6 +28,16 @@ class User extends AbstractApi {
     }
 
     /**
+     * Get user's onlineId
+     *
+     * @return void
+     */
+    public function onlineId() : ?string
+    {
+        return $this->onlineId;
+    }
+
+    /**
      * Gets user's profile information.
      *
      * @return object
@@ -39,15 +49,6 @@ class User extends AbstractApi {
         ]);
     }
 
-    /**
-     * Get user's onlineId
-     *
-     * @return void
-     */
-    public function onlineId() : string
-    {
-        return $this->onlineId;
-    }
     
     /**
      * Add the user to friends list.
@@ -127,38 +128,6 @@ class User extends AbstractApi {
     }
 
     /**
-     * Get the user's trophies.
-     *
-     * @param integer $limit How many trophies to return.
-     * @return array Array of Api\Trophy.
-     */
-    public function trophies(int $limit = 36) : array 
-    {
-        $returnTrophies = [];
-
-        $data = [
-            'fields' => '@default',
-            'npLanguage' => 'en',
-            'iconSize' => 'm',
-            'platform' => 'PS3,PSVITA,PS4',
-            'offset' => 0,
-            'limit' => $limit
-        ];
-
-        if ($this->onlineId() != null) {
-            $data['comparedUser'] = $this->onlineId();
-        }
-
-        $trophies = $this->get(Trophy::TROPHY_ENDPOINT . 'trophyTitles', $data);
-
-        foreach ($trophies->trophyTitles as $trophy) {
-            $returnTrophies[] = new Trophy($this->client, $trophy, $this, $this->onlineId() != null);
-        }
-        
-        return $returnTrophies;
-    }
-
-    /**
      * Gets the user's games played.
      *
      * @return array Array of Api\Game.
@@ -179,7 +148,7 @@ class User extends AbstractApi {
         if ($games->size === 0) return $returnGames;
 
         foreach ($games->titles as $game) {
-            $returnGames[] = new Game($this->client, $game->titleId);
+            $returnGames[] = new Game($this->client, $game->titleId, $this);
         }
 
         return $returnGames;
