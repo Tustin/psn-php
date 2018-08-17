@@ -9,14 +9,14 @@ class TrophyGroup extends AbstractApi
 {
 
     private $group;
-    private $trophySet;
+    private $game;
 
-    public function __construct(Client $client, object $group, TrophySet $trophySet) 
+    public function __construct(Client $client, object $group, Game $game) 
     {
         parent::__construct($client);
 
         $this->group = $group;
-        $this->trophySet = $trophySet;
+        $this->game = $game;
     }
 
     public function id()
@@ -86,7 +86,7 @@ class TrophyGroup extends AbstractApi
             $data['comparedUser'] = $this->game()->user()->onlineId();
         }
 
-        $trophies = $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups/%s/trophies', $this->trophySet->game()->communicationId(), $this->id()), $data);
+        $trophies = $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups/%s/trophies', $this->game()->communicationId(), $this->id()), $data);
 
         foreach ($trophies->trophies as $trophy) {
             $returnTrophies[] = new Trophy($this->client, $trophy, $this);
@@ -95,23 +95,18 @@ class TrophyGroup extends AbstractApi
         return $returnTrophies;
     }
 
-    public function trophySet() : TrophySet
-    {
-        return $this->trophySet;
-    }
-
     public function game() : Game
     {
-        return $this->trophySet()->game();
+        return $this->game;
     }
 
     /**
-     * Returns whether or not the TrophySet is for another user.
+     * Returns whether or not the Game is for another user.
      *
      * @return boolean
      */
     public function comparing() : bool
     {
-        return ($this->game()->user()->onlineId() !== null);
+        return $this->game()->comparing();
     }
 }

@@ -22,6 +22,7 @@ class Game extends AbstractApi
      *
      * @param Client $client 
      * @param string $titleId
+     * @param User $user
      */
     public function __construct(Client $client, string $titleId, User $user = null)
     {
@@ -31,31 +32,61 @@ class Game extends AbstractApi
         $this->user = $user;
     }
 
+    /**
+     * Gets the title ID for the Game.
+     *
+     * @return string
+     */
     public function titleId() : string
     {
         return $this->titleId;
     }
 
+    /**
+     * Gets the name of the Game's trophy set.
+     *
+     * @return string
+     */
     public function name() : string
     {
         return $this->trophyInfo()->trophyTitleName;
     }
     
+    /**
+     * Gets the Game's image URL.
+     *
+     * @return string
+     */
     public function imageUrl() : string 
     {
         return $this->trophyInfo()->trophyTitleIconUrl;
     }
 
+    /**
+     * Gets the Game's NP communication ID.
+     *
+     * @return string
+     */
     public function communicationId() : string
     {
         return $this->trophyInfo()->npCommunicationId;
     }
 
+    /**
+     * Checks if the Game has trophies.
+     *
+     * @return boolean
+     */
     public function hasTrophies() : bool
     {
         return ($this->trophyInfo() !== null);
     }
 
+    /**
+     * Checks if the User has earned the platinum trophy.
+     *
+     * @return boolean
+     */
     public function earnedPlatinum() : bool
     {
         if (
@@ -68,13 +99,14 @@ class Game extends AbstractApi
 
         $user = $this->hasPlayed();
 
-        if ($user === false) {
-            return false;
-        }
-
-        return boolval($user->earnedTrophies->platinum);
+        return ($user === false) ? false : boolval($user->earnedTrophies->platinum);
     }
 
+    /**
+     * Gets the trophy information for the Game.
+     *
+     * @return object|null
+     */
     public function trophyInfo() : ?object
     {
         if ($this->game === null) {
@@ -88,7 +120,7 @@ class Game extends AbstractApi
                 'npLanguage' => 'en'
             ]);
             
-            if (!count($game->apps[0]->trophyTitles)) return null;
+            if (!count($game->apps) || !count($game->apps[0]->trophyTitles)) return null;
 
             $this->npCommunicationId = $game->apps[0]->trophyTitles[0]->npCommunicationId;
 
@@ -120,7 +152,7 @@ class Game extends AbstractApi
     {
         $returnPlayers = [];
 
-        $players = $this->get(sprintf(GAME_ENDPOINT . 'titles/%s/players', $this->titleId));
+        $players = $this->get(sprintf(self::GAME_ENDPOINT . 'titles/%s/players', $this->titleId));
 
         if ($players->size === 0) return $returnPlayers;
 
@@ -136,7 +168,7 @@ class Game extends AbstractApi
      *
      * @return array Array of Api\TrophyGroup
      */
-    public function groups() : array
+    public function trophyGroups() : array
     {
         $returnGroups = [];
 
@@ -152,7 +184,7 @@ class Game extends AbstractApi
 
         $groups = $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups', $this->communicationId()), $data);
 
-        foreach ($groups as $group) {
+        foreach ($groups->trophyGroups as $group) {
             $returnGroups[] = new TrophyGroup($this->client, $group, $this);
         }
 
@@ -195,11 +227,16 @@ class Game extends AbstractApi
      *
      * @return User
      */
-    public function user() : User
+    public function user() : ?User
     {
         return $this->user;
     }
 
+    /**
+     * Gets whether we're getting trophies for the logged in User or another User.
+     *
+     * @return boolean
+     */
     public function comparing() : bool
     {
         if ($this->user() === null) return false;
@@ -207,7 +244,12 @@ class Game extends AbstractApi
         return ($this->user()->onlineId() !== null);
     }
 
-    public function hasPlayed()
+    /**
+     * Gets whether the User has played the game or not.
+     *
+     * @return boolean
+     */
+    public function hasPlayed() : bool
     {
         if ($this->comparing() && isset($this->trophyInfo()->comparedUser)) {
             return $this->trophyInfo()->comparedUser;

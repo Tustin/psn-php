@@ -4,6 +4,7 @@ namespace PlayStation;
 
 use PlayStation\Api\MessageThread;
 use PlayStation\Api\User;
+use PlayStation\Api\Game;
 
 use PlayStation\Http\HttpClient;
 use PlayStation\Http\ResponseParser;
@@ -114,6 +115,12 @@ class Client {
      */
     public function user(string $onlineId = null) 
     {
-        return new Api\User($this, $onlineId);
+        return new User($this, $onlineId);
+    }
+
+
+    public function game(string $titleId) 
+    {
+        return new Game($this, $titleId);
     }
 }

@@ -100,7 +100,7 @@ class Trophy extends AbstractApi
      * @param object $trophyTypes Trophy type information.	
      * @return integer	
      */	
-    private static function calculateTrophies(object $trophyTypes) : int	
+    public static function calculateTrophies(object $trophyTypes) : int	
     {	
         return ($trophyTypes->bronze + $trophyTypes->silver + $trophyTypes->gold + $trophyTypes->platinum);	
     }
