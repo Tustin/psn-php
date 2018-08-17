@@ -16,6 +16,7 @@ class User extends AbstractApi {
 
     private $onlineId;
     private $onlineIdParameter;
+    private $profile;
 
     private $_sessions = [];
 
@@ -38,15 +39,63 @@ class User extends AbstractApi {
     }
 
     /**
+     * Gets the onlineId parameter used for User requests.
+     *
+     * @return string
+     */
+    public function onlineIdParameter() : string
+    {
+        return $this->onlineIdParameter;
+    }
+
+    /**
      * Gets user's profile information.
      *
      * @return object
      */
     public function info() : object
     {
-        return $this->get(sprintf(self::USERS_ENDPOINT . 'profile2', $this->onlineIdParameter), [
-            'fields' => 'npId,onlineId,accountId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s'
-        ]);
+        if ($this->profile === null) {
+            $this->profile = $this->get(sprintf(self::USERS_ENDPOINT . 'profile2', $this->onlineIdParameter), [
+                'fields' => 'npId,onlineId,accountId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s'
+            ]);
+        }
+        return $this->profile;
+    }
+
+    public function aboutMe() : string
+    {
+        return $this->info()->aboutMe ?? "";
+    }
+
+    public function following() : bool
+    {
+        return $this->info()->following;
+    }
+
+    public function followerCount() : int
+    {
+        return $this->info()->followerCount;
+    }
+
+    public function verified() : bool
+    {
+        return $this->info()->isOfficiallyVerified;
+    }
+
+    public function avatarUrl() : string
+    {
+        return $this->info()->avatarUrls[0]->avatarUrl;
+    }
+
+    public function friend() : bool
+    {
+        return ($this->info()->friendRelation !== 'no');
+    }
+
+    public function closeFriend() : bool
+    {
+        return ($this->info()->personalDetailSharing !== 'no');
     }
 
     
@@ -64,7 +113,7 @@ class User extends AbstractApi {
             "requestMessage" => $requestMessage
         ];
 
-        $this->postJson(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->onlineId(), $this->onlineId), $data);
+        $this->postJson(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->onlineId(), $this->onlineId()), $data);
     }
 
     /**
@@ -76,7 +125,7 @@ class User extends AbstractApi {
     {
         if ($this->onlineId() === null) return;
 
-        $this->delete(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->onlineId(), $this->onlineId));
+        $this->delete(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->onlineId(), $this->onlineId()));
     }
 
     /**
@@ -88,7 +137,7 @@ class User extends AbstractApi {
     {
         if ($this->onlineId() === null) return;
 
-        $this->post(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->onlineId(), $this->onlineId), null);
+        $this->post(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->onlineId(), $this->onlineId()), null);
     }
 
     /**
@@ -100,7 +149,7 @@ class User extends AbstractApi {
     {
         if ($this->onlineId() === null) return;
 
-        $this->delete(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->onlineId(), $this->onlineId));
+        $this->delete(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->onlineId(), $this->onlineId()));
     }
 
     /**
@@ -114,7 +163,7 @@ class User extends AbstractApi {
     {
         $result = [];
 
-        $friends = $this->get(sprintf(self::USERS_ENDPOINT . 'friends/profiles2', $this->onlineIdParameter), [
+        $friends = $this->get(sprintf(self::USERS_ENDPOINT . 'friends/profiles2', $this->onlineIdParameter()), [
             'fields' => 'onlineId',
             'limit' => $limit,
             'sort' => 'name-onlineId'
@@ -136,7 +185,7 @@ class User extends AbstractApi {
     {
         $returnGames = [];
 
-        $games = $this->get(sprintf(Game::GAME_ENDPOINT . 'users/%s/titles', $this->onlineIdParameter), [
+        $games = $this->get(sprintf(Game::GAME_ENDPOINT . 'users/%s/titles', $this->onlineIdParameter()), [
             'type'  => 'played',
             'app'   => 'richProfile', // ??
             'sort'  => '-lastPlayedDate',
@@ -264,6 +313,35 @@ class User extends AbstractApi {
         $sessions = $this->filterSessions(SessionType::Game);
         
         return $sessions[0] ?? null;
+    }
+
+    /**
+     * Gets the user's Activity.
+     *
+     * @return array Array of Api\Story
+     */
+    public function story(int $page = 0, bool $includeComments = true, int $offset = 0, int $blockSize = 10) : array
+    {
+        $returnActivity = [];
+        $activity = $this->get(sprintf(Story::ACTIVITY_ENDPOINT . 'v2/users/%s/feed/%d', $this->onlineIdParameter, $page), [
+            'includeComments' => $includeComments,
+            'offset' => $offset,
+            'blockSize' => $blockSize
+        ]);
+
+        foreach ($activity->feed as $story) {
+            // Some stories might just be a collection of similiar stories (like trophy unlocks)
+            // These stories can't be interacted with like other stories, so we need to grab the condensed stories
+            if (isset($story->condensedStories)) {
+                foreach ($story->condensedStories as $condensed) {
+                    $returnActivity[] = new Story($this->client, $condensed, $this);
+                }
+            } else {
+                $returnActivity[] = new Story($this->client, $story, $this);
+            }
+        }
+
+        return $returnActivity;
     }
 
     /**
