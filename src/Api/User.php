@@ -33,9 +33,9 @@ class User extends AbstractApi {
      *
      * @return void
      */
-    public function onlineId() : ?string
+    public function onlineId() : string
     {
-        return $this->onlineId;
+        return $this->info()->onlineId;
     }
 
     /**
@@ -60,7 +60,7 @@ class User extends AbstractApi {
                 'fields' => 'npId,onlineId,accountId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s'
             ]);
         }
-        return $this->profile;
+        return $this->profile->profile;
     }
 
     public function aboutMe() : string

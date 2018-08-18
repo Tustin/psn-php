@@ -11,10 +11,11 @@ use PlayStation\Http\ResponseParser;
 use PlayStation\Http\TokenMiddleware;
 
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 
 class Client {
 
-    const OAUTH_BASE    = 'https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/token';
+    const AUTH_API      = 'https://auth.api.sonyentertainmentnetwork.com/2.0/';
 
     private const CLIENT_ID     = 'ebee17ac-99fd-487c-9b1e-18ef50c39ab5';
     private const CLIENT_SECRET = 'e4Ru_s*LrL4_B2BD';
@@ -40,7 +41,7 @@ class Client {
     public function login(string $ticketUuidOrRefreshToken, string $code = null) 
     {
         if ($code === null) {
-            $response = $this->getHttpClient()->post(self::OAUTH_BASE, [
+            $response = $this->getHttpClient()->post(self::AUTH_API . 'oauth/token', [
                 "app_context" => "inapp_ios",
                 "client_id" => self::CLIENT_ID,
                 "client_secret" => self::CLIENT_SECRET,
@@ -49,12 +50,52 @@ class Client {
                 "grant_type" => "refresh_token",
                 "scope" => self::SCOPE
             ]);
+        } else {
+            $response = $this->getHttpClient()->post(self::AUTH_API . 'ssocookie', [
+                'authentication_type' => 'two_step',
+                'ticket_uuid' => $ticketUuidOrRefreshToken,
+                'code' => $code,
+                'client_id' => self::CLIENT_ID
+            ]);
 
-            $handler = \GuzzleHttp\HandlerStack::create();
-            $handler->push(Middleware::mapRequest(new TokenMiddleware($response->access_token, $response->refresh_token, $response->expires_in)));
-    
-            $this->httpClient = new HttpClient(new \GuzzleHttp\Client(['handler' => $handler, 'verify' => false, 'proxy' => '127.0.0.1:8888']));
+            $npsso = $response->npsso;
+
+            $response = $this->getHttpClient()->get(self::AUTH_API . 'oauth/authorize', [
+                'duid' => self::DUID,
+                'client_id' => self::CLIENT_ID,
+                'response_type' => 'code',
+                'scope' => self::SCOPE,
+                'redirect_uri' => 'com.playstation.PlayStationApp://redirect'
+            ], [
+                'Cookie' => 'npsso=' . $npsso
+            ]);
+
+            if (($response instanceof Response) === false) {
+                throw new \Expection('Unexpected response');
+            }
+
+            $grant = $response->getHeaderLine('X-NP-GRANT-CODE');
+
+            if (empty($grant)) {
+                throw new \Exception('Unable to get X-NP-GRANT-CODE');
+            }
+
+            $response = $this->getHttpClient()->post(self::AUTH_API . 'oauth/token', [
+                'client_id' => self::CLIENT_ID,
+                'client_secret' => self::CLIENT_SECRET,
+                'duid' => self::DUID,
+                'scope' => self::SCOPE,
+                'redirect_uri' => 'com.playstation.PlayStationApp://redirect',
+                'code' => $grant,
+                'grant_type' => 'authorization_code'
+            ]);
+
         }
+
+        $handler = \GuzzleHttp\HandlerStack::create();
+        $handler->push(Middleware::mapRequest(new TokenMiddleware($response->access_token, $response->refresh_token, $response->expires_in)));
+    
+        $this->httpClient = new HttpClient(new \GuzzleHttp\Client(['handler' => $handler, 'verify' => false, 'proxy' => '127.0.0.1:8888']));
     }
 
 

@@ -18,7 +18,7 @@ class HttpClient {
 
     public function __construct(ClientInterface $client = null)
     {
-        $this->client = $client ?? new GuzzleClient(['verify' => false, 'proxy' => '127.0.0.1:8888']);
+        $this->client = $client ?? new GuzzleClient(['verify' => false, 'proxy' => '127.0.0.1:8888','allow_redirects' => false]);
     }
 
     public function get(string $path, array $body = [], array $headers = []) 
@@ -72,6 +72,8 @@ class HttpClient {
                 $options['multipart'] = $body;
             }
         }
+
+        $options['headers'] = $headers;
 
         try {
             return $this->client->request($method, $path, $options);

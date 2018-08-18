@@ -12,6 +12,6 @@ class ResponseParser {
         
         $data = json_decode($contents);
 
-        return (json_last_error() === JSON_ERROR_NONE) ? $data : $contents;
+        return (json_last_error() === JSON_ERROR_NONE) ? $data : (empty($contents) ? $response : $contents);
     }
 }
