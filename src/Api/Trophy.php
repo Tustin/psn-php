@@ -21,41 +21,81 @@ class Trophy extends AbstractApi
         $this->trophyGroup = $trophyGroup;        
     }
 
+    /**
+     * Gets the Trophy ID.
+     *
+     * @return integer
+     */
     public function id() : int 
     {
         return $this->trophy->trophyId;
     }
 
+    /**
+     * Checks if Trophy is hidden.
+     *
+     * @return boolean
+     */
     public function hidden() : bool 
     {
         return $this->trophy->trophyHidden;
     }
 
+    /**
+     * Gets the type of Trophy (bronze, silver, gold, platinum).
+     *
+     * @return string
+     */
     public function type() : string
     {
         return $this->trophy->trophyType;
     }
 
+    /**
+     * Gets the name of the Trophy.
+     *
+     * @return string
+     */
     public function name() : string
     {
         return $this->trophy->trophyName;
     }
 
+    /**
+     * Gets the Trophy's detail.
+     *
+     * @return string
+     */
     public function detail() : string
     {
         return $this->trophy->trophyDetail;
     }
 
+    /**
+     * Gets the icon URL for the Trophy.
+     *
+     * @return string
+     */
     public function iconUrl() : string
     {
         return $this->trophy->trophyIconUrl;
     }
 
+    /**
+     * Gets the total earned rate of the Trophy.
+     *
+     * @return float
+     */
     public function earnedRate() : float
     {
         return floatval($this->trophy->trophyEarnedRate);
     }
 
+    /**
+     * Checks if User has earned the Trophy.
+     *
+     * @return boolean
+     */
     public function earned() : bool
     {
         return $this->comparing() ?
@@ -63,6 +103,11 @@ class Trophy extends AbstractApi
         $this->trophy->fromUser->earned;
     }
 
+    /**
+     * Gets when the User earned the Trophy.
+     *
+     * @return \DateTime|null
+     */
     public function earnedDate() : ?\DateTime
     {
         if (!$this->earned()) return null;
@@ -74,11 +119,21 @@ class Trophy extends AbstractApi
         );
     }
 
+    /**
+     * Gets the TrophyGroup the Trophy is in.
+     *
+     * @return TrophyGroup
+     */
     public function trophyGroup() : TrophyGroup
     {
         return $this->trophyGroup;
     }
 
+    /**
+     * Gets the Game the Trophy is for.
+     *
+     * @return Game
+     */
     public function game() : Game
     {
         return $this->trophyGroup()->game();

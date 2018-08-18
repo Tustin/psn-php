@@ -63,42 +63,76 @@ class User extends AbstractApi {
         return $this->profile->profile;
     }
 
+    /**
+     * Gets the user's about me.
+     *
+     * @return string
+     */
     public function aboutMe() : string
     {
         return $this->info()->aboutMe ?? "";
     }
 
+    /**
+     * Checks if logged in user is following the current user.
+     *
+     * @return boolean
+     */
     public function following() : bool
     {
         return $this->info()->following;
     }
 
+    /**
+     * Gets the user's follower count.
+     *
+     * @return integer
+     */
     public function followerCount() : int
     {
         return $this->info()->followerCount;
     }
 
+    /**
+     * Checks if they user is verified or not.
+     *
+     * @return boolean
+     */
     public function verified() : bool
     {
         return $this->info()->isOfficiallyVerified;
     }
 
+    /**
+     * Gets the user's avatar URL.
+     *
+     * @return string
+     */
     public function avatarUrl() : string
     {
         return $this->info()->avatarUrls[0]->avatarUrl;
     }
 
+    /**
+     * Checks if logged in user is friends with the current user.
+     *
+     * @return boolean
+     */
     public function friend() : bool
     {
         return ($this->info()->friendRelation !== 'no');
     }
 
+    /**
+     * Checks if logged in user is close friends with the current user.
+     *
+     * @return boolean
+     */
     public function closeFriend() : bool
     {
         return ($this->info()->personalDetailSharing !== 'no');
     }
 
-    
     /**
      * Add the user to friends list.
      *

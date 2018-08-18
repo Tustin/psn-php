@@ -121,11 +121,11 @@ class Session extends AbstractApi
      *
      * @return array|null Array of Api\User.
      */
-    public function members() : ?array
+    public function members() : array
     {
         $members = [];
 
-        if (!isset($this->session->members) || $this->session->memberCount <= 0) return null;
+        if (!isset($this->session->members) || $this->session->memberCount <= 0) return $members;
 
         foreach ($this->session->members as $member) {
             $members[] = new User($this->client, $member->onlineId);
