@@ -42,22 +42,27 @@ abstract class AbstractApi {
 
     public function patch(string $path, $parameters, array $headers = [])
     {
-       return $this->client->getHttpClient()->patch($path, $parameters, false, $headers);
+       return $this->client->getHttpClient()->patch($path, $parameters, HttpClient::FORM, $headers);
     }
 
     public function patchJson(string $path, $parameters, array $headers = [])
     {
-        return $this->client->getHttpClient()->patch($path, $parameters, true, $headers);
+        return $this->client->getHttpClient()->patch($path, $parameters, HttpClient::JSON, $headers);
     }
 
     public function put(string $path, $parameters, array $headers = [])
     {
-        return $this->client->getHttpClient()->put($path, $parameters, false, $headers);
+        return $this->client->getHttpClient()->put($path, $parameters, HttpClient::FORM, $headers);
     }
 
     public function putJson(string $path, $parameters, array $headers = [])
     {
-        return $this->client->getHttpClient()->put($path, $parameters, true, $headers);       
+        return $this->client->getHttpClient()->put($path, $parameters,  HttpClient::JSON, $headers);       
+    }
+
+    public function putMultiPart(string $path, array $parameters, array $headers = [])
+    {
+        return $this->client->getHttpClient()->put($path, $parameters, HttpClient::MULTI, $headers);
     }
 
 }

@@ -317,7 +317,7 @@ class User extends AbstractApi {
         if (count($threads) === 0) return null;
         
         foreach ($threads as $thread) {
-            if ($thread->getMemberCount() === 2) {
+            if ($thread->memberCount() === 2) {
                 return $thread;
             }
         }

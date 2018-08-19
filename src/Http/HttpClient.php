@@ -18,7 +18,7 @@ class HttpClient {
 
     public function __construct(ClientInterface $client = null)
     {
-        $this->client = $client ?? new GuzzleClient(['verify' => false, 'proxy' => '127.0.0.1:8888','allow_redirects' => false]);
+        $this->client = $client ?? new GuzzleClient(['allow_redirects' => false/*'verify' => false, 'proxy' => '127.0.0.1:8888'*/]);
     }
 
     public function get(string $path, array $body = [], array $headers = []) 
@@ -42,16 +42,16 @@ class HttpClient {
         return ResponseParser::parse($response);
     }
 
-    public function patch(string $path, $body = null, bool $json = false, array $headers = [])
+    public function patch(string $path, $body = null, int $type = self::FORM, array $headers = [])
     {
-        $response = $this->request('PATCH', $path, $body, ($json) ? self::JSON : self::FORM, $headers);
+        $response = $this->request('PATCH', $path, $body, $type, $headers);
 
         return ResponseParser::parse($response);
     }
 
-    public function put(string $path, $body = null, bool $json = false, array $headers = [])
+    public function put(string $path, $body = null, int $type = self::FORM, array $headers = [])
     {
-        $response = $this->request('PUT', $path, $body, ($json) ? self::JSON : self::FORM, $headers);
+        $response = $this->request('PUT', $path, $body, $type, $headers);
 
         return ResponseParser::parse($response);
     }

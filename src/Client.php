@@ -26,6 +26,10 @@ class Client {
     private $onlineId;
     private $messageThreads;
 
+    private $accessToken;
+    private $refreshToken;
+    private $expiresIn;
+
     public function __construct(HttpClient $httpClient = null)
     {
         $this->httpClient = $httpClient ?? new HttpClient();
@@ -92,10 +96,14 @@ class Client {
 
         }
 
+        $this->accessToken = $response->access_token;
+        $this->refreshToken = $response->refresh_token;
+        $this->expiresIn = $response->expires_in;
+
         $handler = \GuzzleHttp\HandlerStack::create();
-        $handler->push(Middleware::mapRequest(new TokenMiddleware($response->access_token, $response->refresh_token, $response->expires_in)));
+        $handler->push(Middleware::mapRequest(new TokenMiddleware($this->accessToken(), $this->refreshToken(), $this->expiresIn())));
     
-        $this->httpClient = new HttpClient(new \GuzzleHttp\Client(['handler' => $handler, 'verify' => false, 'proxy' => '127.0.0.1:8888']));
+        $this->httpClient = new HttpClient(new \GuzzleHttp\Client(['handler' => $handler /*'verify' => false, 'proxy' => '127.0.0.1:8888'*/]));
     }
 
 
@@ -114,7 +122,7 @@ class Client {
      *
      * @return string
      */
-    public function getOnlineId() : string
+    public function onlineId() : string
     {
         if ($this->onlineId === null) {
             $response = $this->getHttpClient()->get(sprintf(User::USERS_ENDPOINT . 'profile2', 'me'), [
@@ -124,6 +132,36 @@ class Client {
             $this->onlineId = $response->profile->onlineId;
         }
         return $this->onlineId;
+    }
+
+    /**
+     * Gets the access token.
+     *
+     * @return string
+     */
+    public function accessToken() : string
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * Gets the refresh token.
+     *
+     * @return string
+     */
+    public function refreshToken() : string
+    {
+        return $this->refreshToken;
+    }
+
+    /**
+     * Gets the access token expire DateTime.
+     *
+     * @return \DateTime
+     */
+    public function expireDate() : \DateTime
+    {
+        return new \DateTime(sprintf('+%d seconds', $this->expiresIn));
     }
 
     /**

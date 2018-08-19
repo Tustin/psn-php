@@ -3,6 +3,8 @@
 namespace PlayStation\Api;
 
 use PlayStation\Client;
+use PlayStation\MessageType;
+
 use PlayStation\Api\User;
 
 class MessageThread extends AbstractApi 
@@ -23,6 +25,77 @@ class MessageThread extends AbstractApi
             $this->messageThread = $messageThread;
             $this->messageThreadId =  $this->messageThread->threadId;
         }
+    }
+
+       /**
+     * Get the MessageThread info.
+     *
+     * @param integer $count Amount of messages to return.
+     * @param boolean $force Force an update.
+     * @return object
+     */
+    public function info(int $count = 1, bool $force = false) : object
+    {
+        if ($this->messageThread === null || $force) {
+            $this->messageThread = $this->get(sprintf(self::MESSAGE_THREAD_ENDPOINT . 'threads/%s', $this->messageThreadId), [
+                'fields' => 'threadMembers,threadNameDetail,threadThumbnailDetail,threadProperty,latestTakedownEventDetail,newArrivalEventDetail,threadEvents',
+                'count' => $count,
+            ]);
+        }
+
+        return $this->messageThread;
+    }
+
+    /**
+     * Gets the MessageThread ID.
+     *
+     * @return string
+     */
+    public function messageThreadId() : string
+    {
+        return $this->messageThreadId;
+    }
+
+    /**
+     * Get the amount of members.
+     *
+     * @return integer
+     */
+    public function memberCount() : int 
+    {
+        return count($this->info()->threadMembers);
+    }
+
+    /**
+     * Get the MessageThread name.
+     *
+     * @return string
+     */
+    public function name() : string
+    {
+        return $this->info()->threadNameDetail->threadName;
+    }
+
+    /**
+     * Gets the MessageThread thumbnail URL.
+     *
+     * @return string
+     */
+    public function thumbnailUrl() : string
+    {
+        return ($this->info()->threadThumbnailDetail->status == 2) ? 
+        "" : 
+        $this->info()->threadThumbnailDetail->resourcePath;
+    }
+
+    /**
+     * Gets the last time the MessageThread was modified.
+     *
+     * @return \DateTime
+     */
+    public function modifiedDate() : \DateTime
+    {
+        return new \DateTime($this->info()->threadModifiedDate);
     }
 
     /**
@@ -53,24 +126,6 @@ class MessageThread extends AbstractApi
         return $members;
     }
 
-    /**
-     * Get the MessageThread info.
-     *
-     * @param integer $count Amount of messages to return.
-     * @param boolean $force Force an update.
-     * @return object
-     */
-    public function info(int $count = 1, bool $force = false) : object
-    {
-        if ($this->messageThread === null || $force) {
-            $this->messageThread = $this->get(sprintf(self::MESSAGE_THREAD_ENDPOINT . 'threads/%s', $this->messageThreadId), [
-                'fields' => 'threadMembers,threadNameDetail,threadThumbnailDetail,threadProperty,latestTakedownEventDetail,newArrivalEventDetail,threadEvents',
-                'count' => $count,
-            ]);
-        }
-
-        return $this->messageThread;
-    }
 
     /**
      * Set the name of the MessageThread.
@@ -122,26 +177,6 @@ class MessageThread extends AbstractApi
     }
 
     /**
-     * Get the amount of members.
-     *
-     * @return integer
-     */
-    public function memberCount() : int 
-    {
-        return count($this->info()->threadMembers);
-    }
-
-    /**
-     * Get the MessageThread name.
-     *
-     * @return string
-     */
-    public function threadName() : string
-    {
-        return $this->info()->threadNameDetail->threadName;
-    }
-
-    /**
      * Send a text message.
      *
      * @param string $message The message to send.
@@ -151,7 +186,7 @@ class MessageThread extends AbstractApi
     {
         $data = (object)[
             'messageEventDetail' => (object)[
-                'eventCategoryCode' => 1, 
+                'eventCategoryCode' => MessageType::Text, 
                 'messageDetail' => (object)[
                     'body' => $message
                 ]
@@ -189,7 +224,7 @@ class MessageThread extends AbstractApi
     {
         $data = (object)[
             'messageEventDetail' => (object)[
-                'eventCategoryCode' => 3, 
+                'eventCategoryCode' => MessageType::Image, 
                 'messageDetail' => (object)[
                     'body' => ''
                 ]
@@ -237,7 +272,7 @@ class MessageThread extends AbstractApi
     {
         $data = (object)[
             'messageEventDetail' => (object)[
-                'eventCategoryCode' => 1011, 
+                'eventCategoryCode' => MessageType::Audio, 
                 'messageDetail' => (object)[
                     'body' => '',
                     'voiceDetail' => (object)[
@@ -294,6 +329,38 @@ class MessageThread extends AbstractApi
         }
 
         return $messages;
+    }
+
+    /**
+     * Set the MessageThread thumbnail
+     *
+     * @param string $imageContents Raw bytes of the image.
+     * @return void
+     */
+    public function setThumbnail(string $imageContents) : void
+    {
+        $parameters = [
+            [
+                'name' => 'threadThumbnail',
+                'contents' => $imageContents,
+                'headers' => [
+                    'Content-Type' => 'image/jpeg',
+                    'Content-Transfer-Encoding' => 'binary',
+                ]
+            ]
+        ];
+
+        $this->putMultiPart(sprintf(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/%s/thumbnail', $this->messageThreadId), $parameters);
+    }
+
+    /**
+     * Removes the MessageThread thumbnail.
+     *
+     * @return void
+     */
+    public function removeThumbnail() : void
+    {
+        $this->delete(sprintf(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/%s/thumbnail', $this->messageThreadId));
     }
 
 }
