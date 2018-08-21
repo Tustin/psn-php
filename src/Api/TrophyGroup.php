@@ -19,31 +19,61 @@ class TrophyGroup extends AbstractApi
         $this->game = $game;
     }
 
+    /**
+     * Get TrophyGroup ID.
+     *
+     * @return void
+     */
     public function id()
     {
         return $this->group->trophyGroupId;
     }
 
+    /**
+     * Get name.
+     *
+     * @return string
+     */
     public function name() : string
     {
         return $this->group->trophyGroupName;
     }
 
+    /**
+     * Get detail.
+     *
+     * @return string
+     */
     public function detail() : string
     {
         return $this->group->trophyGroupDetail;
     }
 
+    /**
+     * Get the icon URL.
+     *
+     * @return string
+     */
     public function iconUrl() : string
     {
         return $this->group->trophyGroupIconUrl;
     }
 
+    /**
+     * Get amount of Trophies.
+     *
+     * @return integer
+     */
     public function trophyCount() : int 
     {
         return Trophy::calculateTrophies($this->group->definedTrophies);
     }
 
+    /**
+     * Get completion progress of TrophyGroup.
+     *
+     * @return integer
+     */
     public function progress() : int
     {
         return $this->comparing() ?
@@ -51,6 +81,11 @@ class TrophyGroup extends AbstractApi
         $this->group->fromUser->progress;
     }
 
+    /**
+     * Get Trophy earn date.
+     *
+     * @return \DateTime
+     */
     public function lastEarnedDate() : \DateTime
     {
         return new \DateTime(
@@ -59,7 +94,6 @@ class TrophyGroup extends AbstractApi
             $this->group->fromUser->lastUpdateDate
         );
     }
-
 
     /**
      * Get last TrophyGroup earned DateTIme.

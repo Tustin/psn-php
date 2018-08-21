@@ -19,7 +19,7 @@ class Message extends AbstractApi
     }
 
     /**
-     * Get the sender of the message.
+     * Get the sender of the Message.
      *
      * @return User
      */
@@ -29,7 +29,7 @@ class Message extends AbstractApi
     }
 
     /**
-     * Get the MessageThread the message is in.
+     * Get the MessageThread the Message is in.
      *
      * @return MessageThread
      */
@@ -39,7 +39,7 @@ class Message extends AbstractApi
     }
 
     /**
-     * Get the message body text.
+     * Get the Message body text.
      *
      * @return string
      */
@@ -49,7 +49,7 @@ class Message extends AbstractApi
     }
 
     /**
-     * Get the DateTime the message was sent.
+     * Get the DateTime when the Message was sent.
      *
      * @return \DateTime
      */

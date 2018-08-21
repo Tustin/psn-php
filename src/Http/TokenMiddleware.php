@@ -11,7 +11,7 @@ final class TokenMiddleware {
     private $expireTime;
 
 
-    public function __construct(string $accessToken, string $refreshToken, string $expireTime)
+    public function __construct(string $accessToken, string $refreshToken, \DateTime $expireTime)
     {
         $this->accessToken = $accessToken;
         $this->refreshToken = $refreshToken;

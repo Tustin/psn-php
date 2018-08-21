@@ -45,7 +45,7 @@ class Client {
     public function login(string $ticketUuidOrRefreshToken, string $code = null) 
     {
         if ($code === null) {
-            $response = $this->getHttpClient()->post(self::AUTH_API . 'oauth/token', [
+            $response = $this->httpClient()->post(self::AUTH_API . 'oauth/token', [
                 "app_context" => "inapp_ios",
                 "client_id" => self::CLIENT_ID,
                 "client_secret" => self::CLIENT_SECRET,
@@ -55,7 +55,7 @@ class Client {
                 "scope" => self::SCOPE
             ]);
         } else {
-            $response = $this->getHttpClient()->post(self::AUTH_API . 'ssocookie', [
+            $response = $this->httpClient()->post(self::AUTH_API . 'ssocookie', [
                 'authentication_type' => 'two_step',
                 'ticket_uuid' => $ticketUuidOrRefreshToken,
                 'code' => $code,
@@ -64,7 +64,7 @@ class Client {
 
             $npsso = $response->npsso;
 
-            $response = $this->getHttpClient()->get(self::AUTH_API . 'oauth/authorize', [
+            $response = $this->httpClient()->get(self::AUTH_API . 'oauth/authorize', [
                 'duid' => self::DUID,
                 'client_id' => self::CLIENT_ID,
                 'response_type' => 'code',
@@ -84,7 +84,7 @@ class Client {
                 throw new \Exception('Unable to get X-NP-GRANT-CODE');
             }
 
-            $response = $this->getHttpClient()->post(self::AUTH_API . 'oauth/token', [
+            $response = $this->httpClient()->post(self::AUTH_API . 'oauth/token', [
                 'client_id' => self::CLIENT_ID,
                 'client_secret' => self::CLIENT_SECRET,
                 'duid' => self::DUID,
@@ -101,18 +101,17 @@ class Client {
         $this->expiresIn = $response->expires_in;
 
         $handler = \GuzzleHttp\HandlerStack::create();
-        $handler->push(Middleware::mapRequest(new TokenMiddleware($this->accessToken(), $this->refreshToken(), $this->expiresIn())));
+        $handler->push(Middleware::mapRequest(new TokenMiddleware($this->accessToken(), $this->refreshToken(), $this->expireDate())));
     
-        $this->httpClient = new HttpClient(new \GuzzleHttp\Client(['handler' => $handler /*'verify' => false, 'proxy' => '127.0.0.1:8888'*/]));
+        $this->httpClient = new HttpClient(new \GuzzleHttp\Client(['handler' => $handler, 'verify' => false, 'proxy' => '127.0.0.1:8888']));
     }
-
 
     /**
      * Gets the HttpClient.
      *
      * @return HttpClient
      */
-    public function getHttpClient() : HttpClient
+    public function httpClient() : HttpClient
     {
         return $this->httpClient;
     }
@@ -125,7 +124,7 @@ class Client {
     public function onlineId() : string
     {
         if ($this->onlineId === null) {
-            $response = $this->getHttpClient()->get(sprintf(User::USERS_ENDPOINT . 'profile2', 'me'), [
+            $response = $this->httpClient()->get(sprintf(User::USERS_ENDPOINT . 'profile2', 'me'), [
                 'fields' => 'onlineId'
             ]);
 
@@ -165,16 +164,16 @@ class Client {
     }
 
     /**
-     * Gets all the logged in user's message threads
+     * Gets all MessageThreads for the current Client.
      *
      * @param integer $offset Where to start.
      * @param integer $limit Amount of threads.
      * @return object
      */
-    public function getMessageThreads(int $offset = 0, int $limit = 20) : object
+    public function messageThreads(int $offset = 0, int $limit = 20) : object
     {
         if ($this->messageThreads === null) {
-            $response = $this->getHttpClient()->get(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/', [
+            $response = $this->httpClient()->get(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/', [
                 'fields' => 'threadMembers',
                 'limit' => $limit,
                 'offset' => $offset,
@@ -189,7 +188,7 @@ class Client {
     /**
      * Creates a new User object.
      *
-     * @param string $onlineId The user's onlineId (null to get current user's account).
+     * @param string $onlineId The User's onlineId (null to get current User's account).
      * @return void
      */
     public function user(string $onlineId = null) 
@@ -197,7 +196,12 @@ class Client {
         return new User($this, $onlineId);
     }
 
-
+    /**
+     * Find a game by it's title ID and return a new Game object.
+     *
+     * @param string $titleId The Game's title ID
+     * @return void
+     */
     public function game(string $titleId) 
     {
         return new Game($this, $titleId);

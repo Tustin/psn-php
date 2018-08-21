@@ -27,7 +27,7 @@ class MessageThread extends AbstractApi
         }
     }
 
-       /**
+    /**
      * Get the MessageThread info.
      *
      * @param integer $count Amount of messages to return.

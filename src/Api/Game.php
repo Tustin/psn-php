@@ -212,7 +212,7 @@ class Game extends AbstractApi
             $data['comparedUser'] = $this->user()->onlineId();
         }
 
-        $trophies = $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups/all/trophies', $this->trophySet->game()->communicationId()), $data);
+        $trophies = $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups/all/trophies', $this->communicationId()), $data);
 
         foreach ($trophies->trophies as $trophy) {
             $returnTrophies[] = new Trophy($this->client, $trophy, $this);

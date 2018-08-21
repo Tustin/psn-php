@@ -72,7 +72,7 @@ class Comment extends AbstractApi
     }
 
     /**
-     * Gets the post date of the Comment.
+     * Gets the DateTime of the Comment.
      *
      * @return \DateTime
      */

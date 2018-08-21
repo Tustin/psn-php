@@ -18,7 +18,7 @@ class User extends AbstractApi {
     private $onlineIdParameter;
     private $profile;
 
-    private $_sessions = [];
+    private $sessions = [];
 
     public function __construct(Client $client, string $onlineId = null) 
     {
@@ -29,7 +29,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Get user's onlineId
+     * Gets online ID.
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Gets user's profile information.
+     * Gets profile information.
      *
      * @return object
      */
@@ -64,7 +64,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Gets the user's about me.
+     * Gets the about me.
      *
      * @return string
      */
@@ -74,7 +74,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Checks if logged in user is following the current user.
+     * Checks if logged in User is following the current User.
      *
      * @return boolean
      */
@@ -84,7 +84,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Gets the user's follower count.
+     * Gets the follow count.
      *
      * @return integer
      */
@@ -94,7 +94,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Checks if they user is verified or not.
+     * Checks if the User is verified or not.
      *
      * @return boolean
      */
@@ -104,7 +104,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Gets the user's avatar URL.
+     * Gets the User's avatar URL.
      *
      * @return string
      */
@@ -114,7 +114,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Checks if logged in user is friends with the current user.
+     * Checks if logged in User is friends with the current User.
      *
      * @return boolean
      */
@@ -124,7 +124,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Checks if logged in user is close friends with the current user.
+     * Checks if logged in User is close friends with the current User.
      *
      * @return boolean
      */
@@ -134,7 +134,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Add the user to friends list.
+     * Add the User to friends list.
      *
      * @param string $requestMessage Message to send with the request.
      * @return void
@@ -151,7 +151,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Remove the user from friends list.
+     * Remove the User from friends list.
      *
      * @return void
      */
@@ -163,7 +163,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Block the user.
+     * Block the User.
      *
      * @return void
      */
@@ -175,7 +175,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Unblock the user.
+     * Unblock the User.
      *
      * @return void
      */
@@ -187,7 +187,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Get the user's friends.
+     * Get the User's friends.
      *
      * @param string $filter Online Filter.
      * @param integer $limit How many users to return.
@@ -211,7 +211,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Gets the user's games played.
+     * Gets the User's Games played.
      *
      * @return array Array of Api\Game.
      */
@@ -238,7 +238,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Send a message to the user.
+     * Send a Message to the User.
      *
      * @param string $message Message to send.
      * @return Message|null
@@ -253,7 +253,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Send an image message to the user.
+     * Send an image Message to the User.
      *
      * @param string $imageContents Raw bytes of the image.
      * @return Message|null
@@ -268,7 +268,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Send an audio message to the user.
+     * Send an audio Message to the User.
      *
      * @param string $audioContents Raw bytes of the audio.
      * @param integer $audioLengthSeconds Length of audio file (in seconds).
@@ -284,7 +284,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Get all message threads with the user.
+     * Get all MessageThreads with the User.
      *
      * @return array Array of Api\MessageThread.
      */
@@ -306,7 +306,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Get MessageThread with just the logged in account and the current user.
+     * Get MessageThread with just the logged in account and the current User.
      *
      * @return MessageThread|null
      */
@@ -326,7 +326,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Get user's party session.
+     * Get User's party Session.
      *
      * @return Session|null
      */
@@ -338,7 +338,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Get user's game session.
+     * Get User's game Session.
      *
      * @return Session|null
      */
@@ -350,7 +350,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Gets the user's Activity.
+     * Gets the User's Activity.
      *
      * @return array Array of Api\Story
      */
@@ -379,7 +379,33 @@ class User extends AbstractApi {
     }
 
     /**
-     * Gets (or creates) the message group with just the logged in account and the current user.
+     * Get all Communities the User is in.
+     *
+     * @return array Array of Api\Community.
+     */
+    public function communities() : array
+    {
+        $returnCommunities = [];
+
+        $communities = $this->get(Community::COMMUNITY_ENDPOINT . 'communities', [
+            'fields' => 'backgroundImage,description,id,isCommon,members,name,profileImage,role,unreadMessageCount,sessions,timezoneUtcOffset,language,titleName',
+            'includeFields' => 'gameSessions,timezoneUtcOffset,parties',
+            'sort' => 'common',
+            'onlineId' => $this->onlineId()
+        ]);
+
+        if ($communities->size === 0) return $returnCommunities;
+        
+        foreach ($communities->communities as $community) {
+            $returnCommunities[] = new Community($this, $community);
+        }
+        
+        return $returnCommunities;
+
+    }
+
+    /**
+     * Gets (or creates) the message group with just the logged in account and the current User.
      *
      * @return MessageThread
      */
@@ -416,7 +442,7 @@ class User extends AbstractApi {
     }
 
     /**
-     * Filter user's sessions by SessionType flag.
+     * Filter User's Sessions by SessionType flag.
      *
      * @param integer $type SessionType flag.
      * @return array Array of Api\Session.
@@ -433,13 +459,13 @@ class User extends AbstractApi {
     }
 
     /**
-     * Gets all the user's active sessions.
+     * Gets all the User's active Sessions.
      *
      * @return array Array of Api\Session.
      */
     private function sessions() : array
     {
-        if (!empty($_sessions)) return $_sessions;
+        if (!empty($sessions)) return $sessions;
 
         $returnSessions = [];
 
@@ -456,7 +482,7 @@ class User extends AbstractApi {
             $returnSessions[] = new Session($this->client, $session);
         }
 
-        $_sessions = $returnSessions;
+        $sessions = $returnSessions;
 
         return $returnSessions;
     }
