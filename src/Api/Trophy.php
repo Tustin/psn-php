@@ -7,7 +7,6 @@ use PlayStation\Api\User;
 
 class Trophy extends AbstractApi 
 {
-
     public const TROPHY_ENDPOINT    = 'https://us-tpy.np.community.playstation.net/trophy/v1/';
 
     private $trophy;

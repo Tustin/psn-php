@@ -10,8 +10,8 @@ use PlayStation\Api\Session;
 use PlayStation\Api\MessageThread;
 use PlayStation\Api\Game;
 
-class User extends AbstractApi {
-
+class User extends AbstractApi 
+{
     const USERS_ENDPOINT = 'https://us-prof.np.community.playstation.net/userProfile/v1/users/%s/';
 
     private $onlineId;
@@ -397,7 +397,7 @@ class User extends AbstractApi {
         if ($communities->size === 0) return $returnCommunities;
         
         foreach ($communities->communities as $community) {
-            $returnCommunities[] = new Community($this, $community);
+            $returnCommunities[] = new Community($this->client, $community->id);
         }
         
         return $returnCommunities;

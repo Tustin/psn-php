@@ -6,8 +6,8 @@ use PlayStation\Client;
 use PlayStation\Http\HttpClient;
 use PlayStation\Http\ResponseParser;
 
-abstract class AbstractApi {
-
+abstract class AbstractApi 
+{
     protected $client;
 
     public function __construct(Client $client) 

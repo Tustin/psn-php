@@ -49,7 +49,7 @@ class Game extends AbstractApi
      */
     public function name() : string
     {
-        return $this->trophyInfo()->trophyTitleName;
+        return $this->trophyInfo()->trophyTitleName ?? '';
     }
     
     /**
@@ -59,7 +59,7 @@ class Game extends AbstractApi
      */
     public function imageUrl() : string 
     {
-        return $this->trophyInfo()->trophyTitleIconUrl;
+        return $this->trophyInfo()->trophyTitleIconUrl ?? '';
     }
 
     /**
@@ -69,7 +69,7 @@ class Game extends AbstractApi
      */
     public function communicationId() : string
     {
-        return $this->trophyInfo()->npCommunicationId;
+        return $this->trophyInfo()->npCommunicationId ?? '';
     }
 
     /**

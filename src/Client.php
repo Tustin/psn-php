@@ -5,6 +5,7 @@ namespace PlayStation;
 use PlayStation\Api\MessageThread;
 use PlayStation\Api\User;
 use PlayStation\Api\Game;
+use PlayStation\Api\Community;
 
 use PlayStation\Http\HttpClient;
 use PlayStation\Http\ResponseParser;
@@ -205,5 +206,29 @@ class Client {
     public function game(string $titleId) 
     {
         return new Game($this, $titleId);
+    }
+
+    /**
+     * Get or create a Community.
+     *
+     * @param string $communityIdOrName Community ID or the name of the new community.
+     * @param string $type 
+     * @param string $titleId Game to associate your Community with.
+     * @return Community
+     */
+    public function community(string $communityIdOrName, string $type = '', string $titleId = '') : Community
+    {
+        if (!empty($type) && !empty($titleId)) {
+            // Create the Community.
+            $response = $this->httpClient()->post(Community::COMMUNITY_ENDPOINT . 'communities?action=create', [
+                'name' => $communityIdOrName,
+                'type' => $type,
+                'titleId' => $titleId
+            ], HttpClient::JSON);
+
+            $communityIdOrName = $response->id;
+        }
+
+        return new Community($this, $communityIdOrName);
     }
 }

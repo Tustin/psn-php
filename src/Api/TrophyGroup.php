@@ -7,7 +7,6 @@ use PlayStation\Api\User;
 
 class TrophyGroup extends AbstractApi 
 {
-
     private $group;
     private $game;
 
