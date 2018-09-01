@@ -26,14 +26,16 @@ class Client {
     private $httpClient;
     private $onlineId;
     private $messageThreads;
+    private $options;
 
     private $accessToken;
     private $refreshToken;
     private $expiresIn;
 
-    public function __construct(HttpClient $httpClient = null)
+    public function __construct(HttpClient $httpClient = null, array $options = [])
     {
-        $this->httpClient = $httpClient ?? new HttpClient();
+        $this->options = $options;
+        $this->httpClient = $httpClient ?? new HttpClient(new \GuzzleHttp\Client($this->options));
     }
     
     /**
@@ -103,8 +105,10 @@ class Client {
 
         $handler = \GuzzleHttp\HandlerStack::create();
         $handler->push(Middleware::mapRequest(new TokenMiddleware($this->accessToken(), $this->refreshToken(), $this->expireDate())));
+
+        $newOptions = array_merge(['handler' => $handler], $this->options);
     
-        $this->httpClient = new HttpClient(new \GuzzleHttp\Client(['handler' => $handler, 'verify' => false, 'proxy' => '127.0.0.1:8888']));
+        $this->httpClient = new HttpClient(new \GuzzleHttp\Client($newOptions));
     }
 
     /**
