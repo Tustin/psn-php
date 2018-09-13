@@ -407,9 +407,9 @@ class User extends AbstractApi
     /**
      * Gets (or creates) the message group with just the logged in account and the current User.
      *
-     * @return MessageThread
+     * @return MessageThread|null
      */
-    private function messageGroup() : MessageThread
+    private function messageGroup() : ?MessageThread
     {
         if ($this->onlineId() === null) return null;
 
@@ -417,23 +417,31 @@ class User extends AbstractApi
 
         if ($thread === null) {
             // If we couldn't find an existing message thread, let's make one.
-            
-            $data = (object)[
-                'threadDetail' => (object)[
+     
+            $data = [
+                'threadDetail' => [
                     'threadMembers' => [
-                        (object)[
+                        [
                             'onlineId' => $this->onlineId()
                         ],
-                        (object)[
+                        [
                             'onlineId' => $this->client->onlineId()
                         ]
                     ]
                 ]
             ];
 
-            $response = $this->postMultiPart(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/', 'threadDetail', json_encode($data, JSON_PRETTY_PRINT), [
-                'Content-Type' => 'application/json; charset=utf-8'
-            ]);
+            $parameters = [
+                [
+                    'name' => 'threadDetail',
+                    'contents' => json_encode($data, JSON_PRETTY_PRINT),
+                    'headers' => [
+                        'Content-Type' => 'application/json; charset=utf-8'
+                    ]
+                ]
+            ];
+
+            $response = $this->postMultiPart(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/', $parameters);
 
             $thread = new MessageThread($this->client, $response->threadId);
         }
