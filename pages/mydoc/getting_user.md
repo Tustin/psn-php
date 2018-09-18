@@ -5,7 +5,7 @@ permalink: getting_user.html
 folder: mydoc
 ---
 
-You can grab a user by calling the `user` method on the `\PlayStation\Client` object you created to login with. This method works both ways, allowing you to grab your own information (the logged in user) or by grabbing someone else's information by supplying their `onlineId` to the `user` method:
+You can grab a user by calling the `user` method on the `PlayStation\Client` object you created to login with. This method works both ways, allowing you to grab your own information (the logged in user) or by grabbing someone else's information by supplying their `onlineId` to the `user` method:
 
 ```php
 // Your information

@@ -1,11 +1,13 @@
 ---
-title: Message Information
+title: Message Properties
 sidebar: mydoc_sidebar
-permalink: message_information.html
+permalink: message_properties.html
 folder: mydoc
 ---
 
 The `Playstation\Api\Message` class only has methods that return various properties of a Message.
+
+## Properties
 
 ### Sender
 
@@ -22,7 +24,7 @@ Returns an instance of `Playstation\Api\User`.
 Gets the thread the message is in.
 
 ```php
-$user = $message->sender();
+$thread = $message->thread();
 ```
 
 Returns an instance of `Playstation\Api\MessageThread`.

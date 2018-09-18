@@ -45,8 +45,8 @@ entries:
     output: web, pdf
     folderitems:
 
-    - title: Message Information
-      url: /message_information.html
+    - title: Properties
+      url: /message_properties.html
       output: web, pdf
 
   - title: Message Thread
