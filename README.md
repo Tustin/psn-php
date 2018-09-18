@@ -2,7 +2,9 @@
 
 A PHP wrapper for the PlayStation API.
 
-[![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
+
+[![GitHub stars](https://img.shields.io/github/stars/Tustin/psn-php.svg)](https://github.com/Tustin/psn-php/stargazers)
+[![GitHub license](https://img.shields.io/github/license/Tustin/psn-php.svg)](https://github.com/Tustin/psn-php/blob/master/LICENSE)
 
 ## Getting Started
 
