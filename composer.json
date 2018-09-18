@@ -1,9 +1,14 @@
 {
     "name": "tustin/psn-php",
     "license": "MIT",
+    "description": "PHP wrapper for the PlayStation API.",
+    "homepage": "https://github.com/Tustin/psn-php",
+    "keywords": ["playstation", "api", "php"],
     "autoload": {
-        "classmap": [
-            "include/"
-        ]
+        "psr-4": {"PlayStation\\": "src/"}
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "php": "^7.2"
     }
 }
