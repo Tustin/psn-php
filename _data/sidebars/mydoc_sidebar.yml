@@ -25,15 +25,42 @@ entries:
       url: /future_logins.html
       output: web, pdf
 
-    - title: User
+  - title: User
     output: web, pdf
     folderitems:
 
-    - title: First Login
-      url: /first_login.html
+    - title: Getting A User Object
+      url: /getting_user.html
       output: web, pdf
 
-    - title: Future Logins
-      url: /future_logins.html
+    - title: User Management
+      url: /user_management.html
       output: web, pdf
-      
+
+    - title: Messaging a User
+      url: /user_messaging.html
+      output: web, pdf
+
+  - title: Message
+    output: web, pdf
+    folderitems:
+
+    - title: Message Information
+      url: /message_information.html
+      output: web, pdf
+
+  - title: Message Thread
+    output: web, pdf
+    folderitems:
+
+    - title: Message Thread Management
+      url: /message_thread_management.html
+      output: web, pdf
+
+    - title: Sending Messages
+      url: /message_thread_messages.html
+      output: web, pdf
+
+    - title: Properties
+      url: /message_thread_properties.html
+      output: web, pdf
