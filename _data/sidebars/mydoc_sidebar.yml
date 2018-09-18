@@ -5,14 +5,13 @@ entries:
   product: psn-php
   version: 2.0
   folders:
-    
+
   - title: Getting Started
     output: web, pdf
+    url: /index.html
+    type: homepage
     folderitems:
-    - title: Installing
-      url: /index.html
-      output: web, pdf
-      type: homepage
+
 
   - title: Authenticating
     output: web, pdf
@@ -25,3 +24,16 @@ entries:
     - title: Future Logins
       url: /future_logins.html
       output: web, pdf
+
+    - title: User
+    output: web, pdf
+    folderitems:
+
+    - title: First Login
+      url: /first_login.html
+      output: web, pdf
+
+    - title: Future Logins
+      url: /future_logins.html
+      output: web, pdf
+      
