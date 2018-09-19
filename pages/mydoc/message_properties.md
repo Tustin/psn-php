@@ -7,7 +7,7 @@ folder: mydoc
 
 The `Playstation\Api\Message` class only has methods that return various properties of a Message.
 
-## Properties
+## Message Properties
 
 ### Sender
 

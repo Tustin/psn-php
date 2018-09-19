@@ -7,7 +7,7 @@ folder: mydoc
 
 To obtain an instance of `Playstation\Api\MessageThread`, please read the [User documentation for Message Threads](user_messaging.html#all-message-threads).
 
-## Properties
+## Message Thread Properties
 
 ### Members
 

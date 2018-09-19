@@ -8,9 +8,11 @@ entries:
 
   - title: Getting Started
     output: web, pdf
-    url: /index.html
-    type: homepage
     folderitems:
+
+      - title: Installing
+        url: /index.html
+        output: web, pdf
 
 
   - title: Authenticating
@@ -41,6 +43,14 @@ entries:
       url: /user_messaging.html
       output: web, pdf
 
+    - title: User Trophies
+      url: /user_trophies.html
+      output: web, pdf
+
+    - title: Properties
+      url: /user_properties.html
+      output: web, pdf
+
   - title: Message
     output: web, pdf
     folderitems:
@@ -63,4 +73,28 @@ entries:
 
     - title: Properties
       url: /message_thread_properties.html
+      output: web, pdf
+
+  - title: Game
+    output: web, pdf
+    folderitems:
+
+    - title: Game Trophies
+      url: /game_trophies.html
+      output: web, pdf
+
+  - title: Trophy
+    output: web, pdf
+    folderitems:
+
+    - title: Properties
+      url: /trophy_properties.html
+      output: web, pdf
+
+  - title: Trophy Group
+    output: web, pdf
+    folderitems:
+
+    - title: Properties
+      url: /trophy_group_properties.html
       output: web, pdf
