@@ -74,6 +74,7 @@ class HttpClient {
         }
 
         $options['headers'] = $headers;
+        $options['allow_redirects'] = false;
 
         try {
             return $this->client->request($method, $path, $options);
