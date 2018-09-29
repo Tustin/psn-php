@@ -32,10 +32,10 @@ class Client {
     private $refreshToken;
     private $expiresIn;
 
-    public function __construct(HttpClient $httpClient = null, array $options = [])
+    public function __construct(array $options = [])
     {
         $this->options = $options;
-        $this->httpClient = $httpClient ?? new HttpClient(new \GuzzleHttp\Client($this->options));
+        $this->httpClient = new HttpClient(new \GuzzleHttp\Client($this->options));
     }
     
     /**

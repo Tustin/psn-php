@@ -136,12 +136,14 @@ class User extends AbstractApi
     /**
      * Add the User to friends list.
      *
+     *  Will not do anything if called on the logged in user.
+     * 
      * @param string $requestMessage Message to send with the request.
      * @return void
      */
     public function add(string $requestMessage = null) : void
     {
-        if ($this->onlineId() === null) return;
+        if ($this->onlineIdParameter() === 'me') return;
 
         $data = ($requestMessage === null) ? new \stdClass() : [
             "requestMessage" => $requestMessage
@@ -153,11 +155,13 @@ class User extends AbstractApi
     /**
      * Remove the User from friends list.
      *
+     *  Will not do anything if called on the logged in user.
+     * 
      * @return void
      */
     public function remove() : void
     {
-        if ($this->onlineId() === null) return;
+        if ($this->onlineIdParameter() === 'me') return;
 
         $this->delete(sprintf(self::USERS_ENDPOINT . 'friendList/%s', $this->client->onlineId(), $this->onlineId()));
     }
@@ -169,19 +173,21 @@ class User extends AbstractApi
      */
     public function block() : void
     {
-        if ($this->onlineId() === null) return;
+        if ($this->onlineIdParameter() === 'me') return;
 
         $this->post(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->onlineId(), $this->onlineId()), null);
     }
 
     /**
      * Unblock the User.
+     * 
+     * Will not do anything if called on the logged in user.
      *
      * @return void
      */
     public function unblock() : void
     {
-        if ($this->onlineId() === null) return;
+        if ($this->onlineIdParameter() === 'me') return;
 
         $this->delete(sprintf(self::USERS_ENDPOINT . 'blockList/%s', $this->client->onlineId(), $this->onlineId()));
     }
@@ -189,11 +195,10 @@ class User extends AbstractApi
     /**
      * Get the User's friends.
      *
-     * @param string $filter Online Filter.
      * @param integer $limit How many users to return.
      * @return array Array of Api\User.
      */
-    public function friends($filter = 'online', $limit = 36) : array
+    public function friends($limit = 36) : array
     {
         $result = [];
 
@@ -411,7 +416,7 @@ class User extends AbstractApi
      */
     private function messageGroup() : ?MessageThread
     {
-        if ($this->onlineId() === null) return null;
+        if ($this->onlineIdParameter() === 'me') return null;
 
         $thread = $this->privateMessageThread();
 
