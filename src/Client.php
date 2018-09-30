@@ -78,7 +78,7 @@ class Client {
             ]);
 
             if (($response instanceof Response) === false) {
-                throw new \Expection('Unexpected response');
+                throw new \Exception('Unexpected response');
             }
 
             $grant = $response->getHeaderLine('X-NP-GRANT-CODE');
@@ -196,7 +196,7 @@ class Client {
      * @param string $onlineId The User's onlineId (null to get current User's account).
      * @return void
      */
-    public function user(string $onlineId = null) 
+    public function user(string $onlineId = '') 
     {
         return new User($this, $onlineId);
     }

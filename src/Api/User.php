@@ -20,12 +20,31 @@ class User extends AbstractApi
 
     private $sessions = [];
 
-    public function __construct(Client $client, string $onlineId = null) 
+    /**
+     * Constructs a new User.
+     *
+     * @param Client $client
+     * @param object|string $onlineIdOrProfileObject The User's onlineId or their profile data.
+     */
+    public function __construct(Client $client, $onlineIdOrProfileObject = '') 
     {
         parent::__construct($client);
 
-        $this->onlineId = $onlineId;
-        $this->onlineIdParameter = $this->onlineId ?? "me";
+        if (gettype($onlineIdOrProfileObject) == 'object') {
+            $this->profile = $onlineIdOrProfileObject;
+            $this->onlineId = $this->profile->onlineId;
+
+            // Probably a cleaner way to set this, but since onlineId() is cached, it'll do for now.
+            $this->onlineIdParameter = ($client->onlineId() == $this->onlineId) ? "me" : $this->onlineId;
+        } else if (gettype($onlineIdOrProfileObject) == 'string') {
+            $this->onlineId = $onlineIdOrProfileObject;
+            // If $onlineIdOrProfileObject is a string and is empty, then that means this object is meant for the logged in user.
+            $this->onlineIdParameter = ($onlineIdOrProfileObject == '') ? "me" : $onlineIdOrProfileObject;
+        } else {
+            throw new \InvalidArgumentException(
+                sprintf('$onlineIdOrProfileObject is intended to be of type object or string, %s given.', gettype($onlineIdOrProfileObject))
+            );
+        }
     }
 
     /**
@@ -58,9 +77,9 @@ class User extends AbstractApi
         if ($this->profile === null) {
             $this->profile = $this->get(sprintf(self::USERS_ENDPOINT . 'profile2', $this->onlineIdParameter), [
                 'fields' => 'npId,onlineId,accountId,avatarUrls,plus,aboutMe,languagesUsed,trophySummary(@default,progress,earnedTrophies),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),personalDetailSharing,personalDetailSharingRequestMessageFlag,primaryOnlineStatus,presences(@titleInfo,hasBroadcastData),friendRelation,requestMessageFlag,blocking,mutualFriendsCount,following,followerCount,friendsCount,followingUsersCount&avatarSizes=m,xl&profilePictureSizes=m,xl&languagesUsedLanguageSet=set3&psVitaTitleIcon=circled&titleIconSize=s'
-            ]);
+            ])->profile;
         }
-        return $this->profile->profile;
+        return $this->profile;
     }
 
     /**
@@ -133,6 +152,24 @@ class User extends AbstractApi
         return ($this->info()->personalDetailSharing !== 'no');
     }
 
+    public function lastOnlineDate() : ?\DateTime
+    {
+        $isOnline = $this->info()->presences[0]->onlineStatus == "online";
+
+        // They're online now, so just return the current DateTime.
+        if ($isOnline) return new \DateTime();
+
+        // If they don't have a DateTime, just return null.
+        // This can happen if the User object was created using the onlineId string and not the profile data.
+        // Sony only provides lastOnlineDate on the 'friends/profiles2' endpoint and not the individual userinfo endpoint.
+        // This can be a TODO if in the future Sony decides to make that property available for that endpoint.
+        // - Tustin 9/29/2018
+        if (!isset($this->info()->presences[0]->lastOnlineDate)) return null;
+        
+        // I guess it's possible for lastOnlineDate to not exist, but that seems very unlikely.
+        return new \DateTime($this->info()->presences[0]->lastOnlineDate);
+    }
+
     /**
      * Add the User to friends list.
      *
@@ -193,23 +230,29 @@ class User extends AbstractApi
     }
 
     /**
-     * Get the User's friends.
+     * Undocumented function
      *
-     * @param integer $limit How many users to return.
+     * @param string $sort Order to return friends in (onlineStatus | name-onlineId)
+     * @param integer $offset Where to start
+     * @param integer $limit How many friends to return
      * @return array Array of Api\User.
      */
-    public function friends($limit = 36) : array
+    public function friends($sort = 'onlineStatus', $offset = 0, $limit = 36) : array
     {
         $result = [];
 
         $friends = $this->get(sprintf(self::USERS_ENDPOINT . 'friends/profiles2', $this->onlineIdParameter()), [
-            'fields' => 'onlineId',
+            'fields' => 'onlineId,accountId,avatarUrls,plus,trophySummary(@default),isOfficiallyVerified,personalDetail(@default,profilePictureUrls),presences(@titleInfo,hasBroadcastData,lastOnlineDate),presences(@titleInfo),friendRelation,consoleAvailability',
+            'offset' => $offset,
             'limit' => $limit,
-            'sort' => 'name-onlineId'
+            'profilePictureSizes' => 'm',
+            'avatarSizes' => 'm',
+            'titleIconSize' => 's',
+            'sort' => $sort
         ]);
         
         foreach ($friends->profiles as $friend) {
-            $result[] = new self($this->client, $friend->onlineId);
+            $result[] = new self($this->client, $friend);
         }
 
         return $result;
