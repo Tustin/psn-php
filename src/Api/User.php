@@ -152,6 +152,11 @@ class User extends AbstractApi
         return ($this->info()->personalDetailSharing !== 'no');
     }
 
+    /**
+     * Gets the last online date for the User.
+     *
+     * @return \DateTime|null
+     */
     public function lastOnlineDate() : ?\DateTime
     {
         $isOnline = $this->info()->presences[0]->onlineStatus == "online";
@@ -230,7 +235,7 @@ class User extends AbstractApi
     }
 
     /**
-     * Undocumented function
+     * Gets the User's friends.
      *
      * @param string $sort Order to return friends in (onlineStatus | name-onlineId)
      * @param integer $offset Where to start
