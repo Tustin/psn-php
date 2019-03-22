@@ -48,6 +48,16 @@ class User extends AbstractApi
     }
 
     /**
+     * Gets accountId ID.
+     *
+     * @return void
+     */
+    public function accountId() : string
+    {
+        return $this->info()->accountId;
+    }
+
+    /**
      * Gets online ID.
      *
      * @return void
