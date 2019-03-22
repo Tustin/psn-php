@@ -50,7 +50,7 @@ class User extends AbstractApi
     /**
      * Gets accountId ID.
      *
-     * @return void
+     * @return string
      */
     public function accountId() : string
     {
@@ -60,7 +60,7 @@ class User extends AbstractApi
     /**
      * Gets online ID.
      *
-     * @return void
+     * @return string
      */
     public function onlineId() : string
     {
