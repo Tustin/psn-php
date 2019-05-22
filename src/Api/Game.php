@@ -252,9 +252,9 @@ class Game extends AbstractApi
     public function hasPlayed() : bool
     {
         if ($this->comparing() && isset($this->trophyInfo()->comparedUser)) {
-            return $this->trophyInfo()->comparedUser;
+            return (bool) $this->trophyInfo()->comparedUser;
         } else if (isset($this->trophyInfo()->fromUser)) {
-            return $this->trophyInfo()->fromUser;
+            return (bool) $this->trophyInfo()->fromUser;
         }
 
         return false;
