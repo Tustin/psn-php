@@ -50,7 +50,7 @@ class User extends AbstractApi
     /**
      * Gets online ID.
      *
-     * @return void
+     * @return string
      */
     public function onlineId() : string
     {
@@ -133,11 +133,11 @@ class User extends AbstractApi
     }
 
     /**
-     * Gets the User psnuid.
+     * Gets the User accountId.
      *
      * @return string
      */
-    public function psnuid() : string
+    public function accountId() : string
     {
         return $this->info()->accountId;
     }
@@ -282,14 +282,7 @@ class User extends AbstractApi
     {
         $returnGames = [];
 
-        $games = $this->get(sprintf(Game::GAME_ENDPOINT . 'users/%s/titles', $this->onlineIdParameter()), [
-            'type'  => 'played',
-            'app'   => 'richProfile', // ??
-            'sort'  => '-lastPlayedDate',
-            'limit' => $limit,
-            'iw'    => 240, // Size of game image width
-            'ih'    => 240  // Size of game image height
-        ]);
+        $games = $this->fetchPlayedGames($limit);
 
         if ($games->size === 0) return $returnGames;
 
@@ -298,6 +291,22 @@ class User extends AbstractApi
         }
 
         return $returnGames;
+    }
+
+    /**
+     * @param int $limit
+     * @return 
+     */
+    public function fetchPlayedGames($limit)
+    {
+        return $this->get(sprintf(Game::GAME_ENDPOINT . 'users/%s/titles', $this->onlineIdParameter()), [
+            'type'  => 'played',
+            'app'   => 'richProfile', // ??
+            'sort'  => '-lastPlayedDate',
+            'limit' => $limit,
+            'iw'    => 240, // Size of game image width
+            'ih'    => 240  // Size of game image height
+        ]);
     }
 
     /**
