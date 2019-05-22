@@ -1,4 +1,8 @@
 language: php
 php:
-- '7.2'
-script: phpunit --configuration phpunit.xml
+  - '7.2'
+install:
+  - composer self-update
+  - composer install
+script: 
+  - phpunit --configuration phpunit.xml
