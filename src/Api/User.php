@@ -133,6 +133,16 @@ class User extends AbstractApi
     }
 
     /**
+     * Gets the User psnuid.
+     *
+     * @return string
+     */
+    public function psnuid() : string
+    {
+        return $this->info()->accountId;
+    }
+    
+    /**
      * Checks if logged in User is friends with the current User.
      *
      * @return boolean
