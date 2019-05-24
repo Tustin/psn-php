@@ -194,9 +194,9 @@ class Client {
      * Creates a new User object.
      *
      * @param string $onlineId The User's onlineId (null to get current User's account).
-     * @return void
+     * @return PlayStation\Api\User
      */
-    public function user(string $onlineId = '') 
+    public function user(string $onlineId = '') : User
     {
         return new User($this, $onlineId);
     }
@@ -205,9 +205,9 @@ class Client {
      * Find a game by it's title ID and return a new Game object.
      *
      * @param string $titleId The Game's title ID
-     * @return void
+     * @return PlayStation\Api\Game
      */
-    public function game(string $titleId) 
+    public function game(string $titleId) : Game
     {
         return new Game($this, $titleId);
     }
@@ -218,7 +218,7 @@ class Client {
      * @param string $communityIdOrName Community ID or the name of the new community.
      * @param string $type 
      * @param string $titleId Game to associate your Community with.
-     * @return Community
+     * @return PlayStation\Api\Community
      */
     public function community(string $communityIdOrName, string $type = '', string $titleId = '') : Community
     {
