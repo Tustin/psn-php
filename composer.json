@@ -5,10 +5,13 @@
     "homepage": "https://github.com/Tustin/psn-php",
     "keywords": ["playstation", "api", "php"],
     "autoload": {
-        "psr-4": {"PlayStation\\": "src/"}
+        "psr-4": {
+            "PlayStation\\": "src/"
+        }
     },
     "require": {
         "guzzlehttp/guzzle": "^6.3",
-        "php": "^7.2"
+        "php": "^7.2",
+        "phpunit/phpunit": "^8.1"
     }
 }
