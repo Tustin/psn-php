@@ -97,9 +97,21 @@ class Trophy extends AbstractApi
      */
     public function earned() : bool
     {
-        return $this->comparing() ?
-        $this->trophy->comparedUser->earned :
-        $this->trophy->fromUser->earned;
+        // TODO: Temp fix for #93, for some reason the comparedUser isn't always returned from the PlayStation API.
+        // Needs additional investigation but this will at least stop it bugging out.
+        if ($this->comparing()) {
+            if (property_exists($this->trophy, 'comparedUser')) {
+                return $this->trophy->comparedUser->earned;
+            }
+
+            return false;
+        }
+
+        if (property_exists($this->trophy, 'fromUser')) {
+            return $this->trophy->fromUser->earned;
+        }
+
+        return false;
     }
 
     /**
