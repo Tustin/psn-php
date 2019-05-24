@@ -34,7 +34,7 @@ class MessageThread extends AbstractApi
      * @param boolean $force Force an update.
      * @return object
      */
-    public function info(int $count = 1, bool $force = false) : object
+    public function info(int $count = 1, bool $force = false) : \stdClass
     {
         if ($this->messageThread === null || $force) {
             $this->messageThread = $this->get(sprintf(self::MESSAGE_THREAD_ENDPOINT . 'threads/%s', $this->messageThreadId), [

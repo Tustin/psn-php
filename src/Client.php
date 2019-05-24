@@ -204,7 +204,7 @@ class Client {
      * @param integer $limit Amount of threads.
      * @return object
      */
-    public function messageThreads(int $offset = 0, int $limit = 20) : object
+    public function messageThreads(int $offset = 0, int $limit = 20) : \stdClass
     {
         if ($this->messageThreads === null) {
             $response = $this->httpClient()->get(MessageThread::MESSAGE_THREAD_ENDPOINT . 'threads/', [

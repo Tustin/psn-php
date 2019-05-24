@@ -25,7 +25,7 @@ class Session extends AbstractApi
      *
      * @return object
      */
-    public function info() : object
+    public function info() : \stdClass
     {
         return $this->session;
     }

@@ -20,7 +20,7 @@ class Thread extends AbstractApi
         $this->community = $community;
     }
 
-    public function info() : object
+    public function info() : \stdClass
     {
         return $this->thread;
     }

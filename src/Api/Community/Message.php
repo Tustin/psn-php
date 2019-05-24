@@ -22,7 +22,7 @@ class Message extends AbstractApi
         $this->thread = $thread;
     }
 
-    public function info() : object
+    public function info() : \stdClass
     {
         return $this->message;
     }

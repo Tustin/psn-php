@@ -33,7 +33,7 @@ class Comment extends AbstractApi
      *
      * @return object
      */
-    public function info() : object
+    public function info() : \stdClass
     {
         return $this->comment;
     }

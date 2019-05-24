@@ -72,7 +72,7 @@ class User extends AbstractApi
      *
      * @return object
      */
-    public function info() : object
+    public function info() : \stdClass
     {
         if ($this->profile === null) {
             $this->profile = $this->get(sprintf(self::USERS_ENDPOINT . 'profile2', $this->onlineIdParameter), [

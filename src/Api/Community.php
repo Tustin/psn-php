@@ -22,7 +22,7 @@ class Community extends AbstractApi
         $this->communityId = $communityId;
     }
 
-    public function info(bool $force = false) : object
+    public function info(bool $force = false) : \stdClass
     {
         if ($this->community === null || $force) {
             $this->community = $this->get(sprintf(self::COMMUNITY_ENDPOINT . 'communities/%s', $this->communityId), [
@@ -174,7 +174,7 @@ class Community extends AbstractApi
         return $returnMembers;
     }
 
-    public function threads() : object
+    public function threads() : \stdClass
     {
         if ($this->threads === null) {
             $this->threads = $this->get(sprintf(self::COMMUNITY_ENDPOINT . 'communities/%s/threads', $this->id()));
