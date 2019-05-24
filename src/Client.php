@@ -103,12 +103,41 @@ class Client {
         $this->refreshToken = $response->refresh_token;
         $this->expiresIn = $response->expires_in;
 
+        $this->httpClient = $this->createTokenMiddleware($this->accessToken);
+    }
+
+    /**
+     * Creates a new HttpClient using middleware that adds the access token to the header of each request.
+     *
+     * @param string $accessToken PlayStation access token.
+     * @return HttpClient
+     */
+    private function createTokenMiddleware(string $accessToken) : HttpClient
+    {
         $handler = \GuzzleHttp\HandlerStack::create();
-        $handler->push(Middleware::mapRequest(new TokenMiddleware($this->accessToken(), $this->refreshToken(), $this->expireDate())));
+
+        $handler->push(
+            Middleware::mapRequest(
+                new TokenMiddleware($accessToken)
+            )
+        );
 
         $newOptions = array_merge(['handler' => $handler], $this->options);
     
-        $this->httpClient = new HttpClient(new \GuzzleHttp\Client($newOptions));
+        return new HttpClient(new \GuzzleHttp\Client($newOptions));
+    }
+
+    /**
+     * Access the PlayStation API using an existing access token.
+     *
+     * @param string $accessToken
+     * @return void
+     */
+    public function setAccessToken(string $accessToken)
+    {
+        $this->accessToken = $accessToken;
+
+        $this->httpClient = $this->createTokenMiddleware($this->accessToken);
     }
 
     /**
