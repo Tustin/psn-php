@@ -97,7 +97,7 @@ class Game extends AbstractApi
             return false;
         }
 
-        $user = $this->hasPlayed();
+        $user = $this->userTrophyInfo();
 
         return ($user === false) ? false : boolval($user->earnedTrophies->platinum);
     }
@@ -128,7 +128,7 @@ class Game extends AbstractApi
                 'npLanguage' => 'en'
             ];
 
-            if ($this->comparing()) {
+            if ($this->isComparing()) {
                 $data['comparedUser'] = $this->user()->onlineId();
             }
 
@@ -178,7 +178,7 @@ class Game extends AbstractApi
             'npLanguage' => 'en'
         ];
 
-        if ($this->comparing()) {
+        if ($this->isComparing()) {
             $data['comparedUser'] = $this->user()->onlineId();
         }
 
@@ -208,7 +208,7 @@ class Game extends AbstractApi
             'npLanguage' => 'en'
         ];
 
-        if ($this->comparing()) {
+        if ($this->isComparing()) {
             $data['comparedUser'] = $this->user()->onlineId();
         }
 
@@ -237,9 +237,11 @@ class Game extends AbstractApi
      *
      * @return boolean
      */
-    public function comparing() : bool
+    public function isComparing() : bool
     {
-        if ($this->user() === null) return false;
+        if ($this->user() === null) {
+            return false;
+        }
 
         return ($this->user()->onlineId() !== null);
     }
@@ -251,12 +253,47 @@ class Game extends AbstractApi
      */
     public function hasPlayed() : bool
     {
-        if ($this->comparing() && isset($this->trophyInfo()->comparedUser)) {
-            return (bool) $this->trophyInfo()->comparedUser;
-        } else if (isset($this->trophyInfo()->fromUser)) {
-            return (bool) $this->trophyInfo()->fromUser;
+        return boolval($this->userTrophyInfo());
+    }
+
+    /**
+     * Gets the trophy information from the user that is being compared to.
+     *
+     * @return object|null
+     */
+    private function comparedUserTrophyInfo() : ?object
+    {
+        return isset($this->trophyInfo()->comparedUser) ? $this->trophyInfo()->comparedUser : null;
+    }
+
+    /**
+     * Gets the trophy information from the user that is logged in to the api.
+     *
+     * @return object|null
+     */
+    private function fromUserTrophyInfo() : ?object
+    {
+        return isset($this->trophyInfo()->fromUser) ? $this->trophyInfo()->fromUser : null;
+    }
+
+    /**
+     * Gets the trophy information for the active user. When a compared user is set, the trophy information for the
+     * compared user will be returned, otherwise the trophy information for the from user (user that is logged in to
+     * the API) will be returned.
+     *
+     * @return object|null
+     */
+    public function userTrophyInfo() : ?object
+    {
+        $comparedUserTrophyInfo = $this->comparedUserTrophyInfo();
+        $fromUserTrophyInfo = $this->fromUserTrophyInfo();
+
+        if ($this->isComparing() && $comparedUserTrophyInfo) {
+            return $comparedUserTrophyInfo;
+        } else if ($fromUserTrophyInfo) {
+            return $fromUserTrophyInfo;
         }
 
-        return false;
+        return null;
     }
 }
