@@ -140,6 +140,6 @@ class TrophyGroup extends AbstractApi
      */
     public function comparing() : bool
     {
-        return $this->game()->comparing();
+        return $this->game()->isComparing();
     }
 }
