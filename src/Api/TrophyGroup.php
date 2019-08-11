@@ -104,7 +104,12 @@ class TrophyGroup extends AbstractApi
         return new \DateTime($this->group->lastUpdateDate);
     }
 
-    public function trophies() : array 
+    /**
+     * get trophies
+     * 
+     * @param $language result's language "zh-CN" or "en"
+     */
+    public function trophies(String $language) : array 
     {
         $returnTrophies = [];
 
@@ -112,7 +117,7 @@ class TrophyGroup extends AbstractApi
             'fields' => '@default,trophyRare,trophyEarnedRate,hasTrophyGroups,trophySmallIconUrl',
             'iconSize' => 'm',
             'visibleType' => 1,
-            'npLanguage' => 'en'
+            'npLanguage' => $language
         ];
 
         if ($this->comparing()) {
