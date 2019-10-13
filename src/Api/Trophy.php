@@ -97,20 +97,16 @@ class Trophy extends AbstractApi
      */
     public function earned() : bool
     {
-        // TODO: Temp fix for #93, for some reason the comparedUser isn't always returned from the PlayStation API.
-        // Needs additional investigation but this will at least stop it bugging out.
+        // fix someone can't get `earned`
         if ($this->comparing()) {
             if (property_exists($this->trophy, 'comparedUser')) {
                 return $this->trophy->comparedUser->earned;
             }
 
-            return false;
+            if (property_exists($this->trophy, 'fromUser')) {
+                return $this->trophy->fromUser->earned;
+            }
         }
-
-        if (property_exists($this->trophy, 'fromUser')) {
-            return $this->trophy->fromUser->earned;
-        }
-
         return false;
     }
 
@@ -121,13 +117,21 @@ class Trophy extends AbstractApi
      */
     public function earnedDate() : ?\DateTime
     {
-        if (!$this->earned()) return null;
+        //fix sometime the `enrnedDate` is undefined
+        if ($this->earned() && $this->comparing()) {
+            try {
 
-        return new \DateTime(
-            $this->comparing() ?
-            $this->trophy->comparedUser->earnedDate :
-            $this->trophy->fromUser->earnedDate
-        );
+                if (property_exists($this->trophy, 'comparedUser') && property_exists($this->trophy->comparedUser, 'earnedDate')) {
+                    return new \DateTime($this->trophy->comparedUser->earnedDate);
+                }
+                if (property_exists($this->trophy, 'fromUser') && property_exists($this->trophy->fromUser, 'earnedDate')) {
+                    return new \DateTime($this->trophy->fromUser->earnedDate);
+                }
+            } catch (Exception $e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     /**
