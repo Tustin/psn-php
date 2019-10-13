@@ -161,6 +161,16 @@ class User extends AbstractApi
     {
         return ($this->info()->personalDetailSharing !== 'no');
     }
+    
+    /**
+     * Checks if logged in User sent a friend request to the current User.
+     *
+     * @return boolean
+     */
+    public function friendRequested() : bool
+    {
+      return ($this->info()->friendRelation == 'requesting');
+    }
 
     /**
      * Gets the last online date for the User.
