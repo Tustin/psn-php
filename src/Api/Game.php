@@ -63,6 +63,16 @@ class Game extends AbstractApi
     }
 
     /**
+     * Gets the Game's platform
+     * 
+     * @return string
+     */
+    public function platform() : string
+    {
+        return $this->game->trophyTitlePlatfrom;
+    }
+
+    /**
      * Gets the Game's NP communication ID.
      *
      * @return string
