@@ -288,7 +288,7 @@ class User extends AbstractApi
      *
      * @return object
      */
-    public function trophies($offset = 0, $language = 'en', $limit = 128) : \stdClass
+    public function trophyTitles($offset = 0, $language = 'en', $limit = 128) : \stdClass
     {
         $data = [
             'comparedUser' => $this->onlineIdParameter(),
