@@ -293,7 +293,7 @@ class User extends AbstractApi
         $data = [
             'comparedUser' => $this->onlineIdParameter(),
             'fields' => '@default,trophyTitleSmallIconUrl',
-            'limit' => $limit, // 128 is max
+            'limit' => min($limit, 128), // 128 is max
             'npLanguage' => $language,
             'offset' => $offset,
             'platform' => 'PS3,PS4,PSVITA'
