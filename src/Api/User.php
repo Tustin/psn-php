@@ -284,6 +284,25 @@ class User extends AbstractApi
     }
 
     /**
+     * Gets the User's latest games via trophies. This includes all consoles (PS3, PS4 and PS Vita).
+     *
+     * @return object
+     */
+    public function trophyTitles($offset = 0, $language = 'en', $limit = 128) : \stdClass
+    {
+        $data = [
+            'comparedUser' => $this->onlineIdParameter(),
+            'fields' => '@default,trophyTitleSmallIconUrl',
+            'limit' => min($limit, 128), // 128 is max
+            'npLanguage' => $language,
+            'offset' => $offset,
+            'platform' => 'PS3,PS4,PSVITA'
+        ];
+        
+        return $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles'), $data);
+    }
+    
+    /**
      * Gets the User's Games played.
      *
      * @return array Array of Api\Game.
