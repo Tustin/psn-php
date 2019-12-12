@@ -319,6 +319,23 @@ class User extends AbstractApi
     }
     
     /**
+     * Gets all trophies of a game and the specified trophy group. 'default' are the main trophies of the game. '001', '002'... are the DLC trophies.
+     *
+     * @return object
+     */
+    public function trophies($gameId, $trophyGroupId = 'default') : \stdClass
+    {
+        $data = [
+            'comparedUser' => $this->onlineIdParameter(),
+            'fields' => '@default,trophyRare,trophyEarnedRate,trophySmallIconUrl',
+            'npLanguage' => 'en',
+            'visibleType' => '1'
+        ];
+        
+        return $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups/%s/trophies', $gameId, $trophyGroupId), $data);
+    }
+    
+    /**
      * Gets the User's Games played.
      *
      * @return array Array of Api\Game.
