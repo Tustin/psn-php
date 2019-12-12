@@ -303,6 +303,22 @@ class User extends AbstractApi
     }
     
     /**
+     * Gets all of the game's "trophy groups" data. 'default' is the base data of the game. The following '001', '002'... are the DLC data.
+     *
+     * @return object
+     */
+    public function trophyGroups($gameId) : \stdClass
+    {
+        $data = [
+            'comparedUser' => $this->onlineIdParameter(),
+            'fields' => '@default,trophyGroupSmallIconUrl',
+            'npLanguage' => 'en'
+        ];
+        
+        return $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups', $gameId), $data);
+    }
+    
+    /**
      * Gets the User's Games played.
      *
      * @return array Array of Api\Game.
