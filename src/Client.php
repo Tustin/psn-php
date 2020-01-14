@@ -127,6 +127,25 @@ class Client {
         return new HttpClient(new \GuzzleHttp\Client($newOptions));
     }
 
+
+    public function loginWithNpsso(string $npsso)
+    {
+        $response = $this->httpClient()->post(self::AUTH_API . 'oauth/token', [
+            'client_id' => self::CLIENT_ID,
+            'client_secret' => self::CLIENT_SECRET,
+            'scope' => self::SCOPE,
+            'grant_type' => 'sso_cookie',
+        ], HttpClient::FORM, [
+            'Cookie' => 'npsso=' . $npsso
+        ]);
+
+        $this->accessToken = $response->access_token;
+        $this->refreshToken = $response->refresh_token;
+        $this->expiresIn = $response->expires_in;
+
+        $this->httpClient = $this->createTokenMiddleware($this->accessToken);
+    }
+
     /**
      * Access the PlayStation API using an existing access token.
      *
