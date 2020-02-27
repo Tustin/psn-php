@@ -200,37 +200,23 @@ class Game extends AbstractApi
 
         return $returnGroups;
     }
-    
 
     /**
      * Gets all Trophies for this Game.
      *
+     * @param string $language @see PlayStation\Api\TrophyGroup::trophies
      * @return array Array of Api\Trophy
      */
-    public function trophies() : array 
+    public function trophies(string $language = 'en') : array
     {
         $returnTrophies = [];
 
-        $data = [
-            'fields' => '@default,trophyRare,trophyEarnedRate,hasTrophyGroups,trophySmallIconUrl',
-            'iconSize' => 'm',
-            'visibleType' => 1,
-            'npLanguage' => 'en'
-        ];
-
-        if ($this->isComparing()) {
-            $data['comparedUser'] = $this->user()->onlineId();
-        }
-
-        $trophies = $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles/%s/trophyGroups/all/trophies', $this->communicationId()), $data);
-
-        foreach ($trophies->trophies as $trophy) {
-            $returnTrophies[] = new Trophy($this->client, $trophy, $this);
+        foreach ($this->trophyGroups() as $trophyGroup) {
+            $returnTrophies = array_merge($returnTrophies, $trophyGroup->trophies($language));
         }
 
         return $returnTrophies;
     }
-
 
     /**
      * Gets the User who played this game.
