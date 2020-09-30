@@ -288,7 +288,7 @@ class User extends AbstractApi
      *
      * @return object
      */
-    public function trophyTitles($offset = 0, $language = 'en', $limit = 128) : \stdClass
+    public function trophyTitles($offset = 0, $language = 'en', $limit = 128, $platform = 'PS3,PS4,PSVITA') : \stdClass
     {
         $data = [
             'comparedUser' => $this->onlineIdParameter(),
@@ -296,7 +296,7 @@ class User extends AbstractApi
             'limit' => min($limit, 128), // 128 is max
             'npLanguage' => $language,
             'offset' => $offset,
-            'platform' => 'PS3,PS4,PSVITA'
+            'platform' => $platform
         ];
         
         return $this->get(sprintf(Trophy::TROPHY_ENDPOINT . 'trophyTitles'), $data);
