@@ -74,9 +74,6 @@ class UsersSearchIterator extends AbstractApiIterator
 
     public function current()
     {
-        // return User::fromObject(
-        //     $this->usersRepository,
-        //     $this->getFromOffset($this->currentOffset)
-        // );
+        return new User($this->usersFactory, $this->getFromOffset($this->currentOffset)->socialMetadata->accountId);
     }
 }

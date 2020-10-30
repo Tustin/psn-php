@@ -4,6 +4,7 @@ namespace Tustin\PlayStation\Traits;
 use ReflectionClass;
 use RuntimeException;
 use InvalidArgumentException;
+use Tustin\PlayStation\Interfaces\Fetchable;
 
 trait Model
 {
@@ -21,11 +22,11 @@ trait Model
     {
         if (!$this->hasCached() || $ignoreCache)
         {
-            // if (!(new ReflectionClass($this))->implementsInterface(Fetchable::class))
-            // {
-            //     throw new RuntimeException('Model [' . get_class($this) . '] has not been cached, 
-            //     but doesn\'t implement Fetchable to make requests.');
-            // }
+            if (!(new ReflectionClass($this))->implementsInterface(Fetchable::class))
+            {
+                throw new RuntimeException('Model [' . get_class($this) . '] has not been cached, 
+                but doesn\'t implement Fetchable to make requests.');
+            }
 
             $this->setCache($this->fetch());
             $this->pluck($property);

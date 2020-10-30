@@ -210,6 +210,6 @@ class User extends Api implements Fetchable
      */
     public function fetch() : object
     {
-        return $this->get('userProfile/v1/internal/users/' . $this->accountId . '/profiles')->profile;
+        return $this->get('userProfile/v1/internal/users/' . $this->accountId . '/profiles');
     }
 }
