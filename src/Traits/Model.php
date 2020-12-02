@@ -5,10 +5,23 @@ use ReflectionClass;
 use RuntimeException;
 use InvalidArgumentException;
 use Tustin\PlayStation\Interfaces\Fetchable;
+use Tustin\PlayStation\Interfaces\FactoryInterface;
 
 trait Model
 {
-    private array $cache = [];
+    /**
+     * The cache for the model.
+     *
+     * @var array
+     */
+    private $cache = [];
+
+    /**
+     * The factory the model was instantiated by.
+     *
+     * @var FactoryInterface
+     */
+    private $factory;
 
     /**
      * Plucks an API property from the cache. Will populate cache if necessary.
@@ -73,5 +86,15 @@ trait Model
     {
         // So this is bad and probably slow, but it's less annoying than some recursive method.
         $this->cache = json_decode(json_encode($data, JSON_FORCE_OBJECT), true);
+    }
+
+    public function getFactory() : FactoryInterface
+    {
+        return $this->factory;
+    }
+
+    public function setFactory(FactoryInterface $factory)
+    {
+        $this->factory = $factory;
     }
 }

@@ -2,10 +2,12 @@
 
 namespace Tustin\PlayStation\Model;
 
-use Tustin\PlayStation\Api\Api;
+use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Traits\Model;
+use Tustin\PlayStation\Model\TrophySummary;
 use Tustin\PlayStation\Factory\UsersFactory;
 use Tustin\PlayStation\Interfaces\Fetchable;
+use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 
 class User extends Api implements Fetchable
 {
@@ -18,13 +20,30 @@ class User extends Api implements Fetchable
     /**
      * Constructs a new user object.
      *
-     * @param UsersFactory $factory
-     * @param string $onlineId The User's onlineId.
+     * @param UsersFactory $usersFactory
+     * @param string $accountId
      */
-    public function __construct(UsersFactory $factory, string $accountId) 
+    public function __construct(UsersFactory $usersFactory, string $accountId) 
     {
-        parent::__construct($factory->getHttpClient());
+        parent::__construct($usersFactory->getHttpClient());
+        $this->setFactory($usersFactory);
+
         $this->accountId = $accountId;
+    }
+
+    public function trophyTitles()
+    {
+        return new TrophyTitlesFactory($this);
+    }
+
+    /**
+     * Gets the trophy summary for the user.
+     *
+     * @return void
+     */
+    public function trophySummary()
+    {
+        return new TrophySummary($this);
     }
 
     /**
@@ -54,7 +73,7 @@ class User extends Api implements Fetchable
      */
     public function accountId() : string
     {
-        return $this->pluck('accountId');
+        return $this->accountId;
     }
 
     /**

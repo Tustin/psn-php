@@ -4,8 +4,8 @@ namespace Tustin\PlayStation\Iterator;
 use Iterator;
 use Countable;
 use RuntimeException;
+use Tustin\PlayStation\Api;
 use InvalidArgumentException;
-use Tustin\PlayStation\Api\Api;
 
 abstract class AbstractApiIterator extends Api implements Iterator, Countable
 {

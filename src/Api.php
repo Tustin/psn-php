@@ -1,5 +1,5 @@
 <?php
-namespace Tustin\PlayStation\Api;
+namespace Tustin\PlayStation;
 
 use GuzzleHttp\Client;
 

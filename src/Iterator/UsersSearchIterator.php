@@ -1,6 +1,7 @@
 <?php
 namespace Tustin\PlayStation\Iterator;
 
+use Tustin\PlayStation;
 use InvalidArgumentException;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Factory\UsersFactory;
@@ -74,6 +75,9 @@ class UsersSearchIterator extends AbstractApiIterator
 
     public function current()
     {
-        return new User($this->usersFactory, $this->getFromOffset($this->currentOffset)->socialMetadata->accountId);
+        return new User(
+            $this->usersFactory, 
+            $this->getFromOffset($this->currentOffset)->socialMetadata->accountId
+        );
     }
 }

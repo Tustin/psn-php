@@ -13,7 +13,8 @@
         "guzzlehttp/guzzle": "^7.0",
         "php": "^7.2",
         "tustin/haste": "^1.0",
-        "nesbot/carbon": "^2.41"
+        "nesbot/carbon": "^2.41",
+        "myclabs/php-enum": "^1.7"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.1"
