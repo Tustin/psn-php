@@ -219,7 +219,7 @@ class User extends Api implements Fetchable
      */
     public function hasPlus() : bool
     {
-        return $this->pluck('plus');
+        return $this->pluck('isPlus');
     }
 
     /**
