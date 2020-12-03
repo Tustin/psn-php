@@ -34,7 +34,7 @@ class TrophyTitlesIterator extends AbstractApiIterator
 
         $results = $this->get('trophy/v1/users/' . $this->trophyTitlesFactory->getUser()->accountId() .'/trophyTitles', $body);
 
-        $this->update($results->totalResults, $results->trophyTitles);
+        $this->update($results->totalItemCount, $results->trophyTitles);
     }
 
     public function current()
