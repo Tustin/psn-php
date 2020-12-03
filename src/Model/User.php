@@ -17,18 +17,21 @@ class User extends Api implements Fetchable
 
     private $accountId;
 
+    private $country;
+    
     /**
      * Constructs a new user object.
      *
      * @param UsersFactory $usersFactory
      * @param string $accountId
      */
-    public function __construct(UsersFactory $usersFactory, string $accountId) 
+    public function __construct(UsersFactory $usersFactory, string $accountId, string $country) 
     {
         parent::__construct($usersFactory->getHttpClient());
         $this->setFactory($usersFactory);
 
         $this->accountId = $accountId;
+        $this->country = $country;
     }
 
     public function trophyTitles()
@@ -76,6 +79,16 @@ class User extends Api implements Fetchable
         return $this->accountId;
     }
 
+    /**
+     * Gets the user's country.
+     *
+     * @return string
+     */
+    public function country() : string
+    {
+        return $this->country;
+    }
+    
     /**
      * Returns all the available avatar URL sizes.
      * 

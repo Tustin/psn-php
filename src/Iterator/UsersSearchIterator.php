@@ -75,9 +75,12 @@ class UsersSearchIterator extends AbstractApiIterator
 
     public function current()
     {
+        $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;
+        
         return new User(
             $this->usersFactory, 
-            $this->getFromOffset($this->currentOffset)->socialMetadata->accountId
+            $socialMetadata->accountId,
+            $socialMetadata->country
         );
     }
 }
