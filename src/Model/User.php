@@ -87,9 +87,9 @@ class User extends Api implements Fetchable
     {
         $urls = [];
 
-        foreach ($this->pluck('avatarUrls') as $url)
+        foreach ($this->pluck('avatars') as $url)
         {
-            $urls[$url['size']] = $url['avatarUrl'];
+            $urls[$url['size']] = $url['url'];
         }
 
         return $urls;
