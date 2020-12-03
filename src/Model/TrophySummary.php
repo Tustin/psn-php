@@ -2,7 +2,7 @@
 
 namespace Tustin\PlayStation\Model;
 
-use Tustin\PlayStation\Api\Api;
+use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Interfaces\Fetchable;

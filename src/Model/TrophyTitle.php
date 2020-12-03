@@ -1,7 +1,7 @@
 <?php
 namespace Tustin\PlayStation\Model;
 
-use Tustin\PlayStation\Api\Api;
+use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Enum\ConsoleType;
 use Tustin\PlayStation\Enum\LanguageType;
