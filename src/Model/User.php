@@ -104,8 +104,18 @@ class User extends Api implements Fetchable
      */
     public function avatarUrl() : string
     {
-        $firstKey = array_key_first($this->avatarUrls());
-        return $this->avatarUrls()[$firstKey];
+        $sizes = ['xl', 'l', 'm', 's'];
+        
+        foreach ($sizes as $size)
+        {
+            if (array_key_exists($size, $this->avatarUrls()))
+            {
+                return $this->avatarUrls()[$size];
+            }
+        }
+
+        // Could not find any of the sizes specified, just return the first one in the array.
+        return current($this->avatarUrls());
     }
 
     /**
