@@ -59,6 +59,12 @@ class TrophyTitle extends Api
      */
     public function detail() : string
     {
+        // PS5 titles doesn't seem to have the detail data.
+        if ($this->pluck('npServiceName') == 'trophy2')
+        {
+            return '';
+        }
+        
         return $this->pluck('trophyTitleDetail');
     }
 
