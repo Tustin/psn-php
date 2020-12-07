@@ -53,7 +53,7 @@ class TrophySummary extends Api implements Fetchable
      */
     public function level() : int
     {
-        return $this->pluck('level');
+        return $this->pluck('trophyLevel');
     }
 
     /**
