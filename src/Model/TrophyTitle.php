@@ -164,4 +164,14 @@ class TrophyTitle extends Api
         return $this->pluck('npCommunicationId');
     }
 
+    /**
+     * Gets the trophy list version number for this trophy title.
+     *
+     * @return string
+     */
+    public function trophySetVersion() : string
+    {
+        return $this->pluck('trophySetVersion');
+    }
+    
 }
