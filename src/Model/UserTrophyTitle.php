@@ -165,4 +165,44 @@ class UserTrophyTitle extends AbstractTrophyTitle
     {
         return $this->pluck('lastUpdatedDateTime');
     }
+    
+    /**
+     * Gets the amount of earned bronze trophies for this user.
+     *
+     * @return integer
+     */
+    public function earnedTrophiesBronzeCount() : int
+    {
+        return $this->pluck('earnedTrophies.bronze');
+    }
+
+    /**
+     * Gets the amount of earned silver trophies for this user.
+     *
+     * @return integer
+     */
+    public function earnedTrophiesSilverCount() : int
+    {
+        return $this->pluck('earnedTrophies.silver');
+    }
+
+    /**
+     * Gets the amount of earned gold trophies for this user.
+     *
+     * @return integer
+     */
+    public function earnedTrophiesGoldCount() : int
+    {
+        return $this->pluck('earnedTrophies.gold');
+    }
+    
+    /**
+     * Gets the amount of earned platinum trophies for this user.
+     *
+     * @return integer
+     */
+    public function earnedTrophiesPlatinumCount() : int
+    {
+        return $this->pluck('earnedTrophies.platinum');
+    }
 }
