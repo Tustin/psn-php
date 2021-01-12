@@ -205,4 +205,14 @@ class UserTrophyTitle extends AbstractTrophyTitle
     {
         return $this->pluck('earnedTrophies.platinum');
     }
+    
+    /**
+     * Gets the trophy title progress percent for this user.
+     *
+     * @return integer
+     */
+    public function progress() : int
+    {
+        return $this->pluck('progress');
+    }
 }
