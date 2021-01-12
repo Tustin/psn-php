@@ -10,15 +10,19 @@ use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 
 class TrophyTitle extends Api
 {
-    use Model;
+	use Model;
+	
+	/**
+	 * The NP communcation id.
+	 *
+	 * @var string
+	 */
+	protected $npCommuncationId;
 
-    public function __construct(TrophyTitlesFactory $trophyTitlesFactory, object $data)
-    {
-        parent::__construct($trophyTitlesFactory->httpClient);
-        $this->setFactory($trophyTitlesFactory);
-
-        $this->setCache($data);
-    }
+	public function setNpCommuncationId(string $npCommuncationId)
+	{
+		$this->npCommuncationId = $npCommuncationId;
+	}
 
     /**
      * Gets all the trophy groups for the trophy title.
@@ -167,7 +171,7 @@ class TrophyTitle extends Api
      */
     public function npCommunicationId() : string
     {
-        return $this->pluck('npCommunicationId');
+        return $this->pluck('npCommunicationId') ?? $this->npCommuncationId;
     }
 
     /**

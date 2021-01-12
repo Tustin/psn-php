@@ -39,9 +39,10 @@ class TrophyTitlesIterator extends AbstractApiIterator
 
     public function current()
     {
-        return new TrophyTitle(
-            $this->trophyTitlesFactory,
-            $this->getFromOffset($this->currentOffset)
-        );
+		$title = new TrophyTitle($this->trophyTitlesFactory->getHttpClient());
+		$title->setFactory($this->trophyTitlesFactory);
+		$title->setCache($this->getFromOffset($this->currentOffset));
+
+		return $title;
     }
 }

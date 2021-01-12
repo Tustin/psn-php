@@ -82,7 +82,7 @@ trait Model
         return isset($this->cache) && !empty($this->cache);
     }
 
-    protected function setCache($data)
+    public function setCache($data)
     {
         // So this is bad and probably slow, but it's less annoying than some recursive method.
         $this->cache = json_decode(json_encode($data, JSON_FORCE_OBJECT), true);

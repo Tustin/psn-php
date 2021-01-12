@@ -30,12 +30,12 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      *
      * @var string
      */
-    private $withName = '';
-
+	private $withName = '';
+	
     /**
      * The user to get trophy titles for.
      *
-     * @var User
+     * @var User|null
      */
     private $user;
 
@@ -47,13 +47,6 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      * @var boolean|null
      */
     private ?bool $hasTrophyGroups = null;
-
-    public function __construct(User $user)
-    {
-        parent::__construct($user->getHttpClient());
-
-        $this->user = $user;
-    }
 
     /**
      * Filters trophy titles only for the supplied platform(s).
@@ -92,8 +85,20 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
         $this->withName = $name;
         
         return $this;
-    }
+	}
+	
+	/**
+	 * Filters trophy titles to only get trophies for the specific user.
+	 *
+	 * @param User $user
+	 * @return TrophyTitlesFactory
+	 */
+	public function forUser(User $user) : TrophyTitlesFactory
+	{
+		$this->user = $user;
 
+		return $this;
+	}
     /**
      * Gets the iterator and applies any filters.
      *
@@ -121,10 +126,25 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
         return $iterator;
     }
 
-    public function getUser() : User
+	/**
+	 * Gets the current user (if specified) to get trophies for.
+	 *
+	 * @return User|null
+	 */
+    public function getUser() : ?User
     {
         return $this->user;
-    }
+	}
+
+	/**
+	 * Checks to see if this factory should be looking at a specific user's trophies.
+	 *
+	 * @return boolean
+	 */
+	public function hasUser() : bool
+	{
+		return $this->user !== null;
+	}
 
     /**
      * Gets the current platforms passed to this instance.

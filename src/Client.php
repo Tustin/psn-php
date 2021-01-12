@@ -5,7 +5,10 @@ namespace Tustin\PlayStation;
 use Tustin\Haste\AbstractClient;
 use Tustin\PlayStation\OAuthToken;
 
+use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\Factory\UsersFactory;
+use Tustin\PlayStation\Factory\TrophyGroupsFactory;
+use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
 
 class Client extends AbstractClient
@@ -191,5 +194,13 @@ class Client extends AbstractClient
     public function users() : UsersFactory
     {
         return new UsersFactory($this->getHttpClient());
-    }
+	}
+	
+	public function trophies(string $npCommunicationId)
+	{
+		$title = new TrophyTitle($this->getHttpClient());
+		$title->setNpCommuncationId($npCommunicationId);
+
+		return $title;
+	}
 }
