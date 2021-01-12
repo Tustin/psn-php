@@ -1,8 +1,8 @@
 <?php
 namespace Tustin\PlayStation\Iterator;
 
-use PlayStation\Api\Trophy;
 use Tustin\PlayStation\Model\TrophyTitle;
+use Tustin\PlayStation\Model\UserTrophyTitle;
 use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 
 class TrophyTitlesIterator extends AbstractApiIterator
@@ -39,7 +39,7 @@ class TrophyTitlesIterator extends AbstractApiIterator
 
     public function current()
     {
-		$title = new TrophyTitle($this->trophyTitlesFactory->getHttpClient());
+		$title = new UserTrophyTitle($this->trophyTitlesFactory->getHttpClient());
 		$title->setFactory($this->trophyTitlesFactory);
 		$title->setCache($this->getFromOffset($this->currentOffset));
 

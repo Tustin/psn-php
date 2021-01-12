@@ -3,17 +3,22 @@ namespace Tustin\PlayStation\Factory;
 
 use Iterator;
 use IteratorAggregate;
+use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Enum\TrophyType;
 use Tustin\PlayStation\Model\TrophyGroup;
-use Tustin\PlayStation\Model\TrophyTitle;
+use Tustin\PlayStation\AbstractTrophyTitle;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
+use Tustin\PlayStation\Iterator\TrophyGroupsIterator;
+use Tustin\PlayStation\Iterator\Filter\TrophyGroup\NameFilter;
+use Tustin\PlayStation\Iterator\Filter\TrophyGroup\DetailFilter;
+use Tustin\PlayStation\Iterator\Filter\TrophyGroup\TrophyTypeFilter;
 
-class TrophyGroupsFactory implements IteratorAggregate, FactoryInterface
+class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInterface
 {
     /**
      * The trophy groups' title.
      *
-     * @var TrophyTitle
+     * @var AbstractTrophyTitle
      */
     private $title;
 
@@ -22,7 +27,7 @@ class TrophyGroupsFactory implements IteratorAggregate, FactoryInterface
 
     private array $certainTrophyTypeFilter = [];
 
-    public function __construct(TrophyTitle $title)
+    public function __construct(AbstractTrophyTitle $title)
     {
         $this->title = $title;
     }
@@ -58,7 +63,7 @@ class TrophyGroupsFactory implements IteratorAggregate, FactoryInterface
      *
      * @return Iterator
      */
-    public function getIterator(): Iterator
+    public function getIterator() : Iterator
     {
         $iterator = new TrophyGroupsIterator($this->title);
 

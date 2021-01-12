@@ -1,0 +1,45 @@
+<?php
+namespace Tustin\PlayStation;
+
+use Tustin\PlayStation\Api;
+use Tustin\PlayStation\Traits\Model;
+use Tustin\PlayStation\Factory\TrophyGroupsFactory;
+
+/**
+ * This class exists because as of today, Sony only gives you useful trophy title information if you get trophy titles from a user's profile.
+ * 
+ * There is no known endpoint that gives you trophy title information solely using the NpCommuncationId.
+ * 
+ * For now, we'll have two seperate classes for each instance of a trophy title (one with actual info and one with nothing),
+ * and hope that in the future, Sony will make an endpoint that can give trophy title information.
+ * 
+ * - Tustin, Jan 11, 2021
+ */
+abstract class AbstractTrophyTitle extends Api
+{
+	use Model;
+
+    /**
+	 * The NP communcation id.
+	 *
+	 * @var string
+	 */
+	protected $npCommuncationId;
+
+	public function setNpCommuncationId(string $npCommuncationId)
+	{
+		$this->npCommuncationId = $npCommuncationId;
+	}
+
+	public abstract function npCommunicationId() : string;
+
+	/**
+     * Gets all the trophy groups for the trophy title.
+     *
+     * @return TrophyGroupsFactory
+     */
+    public function trophyGroups() : TrophyGroupsFactory
+    {
+        return new TrophyGroupsFactory($this);
+    }
+}

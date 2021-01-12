@@ -3,18 +3,19 @@ namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Model\TrophyGroup;
 use Tustin\PlayStation\Model\TrophyTitle;
-
+use Tustin\PlayStation\AbstractTrophyTitle;
+use Tustin\PlayStation\Model\UserTrophyTitle;
 
 class TrophyGroupsIterator extends AbstractApiIterator
 {
     /**
      * Current trophy title.
      *
-     * @var TrophyTitle
+     * @var AbstractTrophyTitle
      */
     private $title;
 
-    public function __construct(TrophyTitle $title)
+    public function __construct(AbstractTrophyTitle $title)
     {
         parent::__construct($title->getHttpClient());
 
@@ -25,12 +26,24 @@ class TrophyGroupsIterator extends AbstractApiIterator
 
     public function access($cursor) : void
     {
-        $results = $this->get(
-            'trophy/v1/users/' . $this->title->getFactory()->getUser()->accountId() . '/trophyTitles/' . $this->title->npCommunicationId() .'/trophyGroups',
-            [
-                'serviceName' => 'trophy'
-            ]
-        );
+		if ($this->title instanceof UserTrophyTitle)
+		{
+			$results = $this->get(
+				'trophy/v1/users/' . $this->title->getFactory()->getUser()->accountId() . '/trophyTitles/' . $this->title->npCommunicationId() .'/trophyGroups',
+				[
+					'serviceName' => 'trophy'
+				]
+			);
+		}
+		else
+		{
+			$results = $this->get(
+				'trophy/v1/npCommunicationIds/' . $this->title->npCommunicationId()  . '/trophyGroups',
+				[
+					'npServiceName' => 'trophy'
+				]
+			);
+		}
 
         $this->update(count($results->trophyGroups), $results->trophyGroups);
     }

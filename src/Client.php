@@ -198,9 +198,6 @@ class Client extends AbstractClient
 	
 	public function trophies(string $npCommunicationId)
 	{
-		$title = new TrophyTitle($this->getHttpClient());
-		$title->setNpCommuncationId($npCommunicationId);
-
-		return $title;
+		return new TrophyTitle($this->getHttpClient(), $npCommunicationId);
 	}
 }

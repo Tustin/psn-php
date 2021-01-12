@@ -37,8 +37,9 @@ trait Model
         {
             if (!(new ReflectionClass($this))->implementsInterface(Fetchable::class))
             {
-                throw new RuntimeException('Model [' . get_class($this) . '] has not been cached, 
-                but doesn\'t implement Fetchable to make requests.');
+				return null;
+                // throw new RuntimeException('Model [' . get_class($this) . '] has not been cached, 
+                // but doesn\'t implement Fetchable to make requests.');
             }
 
             $this->setCache($this->fetch());

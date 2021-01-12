@@ -46,7 +46,14 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      *
      * @var boolean|null
      */
-    private ?bool $hasTrophyGroups = null;
+	private ?bool $hasTrophyGroups = null;
+	
+    public function __construct(User $user)
+    {
+        parent::__construct($user->getHttpClient());
+
+        $this->user = $user;
+    }
 
     /**
      * Filters trophy titles only for the supplied platform(s).
