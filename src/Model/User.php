@@ -25,7 +25,7 @@ class User extends Api implements Fetchable
      * @param UsersFactory $usersFactory
      * @param string $accountId
      */
-    public function __construct(UsersFactory $usersFactory, string $accountId, string $country) 
+    public function __construct(UsersFactory $usersFactory, string $accountId, string $country = '') 
     {
         parent::__construct($usersFactory->getHttpClient());
         $this->setFactory($usersFactory);
