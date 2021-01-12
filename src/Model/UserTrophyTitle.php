@@ -155,4 +155,14 @@ class UserTrophyTitle extends AbstractTrophyTitle
     {
         return $this->pluck('trophySetVersion');
     }
+    
+    /**
+     * Gets the last updated date and time for the trophy title for this user.
+     *
+     * @return string
+     */
+    public function lastUpdatedDateTime() : string
+    {
+        return $this->pluck('lastUpdatedDateTime');
+    }
 }
