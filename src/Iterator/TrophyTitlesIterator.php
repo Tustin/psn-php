@@ -19,7 +19,7 @@ class TrophyTitlesIterator extends AbstractApiIterator
         
         $this->platforms = implode(',', $trophyTitlesFactory->getPlatforms());
 
-        $this->limit = 128;
+        $this->limit = 100;
         
         $this->access(0);
     }
@@ -27,7 +27,6 @@ class TrophyTitlesIterator extends AbstractApiIterator
     public function access($cursor) : void
     {
         $body = [
-            'platform' => $this->platforms,
             'limit' => $this->limit,
             'offset' => $cursor,
         ];

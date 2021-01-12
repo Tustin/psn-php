@@ -9,6 +9,7 @@ use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Enum\ConsoleType;
 use Tustin\PlayStation\Enum\LanguageType;
 use Tustin\PlayStation\Model\TrophyTitle;
+use Tustin\PlayStation\Model\UserTrophyTitle;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Exception\NoTrophiesException;
 use Tustin\PlayStation\Iterator\TrophyTitlesIterator;
@@ -56,19 +57,6 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
     }
 
     /**
-     * Filters trophy titles only for the supplied platform(s).
-     *
-     * @param ConsoleType ...$platforms
-     * @return TrophyTitlesFactory
-     */
-    public function platforms(ConsoleType ...$platforms) : TrophyTitlesFactory
-    {
-        $this->platforms = $platforms;
-
-        return $this;
-    }
-
-    /**
      * Filters trophy titles that either have trophy groups or no trophy groups.
      *
      * @param boolean $value
@@ -113,11 +101,6 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      */
     public function getIterator() : Iterator
     {
-        if (empty($this->platforms))
-        {
-            throw new MissingPlatformException("TrophyTitles::platforms() must be called once with the specified platforms.");    
-        }
-
         $iterator = new TrophyTitlesIterator($this);
 
         if ($this->withName)
@@ -178,9 +161,9 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
     /**
      * Gets the first trophy title in the collection.
      *
-     * @return TrophyTitle
+     * @return UserTrophyTitle
      */
-    public function first() : TrophyTitle
+    public function first() : UserTrophyTitle
     {
         try
         {
