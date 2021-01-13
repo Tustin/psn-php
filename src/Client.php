@@ -7,6 +7,7 @@ use Tustin\PlayStation\OAuthToken;
 
 use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\Factory\UsersFactory;
+use Tustin\PlayStation\Api\MessageThreadsFactory;
 use Tustin\PlayStation\Factory\TrophyGroupsFactory;
 use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
@@ -204,5 +205,10 @@ class Client extends AbstractClient
 	public function store()
 	{
 		// TODO
+	}
+
+	public function messageThreads()
+	{
+		return new MessageThreadsFactory($this->getHttpClient());
 	}
 }

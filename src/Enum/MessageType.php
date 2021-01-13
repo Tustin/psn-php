@@ -3,7 +3,6 @@ namespace Tustin\PlayStation\Enum;
 
 use MyCLabs\Enum\Enum;
 
-
 class MessageType extends Enum
 {
     private const text = 1;
