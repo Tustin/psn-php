@@ -15,7 +15,9 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
 
     protected int $totalResults = 0;
 
-    protected bool $lastBlock = false;
+	protected bool $lastBlock = false;
+	
+	protected $customCursor = null;
 
     /**
      * The cache of all items for a given iterator.
@@ -100,11 +102,13 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      * @param array $items
      * @return void
      */
-    public final function update(int $totalResults, array $items)
+    public final function update(int $totalResults, array $items, $customCusor = null)
     {
         $this->setTotalResults($totalResults);
 
-        $this->cache = array_merge($this->cache, $items);
+		$this->cache = array_merge($this->cache, $items);
+		
+		$this->customCursor = $customCursor;
     }
 
     /**
@@ -125,7 +129,14 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
 
         if ($this->currentOffset % $this->limit === 0 && $this->currentOffset < $this->getTotalResults())
         {
-            $this->access($this->currentOffset);
+			if (!is_null($this->customCursor))
+			{
+				$this->access($this->customCursor);
+			}
+			else
+			{
+				$this->access($this->currentOffset);
+			}
         }
     }
 

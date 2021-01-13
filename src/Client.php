@@ -200,4 +200,9 @@ class Client extends AbstractClient
 	{
 		return new TrophyTitle($this->getHttpClient(), $npCommunicationId);
 	}
+
+	public function store()
+	{
+		// TODO
+	}
 }
