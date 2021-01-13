@@ -29,9 +29,9 @@ class TrophyGroupsIterator extends AbstractApiIterator
 		if ($this->title instanceof UserTrophyTitle)
 		{
 			$results = $this->get(
-				'trophy/v1/users/' . $this->title->getFactory()->getUser()->accountId() . '/trophyTitles/' . $this->title->npCommunicationId() .'/trophyGroups',
+				'trophy/v1/users/' . $this->title->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->title->npCommunicationId() .'/trophyGroups',
 				[
-					'serviceName' => 'trophy'
+					'npServiceName' => 'trophy'
 				]
 			);
 		}

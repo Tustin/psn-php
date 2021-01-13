@@ -102,7 +102,7 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      * @param array $items
      * @return void
      */
-    public final function update(int $totalResults, array $items, $customCusor = null)
+    public final function update(int $totalResults, array $items, $customCursor = null)
     {
         $this->setTotalResults($totalResults);
 
