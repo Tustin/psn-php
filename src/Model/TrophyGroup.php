@@ -5,6 +5,7 @@ use InvalidArgumentException;
 use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Enum\TrophyType;
 use Tustin\PlayStation\Model\TrophyTitle;
+use Tustin\PlayStation\AbstractTrophyTitle;
 
 class TrophyGroup
 {
@@ -12,7 +13,7 @@ class TrophyGroup
 
     private $trophyTitle;
 
-    public function __construct(TrophyTitle $trophyTitle, object $data)
+    public function __construct(AbstractTrophyTitle $trophyTitle, object $data)
     {
         $this->setCache($data);
         $this->trophyTitle = $trophyTitle;
