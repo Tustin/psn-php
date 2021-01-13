@@ -6,6 +6,7 @@ use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Enum\TrophyType;
 use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\AbstractTrophyTitle;
+use Tustin\PlayStation\Factory\TrophyFactory;
 
 class TrophyGroup
 {
@@ -27,9 +28,9 @@ class TrophyGroup
     /**
      * Gets the trophy title for this trophy group.
      *
-     * @return TrophyTitle
+     * @return AbstractTrophyTitle
      */
-    public function title() : TrophyTitle
+    public function title() : AbstractTrophyTitle
     {
         return $this->trophyTitle;
     }
@@ -37,11 +38,11 @@ class TrophyGroup
     /**
      * Gets all the trophies in the trophy group.
      *
-     * @return TrophiesFactory
+     * @return TrophyFactory
      */
-    public function trophies() : TrophiesFactory
+    public function trophies() : TrophyFactory
     {
-        return new TrophiesFactory($this);
+        return new TrophyFactory($this);
     }
 
     /**

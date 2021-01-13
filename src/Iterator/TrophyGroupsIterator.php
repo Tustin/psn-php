@@ -2,7 +2,6 @@
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Model\TrophyGroup;
-use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\AbstractTrophyTitle;
 use Tustin\PlayStation\Model\UserTrophyTitle;
 
