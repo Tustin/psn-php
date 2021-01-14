@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Factory\UsersFactory;
 
-class UsersSearchIterator extends AbstractApiIterator
+class StoreSearchIterator extends AbstractApiIterator
 {
     /**
      * The search query.
