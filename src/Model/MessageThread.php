@@ -3,67 +3,40 @@
 namespace Tustin\PlayStation\Model;
 
 use Tustin\PlayStation\Api;
+use Tustin\PlayStation\Model\Group;
 use Tustin\PlayStation\Traits\Model;
-use Tustin\PlayStation\MessagesFactory;
 use Tustin\PlayStation\Interfaces\Fetchable;
-use Tustin\PlayStation\Factory\MessageThreadsFactory;
-use Tustin\PlayStation\Factory\MessageThreadMembersFactory;
+use Tustin\PlayStation\Factory\MessagesFactory;
 
-class MessageThread extends Api implements Fetchable
+class MessageThread extends Api
 {
-    use Model;
-    
-    private string $threadId;
+	use Model;
+	
+	/**
+	 * @var Group
+	 */
+	private $group;
+	
+	/**
+	 * @var string
+	 */
+    private $threadId;
 
-    private array $members;
-
-    public function __construct(MessageThreadsFactory $messageThreadsFactory, string $threadId, array $members = [])
+    public function __construct(Group $group, string $threadId)
     {
-        parent::__construct($messageThreadsFactory->getHttpClient());
+		parent::__construct($group->getHttpClient());
 
+		$this->group = $group;
         $this->threadId = $threadId;
-        $this->members = $members;
     }
 
-    public static function fromObject(MessageThreadsFactory $messageThreadsFactory, object $data)
+    public static function fromObject(Group $group, object $data)
     {
-        $instance = new static($messageThreadsFactory, $data->threadId, $data->threadMembers);
+        $instance = new static($group, $data->threadId);
 		$instance->setCache($data);
 
         return $instance;
-    }
-
-    /**
-     * Gets all the members in the message thread.
-     *
-     * @return MessageThreadMembersFactory
-     */
-    public function members() : MessageThreadMembersFactory
-    {
-        return new MessageThreadMembersFactory($this);
-    }
-
-    /**
-     * Gets all the message thread members as an array.
-     *
-     * @return array
-     */
-    public function membersArray() : array
-    {
-        return $this->members ??= $this->pluck('threadMembers');
-    }
-
-    /**
-     * Gets the member count in the message thread.
-     *
-     * @return integer
-     */
-    public function memberCount() : int
-    {
-        return count(
-            $this->members()
-        );
-    }
+	}
 
     // /**
     //  * Sends a message to the message thread.
@@ -82,7 +55,7 @@ class MessageThread extends Api implements Fetchable
     // }
 
     /**
-     * Gets all messages in the message thread.
+     * Gets all messages in this message thread.
      *
      * @return MessagesFactory
      */
@@ -92,34 +65,32 @@ class MessageThread extends Api implements Fetchable
     }
 
     /**
-     * Gets the message thread ID.
+     * The thread id.
      *
      * @return string
      */
     public function id() : string
     {
-        return $this->threadId;
-    }
+        return $this->threadId ??= $this->pluck('threadId');
+	}
+	
+	/**
+	 * The group.
+	 *
+	 * @return Group
+	 */
+	public function group() : Group
+	{
+		return $this->group;
+	}
 
-    /**
-     * Gets the thread info from the PlayStation API.
-     *
-     * @param integer $count
-     * @return object
-     */
-    public function fetch(int $count = 1) : object
-    {
-        return $this->get('https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads/' . $this->id(), [
-            'fields' => implode(',', [
-                'threadMembers',
-                'threadNameDetail',
-                'threadThumbnailDetail',
-                'threadProperty',
-                'latestTakedownEventDetail',
-                'newArrivalEventDetail',
-                'threadEvents'
-            ]),
-            'count' => $count,
-        ]);
-    }
+	/**
+	 * The message count for this thread.
+	 *
+	 * @return integer
+	 */
+	public function messageCount() : int
+	{
+		return $this->pluck('messageCount') ?? 0;
+	}
 }

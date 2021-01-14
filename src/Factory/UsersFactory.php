@@ -29,7 +29,7 @@ class UsersFactory extends Api implements FactoryInterface
      */
     public function find(string $accountId) : User
     {
-        return new User($this, $accountId);
+        return new User($this->getHttpClient(), $accountId);
     }
 
     /**
@@ -39,6 +39,6 @@ class UsersFactory extends Api implements FactoryInterface
      */
     public function me() : User
     {
-        return new User($this, 'me');
+        return new User($this->getHttpClient(), 'me');
     }
 }

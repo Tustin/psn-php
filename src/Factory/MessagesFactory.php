@@ -8,18 +8,16 @@ use Tustin\PlayStation\Model\Message;
 use Tustin\PlayStation\Model\MessageThread;
 use Tustin\PlayStation\Iterator\MessagesIterator;
 
-class MessagesRepository extends Api implements IteratorAggregate
+class MessagesFactory extends Api implements IteratorAggregate
 {
     /**
-     * The message thread for these messages.
-     *
      * @var MessageThread
      */
     private $thread;
     
     public function __construct(MessageThread $thread)
     {
-        parent::__construct($thread->httpClient);
+        parent::__construct($thread->getHttpClient());
 
         $this->thread = $thread;
     }

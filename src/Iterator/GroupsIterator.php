@@ -1,24 +1,23 @@
 <?php
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Api\Model\MessageThread;
-use Tustin\PlayStation\Api\MessageThreadsFactory;
-use Tustin\PlayStation\Api\MessageThreadsRepository;
+use Tustin\PlayStation\Model\Group;
+use Tustin\PlayStation\Factory\GroupsFactory;
 
-class MessageThreadsIterator extends AbstractApiIterator
+class GroupsIterator extends AbstractApiIterator
 {
     /**
      * The message threads repository.
      *
-     * @var MessageThreadsFactory
+     * @var GroupsFactory
      */
-    private $messageThreadsFactory;
+    private $groupsFactory;
     
-    public function __construct(MessageThreadsFactory $messageThreadsFactory)
+    public function __construct(GroupsFactory $groupsFactory)
     {
-        parent::__construct($messageThreadsFactory->httpClient);
+        parent::__construct($groupsFactory->getHttpClient());
 
-        $this->messageThreadsFactory = $messageThreadsFactory;
+        $this->groupsFactory = $groupsFactory;
         $this->limit = 20;
 
         $this->access(0);
@@ -29,17 +28,17 @@ class MessageThreadsIterator extends AbstractApiIterator
         $results = $this->get('gamingLoungeGroups/v1/members/me/groups', [
             'favoriteFilter' => 'notFavorite',
             'limit' => $this->limit,
-            'offset' => $cursor, // Needs Testing
+            'offset' => $cursor,
             'includeFields' => 'groupName,groupIcon,members,mainThread,joinedTimestamp,modifiedTimestamp,totalGroupCount,isFavorite,existsNewArrival,partySessions'
         ]);
 
-        $this->update($results->totalSize, $results->threads);
+        $this->update($results->totalGroupCount, $results->groups);
     }
 
     public function current()
     {
-        return MessageThread::fromObject(
-            $this->messageThreadsFactory,
+        return Group::fromObject(
+            $this->groupsFactory,
             $this->getFromOffset($this->currentOffset)
         );
     }

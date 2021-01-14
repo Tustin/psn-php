@@ -2,7 +2,9 @@
 
 namespace Tustin\PlayStation\Model;
 
+use GuzzleHttp\Client;
 use Tustin\PlayStation\Api;
+use Tustin\Haste\Http\HttpClient;
 use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Model\TrophySummary;
 use Tustin\PlayStation\Factory\UsersFactory;
@@ -25,10 +27,9 @@ class User extends Api implements Fetchable
      * @param UsersFactory $usersFactory
      * @param string $accountId
      */
-    public function __construct(UsersFactory $usersFactory, string $accountId, string $country = '') 
+    public function __construct(Client $client, string $accountId, string $country = '') 
     {
-        parent::__construct($usersFactory->getHttpClient());
-        $this->setFactory($usersFactory);
+        parent::__construct($client);
 
         $this->accountId = $accountId;
         $this->country = $country;

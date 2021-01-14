@@ -4,7 +4,7 @@ namespace Tustin\PlayStation\Iterator\Filter;
 use Iterator;
 use FilterIterator;
 
-class ThreadMembersFilter extends FilterIterator
+class GroupMembersFilter extends FilterIterator
 {
     private array $onlineIds;
     private bool $includesOnly;

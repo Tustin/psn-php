@@ -1,6 +1,7 @@
 <?php
 namespace Tustin\PlayStation\Iterator;
 
+use GuzzleHttp\Client;
 use Tustin\PlayStation;
 use InvalidArgumentException;
 use Tustin\PlayStation\Model\User;
@@ -29,22 +30,14 @@ class UsersSearchIterator extends AbstractApiIterator
      */
     protected $countryCode;
 
-    /**
-     * The users factory.
-     *
-     * @var UsersFactory
-     */
-    private $usersFactory;
-    
-    public function __construct(UsersFactory $usersFactory, string $query, string $languageCode = 'en', string $countryCode = 'us')
+    public function __construct(Client $client, string $query, string $languageCode = 'en', string $countryCode = 'us')
     {
         if (empty($query))
         {
             throw new InvalidArgumentException('[query] must contain a value.');
         }
 
-        parent::__construct($usersFactory->getHttpClient());
-        $this->usersFactory = $usersFactory;
+        parent::__construct($client);
         $this->query = $query;
         $this->languageCode = $languageCode;
         $this->countryCode = $countryCode;
@@ -86,7 +79,7 @@ class UsersSearchIterator extends AbstractApiIterator
         $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;
         
         return new User(
-            $this->usersFactory, 
+            $this->getHttpClient(), 
             $socialMetadata->accountId,
             $socialMetadata->country
         );

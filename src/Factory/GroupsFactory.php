@@ -5,11 +5,12 @@ use Iterator;
 use Carbon\Carbon;
 use IteratorAggregate;
 use Tustin\PlayStation\Api;
+use Tustin\PlayStation\Model\Group;
 use Tustin\PlayStation\Model\MessageThread;
-use Tustin\PlayStation\Iterator\MessageThreadsIterator;
-use Tustin\PlayStation\Iterator\Filter\ThreadMembersFilter;
+use Tustin\PlayStation\Iterator\GroupsIterator;
+use Tustin\PlayStation\Iterator\Filter\GroupMembersFilter;
 
-class MessageThreadsFactory extends Api implements IteratorAggregate
+class GroupsFactory extends Api implements IteratorAggregate
 {
     private $with = [];
     private $only = false;
@@ -18,12 +19,12 @@ class MessageThreadsFactory extends Api implements IteratorAggregate
     /**
      * Filters threads that contains the user(s).
      * 
-     * Chain this with MessageThreadsFactory::only to ensure you only get threads with these exact users.
+     * Chain this with GroupsFactory::only to ensure you only get threads with these exact users.
      *
      * @param string ...$onlineIds
-     * @return MessageThreadsFactory
+     * @return GroupsFactory
      */
-    public function with(string ...$onlineIds) : MessageThreadsFactory
+    public function with(string ...$onlineIds) : GroupsFactory
     {
         $this->with = array_merge($this->with, $onlineIds);
 
@@ -31,13 +32,13 @@ class MessageThreadsFactory extends Api implements IteratorAggregate
     }
 
     /**
-     * Should be used with the MessageThreadsFactory::with method.
+     * Should be used with the GroupsFactory::with method.
      * 
-     * Will return threads that contain ONLY the users passed to MessageThreadsFactory::with.
+     * Will return threads that contain ONLY the users passed to GroupsFactory::with.
      *
-     * @return MessageThreadsFactory
+     * @return GroupsFactory
      */
-    public function only() : MessageThreadsFactory
+    public function only() : GroupsFactory
     {
         $this->only = true;
 
@@ -48,9 +49,9 @@ class MessageThreadsFactory extends Api implements IteratorAggregate
      * Returns message threads that have only been active since the given date.
      *
      * @param Carbon $date
-     * @return MessageThreadsFactory
+     * @return GroupsFactory
      */
-    public function since(Carbon $date) : MessageThreadsFactory
+    public function since(Carbon $date) : GroupsFactory
     {
         $this->since = $date;
 
@@ -64,22 +65,22 @@ class MessageThreadsFactory extends Api implements IteratorAggregate
      */
     public function getIterator(): Iterator
     {
-        $iterator = new MessageThreadsIterator($this);
+        $iterator = new GroupsIterator($this);
 
         if ($this->with)
         {
-            $iterator = new ThreadMembersFilter($iterator, $this->with, $this->only);
+            $iterator = new GroupMembersFilter($iterator, $this->with, $this->only);
         }
 
         return $iterator;
     }
 
     /**
-     * Gets the first message thread in the collection.
+     * Gets the first group in the collection.
      *
-     * @return MessageThread
+     * @return Group
      */
-    public function first() : MessageThread
+    public function first() : Group
     {
         return $this->getIterator()->current();
     }

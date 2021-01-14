@@ -8,16 +8,15 @@ use Tustin\PlayStation\Model\MessageThread;
 class MessagesIterator extends AbstractApiIterator
 {
     /**
-     * The message thread that these messages are in.
-     *
-     * @var MessageThread $thread
+     * @var MessageThread
      */
     protected $thread;
 
-    protected int $limit;
+	/**
+	 * @var int
+	 */
+    protected $limit;
 
-    protected string $maxEventIndexCursor;
-        
     public function __construct(MessageThread $thread, int $limit = 20)
     {
         if ($limit <= 0)
@@ -33,29 +32,22 @@ class MessagesIterator extends AbstractApiIterator
 
     public function access($cursor) : void
     {
-        // $params = [
-        //     'fields' => 'threadEvents',
-        //     'count' => $this->limit,
-        // ];
+		$params = [];
 
-        // if ($cursor != null)
-        // {
-        //     if (!is_string($cursor))
-        //     {
-        //         throw new InvalidArgumentException("$cursor must be a string.");
-        //     }
+		if ($cursor != null)
+        {
+            if (!is_string($cursor))
+            {
+                throw new InvalidArgumentException("$cursor must be a string.");
+            }
        
-        //     $params['maxEventIndex'] = $cursor;
-        // }
+            $params['before'] = $cursor;
+        }
+		
+		$results = $this->get('gamingLoungeGroups/v1/members/me/groups/' . $this->thread->group()->id() . '/threads/' . $this->thread->id() . '/messages', $params);
 
-        // $results = $this->get(
-        //     'https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads/' . $this->thread->id(), 
-        //     $params
-        // );
-
-        // $this->maxEventIndexCursor = $results->maxEventIndexCursor;
-
-        // $this->update($results->resultsCount, $results->threadEvents);
+		$this->force(!$results->reachedEndOfPage);
+        $this->update($results->messageCount, $results->messages, $results->previous);
     }
 
     public function next() : void
@@ -71,7 +63,7 @@ class MessagesIterator extends AbstractApiIterator
     {
         return new Message(
             $this->thread,
-            $this->getFromOffset($this->currentOffset)->messageEventDetail
+            $this->getFromOffset($this->currentOffset)
         );
     }
 }

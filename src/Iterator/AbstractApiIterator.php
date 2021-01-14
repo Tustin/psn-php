@@ -9,15 +9,35 @@ use InvalidArgumentException;
 
 abstract class AbstractApiIterator extends Api implements Iterator, Countable
 {
+	/**
+	 * @var integer
+	 */
     protected $currentOffset = 0;
 
-    protected ?int $limit = null;
+	/**
+	 * @var integer|null
+	 */
+    protected $limit = null;
 
-    protected int $totalResults = 0;
-
-	protected bool $lastBlock = false;
+	/**
+	 * @var integer
+	 */
+	protected $totalResults = 0;
 	
+	/**
+	 * @var bool
+	 */
+	protected $lastBlock = false;
+	
+	/**
+	 * @var mixed
+	 */
 	protected $customCursor = null;
+
+	/**
+	 * @var bool|null
+	 */
+	protected $force = null;
 
     /**
      * The cache of all items for a given iterator.
@@ -109,7 +129,18 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
 		$this->cache = array_merge($this->cache, $items);
 		
 		$this->customCursor = $customCursor;
-    }
+	}
+	
+	/**
+	 * Set whether to force the iterator to keep accessing values or not.
+	 *
+	 * @param boolean $value
+	 * @return void
+	 */
+	public function force(bool $value)
+	{
+		$this->force = $value;
+	}
 
     /**
      * Points the offset to the next item.
@@ -127,7 +158,7 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
             return;
         }
 
-        if ($this->currentOffset % $this->limit === 0 && $this->currentOffset < $this->getTotalResults())
+        if (($this->currentOffset % $this->limit === 0 && $this->currentOffset < $this->getTotalResults()) || $this->force === true)
         {
 			if (!is_null($this->customCursor))
 			{

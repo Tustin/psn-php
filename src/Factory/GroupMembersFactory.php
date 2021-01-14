@@ -5,17 +5,15 @@ use Iterator;
 use Countable;
 use IteratorAggregate;
 use CallbackFilterIterator;
-use Tustin\PlayStation\Model\MessageThread;
+use Tustin\PlayStation\Model\User;
+use Tustin\PlayStation\Model\Group;
 
-class MessageThreadMembersFactory //implements IteratorAggregate, Countable
+class GroupMembersFactory implements IteratorAggregate, Countable
 {
     /**
-     * The message thread the members are in.
-     *
-     * @var MessageThread
+     * @var Group
      */
-    private $messageThread;
-
+    private $group;
 
     /**
      * The name to filter with.
@@ -24,9 +22,9 @@ class MessageThreadMembersFactory //implements IteratorAggregate, Countable
      */
     private $name;
 
-    public function __construct(MessageThread $messageThread)
+    public function __construct(Group $group)
     {
-        $this->messageThread = $messageThread;
+        $this->group = $group;
     }
 
     /**
@@ -35,7 +33,7 @@ class MessageThreadMembersFactory //implements IteratorAggregate, Countable
      * @param string $name
      * @return MessageThreadMembersFactory
      */
-    public function withName(string $name) : MessageThreadMembersFactory
+    public function withName(string $name) : GroupMembersFactory
     {
         $this->name = $name;
 
@@ -77,24 +75,23 @@ class MessageThreadMembersFactory //implements IteratorAggregate, Countable
      *
      * @return Iterator
      */
-    // public function getIterator() : Iterator
-    // {
-    //     // Since there is no endpoint to get thread members from, we can just yield from the existing array.
-    //     // $iterator = yield from array_map(
-    //     //     fn($member) => User::create($this->messageThread->getHttpClient(), $member->onlineId, true),
-    //     //     $this->messageThread->membersArray()
-    //     // );
+    public function getIterator() : Iterator
+    {
+        $iterator = yield from array_map(
+            fn($member) => new User($this->group->getHttpClient(), $member['accountId']),
+            $this->group->membersArray()
+        );
 
-    //     // if ($this->name)
-    //     // {
-    //     //     $iterator = new CallbackFilterIterator(
-    //     //         $iterator, 
-    //     //         fn($it) => stripos($it->onlineId(), $this->name) !== false
-    //     //     );
-    //     // }
+        if ($this->name)
+        {
+            $iterator = new CallbackFilterIterator(
+                $iterator, 
+                fn($it) => stripos($it->onlineId(), $this->name) !== false
+            );
+        }
 
-    //     return null;
-    // }
+        return $iterator;
+    }
 
     public function count() : int
     {

@@ -7,9 +7,7 @@ use Tustin\PlayStation\OAuthToken;
 
 use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\Factory\UsersFactory;
-use Tustin\PlayStation\Api\MessageThreadsFactory;
-use Tustin\PlayStation\Factory\TrophyGroupsFactory;
-use Tustin\PlayStation\Factory\TrophyTitlesFactory;
+use Tustin\PlayStation\Factory\GroupsFactory;
 use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
 
 class Client extends AbstractClient
@@ -19,8 +17,6 @@ class Client extends AbstractClient
     const AUTH_URL = 'https://ca.account.sony.com/api/';
     const BASE_URL = 'https://m.np.playstation.net/api/';
 
-    private $options;
-
     private $accessToken;
     private $refreshToken;
 
@@ -28,6 +24,7 @@ class Client extends AbstractClient
     {
         $guzzleOptions['allow_redirects'] = false;
         $guzzleOptions['headers']['User-Agent'] = 'psn-php/' . self::VERSION;
+        $guzzleOptions['headers']['Accept-Language'] = 'en-US';
         $guzzleOptions['base_uri'] = self::BASE_URL;
 
         parent::__construct($guzzleOptions);
@@ -165,8 +162,8 @@ class Client extends AbstractClient
         $this->pushAuthenticationMiddleware(new AuthenticationMiddleware([
             'Authorization' => 'Bearer ' . $accessToken
         ]));
-    }
-
+	}
+	
     /**
      * Gets the access token.
      *
@@ -207,8 +204,8 @@ class Client extends AbstractClient
 		// TODO
 	}
 
-	public function messageThreads()
+	public function groups()
 	{
-		return new MessageThreadsFactory($this->getHttpClient());
+		return new GroupsFactory($this->getHttpClient());
 	}
 }
