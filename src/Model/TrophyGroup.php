@@ -1,28 +1,36 @@
 <?php
 namespace Tustin\PlayStation\Model;
 
+use Tustin\PlayStation\Api;
 use InvalidArgumentException;
 use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Enum\TrophyType;
 use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\AbstractTrophyTitle;
+use Tustin\PlayStation\Interfaces\Fetchable;
 use Tustin\PlayStation\Factory\TrophyFactory;
 
-class TrophyGroup
+class TrophyGroup extends Api implements Fetchable
 {
     use Model;
 
-    private $trophyTitle;
+	private $trophyTitle;
+	
+	private $groupId;
 
-    public function __construct(AbstractTrophyTitle $trophyTitle, object $data)
+    public function __construct(AbstractTrophyTitle $trophyTitle, string $groupId)
     {
-        $this->setCache($data);
+		parent::__construct($trophyTitle->getHttpClient());
         $this->trophyTitle = $trophyTitle;
+		$this->groupId = $groupId;
     }
 
-    public static function fromObject(TrophyTitle $trophyTitle, object $data) : TrophyGroup
+    public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data) : TrophyGroup
     {
-        return new static($trophyTitle, $data);
+		$instance = new static($trophyTitle, $data->trophyGroupId);
+		$instance->setCache($data);
+		
+		return $instance;
     }
 
     /**
@@ -52,17 +60,7 @@ class TrophyGroup
      */
     public function name() : string
     {
-        return $this->pluck('trophyGroupName');
-    }
-
-    /**
-     * Gets the trophy group detail.
-     *
-     * @return string
-     */
-    public function detail() : string
-    {
-        return $this->pluck('trophyGroupDetail');
+        return $this->pluck('trophyGroups.0.trophyGroupName');
     }
 
     /**
@@ -72,7 +70,7 @@ class TrophyGroup
      */
     public function id() : string
     {
-        return $this->pluck('trophyGroupId');
+        return $this->pluck('trophyGroups.0.trophyGroupId');
     }
 
     /**
@@ -82,7 +80,7 @@ class TrophyGroup
      */
     public function iconUrl() : string
     {
-        return $this->pluck('trophyGroupIconUrl');
+        return $this->pluck('trophyGroups.0.trophyGroupIconUrl');
     }
 
     /**
@@ -128,8 +126,6 @@ class TrophyGroup
     /**
      * Gets whether this trophy group has a platinum or not.
      * 
-     * This should only be true for the 'default' trophy group (unless PS5 changes this).
-     *
      * @return boolean
      */
     public function hasPlatinum() : bool
@@ -170,5 +166,15 @@ class TrophyGroup
         $count = $this->bronze() + $this->silver() + $this->gold();
 
         return $this->hasPlatinum() ? ++$count : $count;
-    }
+	}
+	
+	public function fetch() : object
+	{
+		return $this->get(
+			'trophy/v1/npCommunicationIds/' . $this->title()->npCommunicationId()  . '/trophyGroups',
+			[
+				'npServiceName' => $this->title()->serviceName()
+			]
+		);
+	}
 }

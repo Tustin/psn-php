@@ -36,7 +36,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
     public function detail() : string
     {
         // PS5 titles doesn't seem to have the detail data.
-        if ($this->pluck('npServiceName') == 'trophy2')
+        if ($this->serviceName() == 'trophy2')
         {
             return '';
         }
