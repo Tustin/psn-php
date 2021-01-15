@@ -20,15 +20,23 @@ abstract class AbstractTrophyTitle extends Api
 	use Model;
 
     /**
-	 * The NP communcation id.
-	 *
 	 * @var string
 	 */
 	protected $npCommuncationId;
 
-	public function setNpCommuncationId(string $npCommuncationId)
+	/**
+	 * @var string
+	 */
+	protected $serviceName;
+
+	protected function setNpCommuncationId(string $npCommuncationId)
 	{
 		$this->npCommuncationId = $npCommuncationId;
+	}
+
+	protected function setServiceName(string $serviceName)
+	{
+		$this->serviceName = $serviceName;
 	}
 
 	public abstract function npCommunicationId() : string;
@@ -41,5 +49,14 @@ abstract class AbstractTrophyTitle extends Api
     public function trophyGroups() : TrophyGroupsFactory
     {
         return new TrophyGroupsFactory($this);
-    }
+	}
+	
+	/**
+	 * Gets the service name for this trophy title.
+	 * 
+	 * PS5 has a different service name than PS4 so this needs to be set correctly to avoid errors.
+	 *
+	 * @return string
+	 */
+	public abstract function serviceName() : string;
 }

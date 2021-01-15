@@ -30,7 +30,7 @@ class TrophyGroupsIterator extends AbstractApiIterator
 			$results = $this->get(
 				'trophy/v1/users/' . $this->title->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->title->npCommunicationId() .'/trophyGroups',
 				[
-					'npServiceName' => 'trophy'
+					'npServiceName' => $this->title->serviceName()
 				]
 			);
 		}
@@ -39,7 +39,7 @@ class TrophyGroupsIterator extends AbstractApiIterator
 			$results = $this->get(
 				'trophy/v1/npCommunicationIds/' . $this->title->npCommunicationId()  . '/trophyGroups',
 				[
-					'npServiceName' => 'trophy'
+					'npServiceName' => $this->title->serviceName()
 				]
 			);
 		}

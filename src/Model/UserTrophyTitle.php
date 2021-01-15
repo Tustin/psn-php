@@ -214,5 +214,10 @@ class UserTrophyTitle extends AbstractTrophyTitle
     public function progress() : int
     {
         return $this->pluck('progress');
-    }
+	}
+	
+	public function serviceName() : string
+	{
+		return $this->serviceName ??= $this->pluck('npServiceName');
+	}
 }

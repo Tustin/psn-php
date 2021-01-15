@@ -6,14 +6,11 @@ use IteratorAggregate;
 use Tustin\PlayStation\Api;
 use InvalidArgumentException;
 use Tustin\PlayStation\Model\User;
-use Tustin\PlayStation\Enum\ConsoleType;
 use Tustin\PlayStation\Enum\LanguageType;
-use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\Model\UserTrophyTitle;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Exception\NoTrophiesException;
 use Tustin\PlayStation\Iterator\TrophyTitlesIterator;
-use Tustin\PlayStation\Exception\MissingPlatformException;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleNameFilter;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleHasGroupsFilter;
 
