@@ -194,9 +194,9 @@ class Client extends AbstractClient
         return new UsersFactory($this->getHttpClient());
     }
 
-    public function trophies(string $npCommunicationId)
+    public function trophies(string $npCommunicationId, string $serviceName)
     {
-        return new TrophyTitle($this->getHttpClient(), $npCommunicationId);
+        return new TrophyTitle($this->getHttpClient(), $npCommunicationId, $serviceName);
     }
 
     public function store()
