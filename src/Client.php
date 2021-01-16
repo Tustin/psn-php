@@ -162,7 +162,7 @@ class Client extends AbstractClient
         $this->pushAuthenticationMiddleware(new AuthenticationMiddleware([
             'Authorization' => 'Bearer ' . $accessToken
         ]));
-	}
+    }
 	
     /**
      * Gets the access token.
@@ -192,20 +192,20 @@ class Client extends AbstractClient
     public function users() : UsersFactory
     {
         return new UsersFactory($this->getHttpClient());
-	}
-	
-	public function trophies(string $npCommunicationId)
-	{
-		return new TrophyTitle($this->getHttpClient(), $npCommunicationId);
-	}
+    }
 
-	public function store()
-	{
-		// TODO
-	}
+    public function trophies(string $npCommunicationId)
+    {
+        return new TrophyTitle($this->getHttpClient(), $npCommunicationId);
+    }
 
-	public function groups()
-	{
-		return new GroupsFactory($this->getHttpClient());
-	}
+    public function store()
+    {
+        // TODO
+    }
+
+    public function groups()
+    {
+        return new GroupsFactory($this->getHttpClient());
+    }
 }
