@@ -26,7 +26,7 @@ class GroupsIterator extends AbstractApiIterator
     public function access($cursor) : void
     {
         $results = $this->get('gamingLoungeGroups/v1/members/me/groups', [
-            'favoriteFilter' => 'notFavorite',
+            'favoriteFilter' => $this->groupsFactory->favorited ? 'favorite' : 'notFavorite',
             'limit' => $this->limit,
             'offset' => $cursor,
             'includeFields' => 'groupName,groupIcon,members,mainThread,joinedTimestamp,modifiedTimestamp,totalGroupCount,isFavorite,existsNewArrival,partySessions'

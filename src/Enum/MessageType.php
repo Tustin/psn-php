@@ -6,7 +6,8 @@ use MyCLabs\Enum\Enum;
 class MessageType extends Enum
 {
     private const text = 1;
-    private const image = 3;
+	private const image = 3;
+	private const video = 210;
     private const audio = 1011;
     private const sticker = 1013;
     private const leftGroup = 2002;

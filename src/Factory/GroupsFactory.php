@@ -12,12 +12,22 @@ use Tustin\PlayStation\Iterator\Filter\GroupMembersFilter;
 
 class GroupsFactory extends Api implements IteratorAggregate
 {
-    private $with = [];
-    private $only = false;
-    private ?Carbon $since = null;
+	private $with = [];
+	
+	/**
+	 * @var boolean
+	 */
+	private $only = false;
+	
+	/**
+	 * @var Carbon|null
+	 */
+	private $since = null;
+	
+	protected $favorited = false;
 
     /**
-     * Filters threads that contains the user(s).
+     * Filters groups that only contain these onlineIds.
      * 
      * Chain this with GroupsFactory::only to ensure you only get threads with these exact users.
      *
@@ -34,7 +44,7 @@ class GroupsFactory extends Api implements IteratorAggregate
     /**
      * Should be used with the GroupsFactory::with method.
      * 
-     * Will return threads that contain ONLY the users passed to GroupsFactory::with.
+     * Will return groups that contain ONLY the users passed to GroupsFactory::with.
      *
      * @return GroupsFactory
      */
@@ -46,7 +56,7 @@ class GroupsFactory extends Api implements IteratorAggregate
     }
 
     /**
-     * Returns message threads that have only been active since the given date.
+     * Filters groups that have only been active since the given date.
      *
      * @param Carbon $date
      * @return GroupsFactory
@@ -56,7 +66,19 @@ class GroupsFactory extends Api implements IteratorAggregate
         $this->since = $date;
 
         return $this;
-    }
+	}
+	
+	/**
+	 * Filters groups that are favorited.
+	 *
+	 * @return GroupsFactory
+	 */
+	public function favorited() : GroupsFactory
+	{
+		$this->favorited = true;
+
+		return $this;
+	}
 
     /**
      * Gets the iterator and applies any filters.

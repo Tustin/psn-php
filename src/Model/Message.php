@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Model;
 
 use Carbon\Carbon;
@@ -9,112 +10,109 @@ use Tustin\PlayStation\Model\MessageThread;
 
 class Message extends Api
 {
-    use Model;
+	use Model;
 
-    /**
-     * The message thread this message is in.
-     *
-     * @var MessageThread
-     */
-    private $thread;
-    
-    public function __construct(MessageThread $thread, object $messageData)
-    {
-        $this->setCache($messageData);
+	/**
+	 * The message thread this message is in.
+	 *
+	 * @var MessageThread
+	 */
+	private $thread;
 
-        $this->thread = $thread;
-    }
+	public function __construct(MessageThread $thread, object $messageData)
+	{
+		$this->setCache($messageData);
 
-    public function fromObject(MessageThread $thread, object $messageData)
-    {
-        $instance = new static($thread, $messageData);
+		$this->thread = $thread;
+	}
 
-        return $instance;
-    }
+	public function fromObject(MessageThread $thread, object $messageData)
+	{
+		$instance = new static($thread, $messageData);
 
-    /**
-     * Gets the type of message.
-     * 
-     * Returns MessageType::unknown on unmapped message types. If you receive this type, open a PR/issue.
-     *
-     * @return MessageType
-     */
-    public function type() : MessageType
-    {
-        try
-        {
-            return new MessageType($this->pluck('eventCategoryCode'));
-        }
-        catch (\UnexpectedValueException $e)
-        {
-            return MessageType::unknown();
-        }
-    }
+		return $instance;
+	}
 
-    /**
-     * Gets the media URL if the message contains some piece of media (image, audio).
-     *
-     * @return string|null
-     */
-    public function mediaUrl() : ?string
-    {
-        // @NeedsTesting
-        return $this->pluck('attachedMediaPath');
-    }
+	/**
+	 * Gets the type of message.
+	 * 
+	 * Returns MessageType::unknown on unmapped message types. If you receive this type, open a PR/issue.
+	 *
+	 * @return MessageType
+	 */
+	public function type(): MessageType
+	{
+		try {
+			return new MessageType($this->pluck('eventCategoryCode'));
+		} catch (\UnexpectedValueException $e) {
+			return MessageType::unknown();
+		}
+	}
 
-    /**
-     * Gets the message body.
-     *
-     * @return string
-     */
-    public function body() : string
-    {
-        return $this->pluck('messageDetail.body');
-    }
+	/**
+	 * Gets the media URL if the message contains some piece of media (image, audio).
+	 *
+	 * @return string|null
+	 */
+	public function mediaUrl(): ?string
+	{
+		// @NeedsTesting
+		return $this->pluck('attachedMediaPath');
+	}
 
-    /**
-     * Gets the event index ID for the message.
-     * 
-     * Used as a cursor for pagination.
-     *
-     * @return string
-     */
-    public function eventIndex() : string
-    {
-        return $this->pluck('eventIndex');
-    }
+	/**
+	 * Gets the message body.
+	 *
+	 * @return string
+	 */
+	public function body(): string
+	{
+		return $this->pluck('messageDetail.body');
+	}
 
-    /**
-     * Gets the date and time when the message was posted.
-     *
-     * @return Carbon
-     */
-    public function date() : Carbon
-    {
-        // @NeedsTesting
-        return Carbon::parse($this->pluck('postDate'))->setTimezone('UTC');
-    }
+	/**
+	 * Gets the event index ID for the message.
+	 * 
+	 * Used as a cursor for pagination.
+	 *
+	 * @return string
+	 */
+	public function eventIndex(): string
+	{
+		return $this->pluck('eventIndex');
+	}
 
-    /**
-     * Returns the message thread that this message is in.
-     *
-     * @return MessageThread
-     */
-    public function messageThread() : MessageThread
-    {
-        return $this->thread;
-    }
+	/**
+	 * Gets the date and time when the message was posted.
+	 *
+	 * @return Carbon
+	 */
+	public function date(): Carbon
+	{
+		// @NeedsTesting
+		return Carbon::parse($this->pluck('postDate'))->setTimezone('UTC');
+	}
 
-    /**
-     * Gets the message sender.
-     *
-     * @return User
-     */
-    public function sender() : User
-    {
-        return new User(
-            $this->messageThread()->getHttpClient(), 
-            $this->pluck('sender.onlineId')
-        );
-    }
+	/**
+	 * Returns the message thread that this message is in.
+	 *
+	 * @return MessageThread
+	 */
+	public function messageThread(): MessageThread
+	{
+		return $this->thread;
+	}
+
+	/**
+	 * Gets the message sender.
+	 *
+	 * @return User
+	 */
+	public function sender(): User
+	{
+		return new User(
+			$this->messageThread()->getHttpClient(),
+			$this->pluck('sender.accountId')
+		);
+	}
 }

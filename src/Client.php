@@ -5,6 +5,7 @@ namespace Tustin\PlayStation;
 use Tustin\Haste\AbstractClient;
 use Tustin\PlayStation\OAuthToken;
 
+use Tustin\PlayStation\Model\Media;
 use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\Factory\UsersFactory;
 use Tustin\PlayStation\Factory\GroupsFactory;
@@ -163,13 +164,13 @@ class Client extends AbstractClient
             'Authorization' => 'Bearer ' . $accessToken
         ]));
     }
-	
+
     /**
      * Gets the access token.
      *
      * @return OAuthToken
      */
-    public function getAccessToken() : OAuthToken
+    public function getAccessToken(): OAuthToken
     {
         return $this->accessToken;
     }
@@ -179,7 +180,7 @@ class Client extends AbstractClient
      *
      * @return OAuthToken
      */
-    public function getRefreshToken() : OAuthToken
+    public function getRefreshToken(): OAuthToken
     {
         return $this->refreshToken;
     }
@@ -189,12 +190,12 @@ class Client extends AbstractClient
      *
      * @return UsersFactory
      */
-    public function users() : UsersFactory
+    public function users(): UsersFactory
     {
         return new UsersFactory($this->getHttpClient());
     }
 
-    public function trophies(string $npCommunicationId, string $serviceName)
+    public function trophies(string $npCommunicationId, string $serviceName): TrophyTitle
     {
         return new TrophyTitle($this->getHttpClient(), $npCommunicationId, $serviceName);
     }
@@ -204,8 +205,13 @@ class Client extends AbstractClient
         // TODO
     }
 
-    public function groups()
+    public function groups(): GroupsFactory
     {
         return new GroupsFactory($this->getHttpClient());
+    }
+
+    public function media(string $ugcId): Media
+    {
+        return new Media($this->getHttpClient(), $ugcId);
     }
 }
