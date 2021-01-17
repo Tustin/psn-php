@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Iterator;
 
 use Iterator;
@@ -9,35 +10,35 @@ use InvalidArgumentException;
 
 abstract class AbstractApiIterator extends Api implements Iterator, Countable
 {
-	/**
-	 * @var integer
-	 */
+    /**
+     * @var integer
+     */
     protected $currentOffset = 0;
 
-	/**
-	 * @var integer|null
-	 */
+    /**
+     * @var integer|null
+     */
     protected $limit = null;
 
-	/**
-	 * @var integer
-	 */
-	protected $totalResults = 0;
-	
-	/**
-	 * @var bool
-	 */
-	protected $lastBlock = false;
-	
-	/**
-	 * @var mixed
-	 */
-	protected $customCursor = null;
+    /**
+     * @var integer
+     */
+    protected $totalResults = 0;
 
-	/**
-	 * @var bool|null
-	 */
-	protected $force = null;
+    /**
+     * @var bool
+     */
+    protected $lastBlock = false;
+
+    /**
+     * @var mixed
+     */
+    protected $customCursor = null;
+
+    /**
+     * @var bool|null
+     */
+    protected $force = null;
 
     /**
      * The cache of all items for a given iterator.
@@ -52,8 +53,8 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      * @param mixed $cursor
      * @return void
      */
-    public abstract function access($cursor) : void;
-    
+    public abstract function access($cursor): void;
+
     /**
      * Currents the current offset.
      *
@@ -69,7 +70,7 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      *
      * @return integer
      */
-    public final function count() : int
+    public final function count(): int
     {
         return $this->getTotalResults();
     }
@@ -79,7 +80,7 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      *
      * @return integer
      */
-    public function getTotalResults() : int
+    public function getTotalResults(): int
     {
         return $this->totalResults;
     }
@@ -90,7 +91,7 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      * @param integer $results
      * @return void
      */
-    protected final function setTotalResults(int $results) : void
+    protected final function setTotalResults(int $results): void
     {
         $this->totalResults = $results;
     }
@@ -100,7 +101,7 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      *
      * @return bool
      */
-    public final function valid() : bool
+    public final function valid(): bool
     {
         return array_key_exists($this->currentOffset, $this->cache);
     }
@@ -126,21 +127,21 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
     {
         $this->setTotalResults($totalResults);
 
-		$this->cache = array_merge($this->cache, $items);
-		
-		$this->customCursor = $customCursor;
-	}
-	
-	/**
-	 * Set whether to force the iterator to keep accessing values or not.
-	 *
-	 * @param boolean $value
-	 * @return void
-	 */
-	public function force(bool $value)
-	{
-		$this->force = $value;
-	}
+        $this->cache = array_merge($this->cache, $items);
+
+        $this->customCursor = $customCursor;
+    }
+
+    /**
+     * Set whether to force the iterator to keep accessing values or not.
+     *
+     * @param boolean $value
+     * @return void
+     */
+    public function force(bool $value)
+    {
+        $this->force = $value;
+    }
 
     /**
      * Points the offset to the next item.
@@ -149,27 +150,19 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      *
      * @return void
      */
-    public function next() : void
+    public function next(): void
     {
         $this->currentOffset++;
 
-        if (is_null($this->limit))
-        {
+        if (is_null($this->limit)) {
             return;
         }
 
-        if (($this->currentOffset % $this->limit === 0 && $this->currentOffset < $this->getTotalResults()) || $this->force === true)
-        {
-			if (!is_null($this->customCursor))
-			{
-				$this->access($this->customCursor);
-			}
-			else
-			{
-				$this->access($this->currentOffset);
-			}
+        if ($this->currentOffset % $this->limit === 0 && $this->currentOffset < $this->getTotalResults()) {
+            $this->access($this->currentOffset);
         }
     }
+
 
     /**
      * Gets an item from cache, or from the API resource if necessary, by an offset.
@@ -177,20 +170,17 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      * @param integer|string $offset
      * @return object
      */
-    public function getFromOffset($offset) : object
+    public function getFromOffset($offset): object
     {
-        if (is_null($offset))
-        {
+        if (is_null($offset)) {
             throw new InvalidArgumentException("Offset cannot be null.");
         }
-        
-        if (!$this->offsetExists($offset))
-        {
+
+        if (!$this->offsetExists($offset)) {
             throw new InvalidArgumentException("Offset $offset does not exist.");
         }
 
-        if (!array_key_exists($offset, $this->cache))
-        {
+        if (!array_key_exists($offset, $this->cache)) {
             $this->access($offset);
         }
 
@@ -203,14 +193,11 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
      * @param integer|string $offset
      * @return boolean
      */
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
-        try
-        {
+        try {
             return $offset >= 0 && $offset < $this->getTotalResults();
-        }
-        catch (RuntimeException $e)
-        {
+        } catch (RuntimeException $e) {
             return !$this->lastBlock;
         }
     }
@@ -229,7 +216,7 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
     public function first()
     {
         $this->rewind();
-        
+
         return $this->current();
     }
 }

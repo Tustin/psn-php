@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Factory;
 
 use Iterator;
@@ -12,19 +13,19 @@ use Tustin\PlayStation\Iterator\Filter\GroupMembersFilter;
 
 class GroupsFactory extends Api implements IteratorAggregate
 {
-	private $with = [];
-	
-	/**
-	 * @var boolean
-	 */
-	private $only = false;
-	
-	/**
-	 * @var Carbon|null
-	 */
-	private $since = null;
-	
-	protected $favorited = false;
+    private $with = [];
+
+    /**
+     * @var boolean
+     */
+    private $only = false;
+
+    /**
+     * @var Carbon|null
+     */
+    private $since = null;
+
+    public $favorited = false;
 
     /**
      * Filters groups that only contain these onlineIds.
@@ -34,7 +35,7 @@ class GroupsFactory extends Api implements IteratorAggregate
      * @param string ...$onlineIds
      * @return GroupsFactory
      */
-    public function with(string ...$onlineIds) : GroupsFactory
+    public function with(string ...$onlineIds): GroupsFactory
     {
         $this->with = array_merge($this->with, $onlineIds);
 
@@ -48,7 +49,7 @@ class GroupsFactory extends Api implements IteratorAggregate
      *
      * @return GroupsFactory
      */
-    public function only() : GroupsFactory
+    public function only(): GroupsFactory
     {
         $this->only = true;
 
@@ -61,24 +62,24 @@ class GroupsFactory extends Api implements IteratorAggregate
      * @param Carbon $date
      * @return GroupsFactory
      */
-    public function since(Carbon $date) : GroupsFactory
+    public function since(Carbon $date): GroupsFactory
     {
         $this->since = $date;
 
         return $this;
-	}
-	
-	/**
-	 * Filters groups that are favorited.
-	 *
-	 * @return GroupsFactory
-	 */
-	public function favorited() : GroupsFactory
-	{
-		$this->favorited = true;
+    }
 
-		return $this;
-	}
+    /**
+     * Filters groups that are favorited.
+     *
+     * @return GroupsFactory
+     */
+    public function favorited(): GroupsFactory
+    {
+        $this->favorited = true;
+
+        return $this;
+    }
 
     /**
      * Gets the iterator and applies any filters.
@@ -89,8 +90,7 @@ class GroupsFactory extends Api implements IteratorAggregate
     {
         $iterator = new GroupsIterator($this);
 
-        if ($this->with)
-        {
+        if ($this->with) {
             $iterator = new GroupMembersFilter($iterator, $this->with, $this->only);
         }
 
@@ -102,7 +102,7 @@ class GroupsFactory extends Api implements IteratorAggregate
      *
      * @return Group
      */
-    public function first() : Group
+    public function first(): Group
     {
         return $this->getIterator()->current();
     }
@@ -114,7 +114,7 @@ class GroupsFactory extends Api implements IteratorAggregate
      *
      * @return Carbon
      */
-    public function getSinceDate() : Carbon
+    public function getSinceDate(): Carbon
     {
         return $this->since ?? Carbon::createFromTimestamp(0);
     }
@@ -123,13 +123,13 @@ class GroupsFactory extends Api implements IteratorAggregate
      * Creates a new message thread.
      * 
      * Will return an existing message thread if a thread already exists containing the same users you pass to this method.
-	 * 
-	 * @TODO: Update for new API
+     * 
+     * @TODO: Update for new API
      *
      * @param string ...$onlineIds
      * @return MessageThread
      */
-    public function create(string ...$onlineIds) : MessageThread
+    public function create(string ...$onlineIds): MessageThread
     {
         // We need our onlineId when creating a new group.
         $clientOnlineId = (new UsersFactory($this->getHttpClient()))->me()->onlineId();
@@ -138,8 +138,7 @@ class GroupsFactory extends Api implements IteratorAggregate
 
         $membersToAdd[] = ['onlineId' => $clientOnlineId];
 
-        foreach ($onlineIds as $onlineId)
-        {
+        foreach ($onlineIds as $onlineId) {
             $membersToAdd[] = ['onlineId' => $onlineId];
         }
 

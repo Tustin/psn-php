@@ -1,9 +1,11 @@
 <?php
+
 namespace Tustin\PlayStation\Iterator;
 
 use InvalidArgumentException;
 use Tustin\PlayStation\Model\Message;
 use Tustin\PlayStation\Model\MessageThread;
+use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class MessagesIterator extends AbstractApiIterator
 {
@@ -12,15 +14,16 @@ class MessagesIterator extends AbstractApiIterator
      */
     protected $thread;
 
-	/**
-	 * @var int
-	 */
+    /**
+     * @var int
+     */
     protected $limit;
+
+    private $totalCount = 0;
 
     public function __construct(MessageThread $thread, int $limit = 20)
     {
-        if ($limit <= 0)
-        {
+        if ($limit <= 0) {
             throw new InvalidArgumentException('$limit must be greater than zero.');
         }
 
@@ -30,38 +33,42 @@ class MessagesIterator extends AbstractApiIterator
         $this->access(null);
     }
 
-    public function access($cursor) : void
+    public function access($cursor): void
     {
-		$params = [];
+        $params = [];
 
-		if ($cursor != null)
-        {
-            if (!is_string($cursor))
-            {
+        if ($cursor != null) {
+            if (!is_string($cursor)) {
                 throw new InvalidArgumentException("$cursor must be a string.");
             }
-       
+
             $params['before'] = $cursor;
         }
-		
-		$results = $this->get('gamingLoungeGroups/v1/members/me/groups/' . $this->thread->group()->id() . '/threads/' . $this->thread->id() . '/messages', $params);
 
-		$this->force(!$results->reachedEndOfPage);
-        $this->update($results->messageCount, $results->messages, $results->previous);
+        $results = $this->get('gamingLoungeGroups/v1/members/me/groups/' . $this->thread->group()->id() . '/threads/' . $this->thread->id() . '/messages', $params);
+
+        $this->totalCount += $results->messageCount;
+        // if ($results->reachedEndOfPage && $results->messageCount == 0) {
+        //     return;
+        // }
+
+        // $this->force(!$results->reachedEndOfPage);
+        $this->update($this->totalCount, $results->messages, $results->previous);
     }
 
-    public function next() : void
+    public function next(): void
     {
         $this->currentOffset++;
-        if (($this->currentOffset % $this->limit) == 0)
-        {
-            $this->access($this->maxEventIndexCursor);
+
+        // Since totalResults for the messages API just returns the amount of messages sent in the response, we have to do it like this.
+        if ($this->currentOffset == $this->totalResults) {
+            $this->access($this->customCursor);
         }
     }
 
     public function current()
     {
-        return new Message(
+        return AbstractMessage::create(
             $this->thread,
             $this->getFromOffset($this->currentOffset)
         );
