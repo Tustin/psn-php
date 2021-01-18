@@ -112,6 +112,56 @@ class Trophy extends Api implements Fetchable
         return $this->pluck('trophyProgressTargetValue') ?? '';
     }
     
+    /**
+     * Check if the user have earned this trophy.
+     *
+     * @return boolean
+     */
+    public function earned() : bool
+    {
+        return $this->pluck('earned');
+    }
+
+    /**
+     * Get the date and time the user earned this trophy, if any.
+     *
+     * @return string
+     */
+    public function earnedDateTime() : string
+    {
+        return $this->pluck('earnedDateTime') ?? '';
+    }
+
+    /**
+     * Get the progress count for the user on this trophy, if any.
+     *
+     * @return string
+     */
+    public function progress() : string
+    {
+        return $this->pluck('progress') ?? '';
+    }
+
+    /**
+     * Get the progress percentage for the user on this trophy, if any.
+     *
+     * @return string
+     */
+    public function progressRate() : string
+    {
+        return $this->pluck('progressRate') ?? '';
+    }
+
+    /**
+     * Get the date and time when a progress was made for the user on this trophy, if any.
+     *
+     * @return string
+     */
+    public function progressedDateTime() : string
+    {
+        return $this->pluck('progressedDateTime') ?? '';
+    }
+    
     public function fetch() : object
     {
         return $this->get('trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophyGroups/'  . $this->trophyGroup->id() . '/trophies/' . $this->id(), [
