@@ -26,9 +26,9 @@ class TrophyIterator extends AbstractApiIterator
     public function access($cursor) : void
     {
         $results = $this->get(
-            'trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophyGroups/'  . $this->trophyGroup->id() . '/trophies',
+            'trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId() . '/trophyGroups/' . $this->trophyGroup->id() . '/trophies',
             [
-                'npServiceName' => 'trophy',
+                'npServiceName' => $this->trophyGroup->title()->serviceName(),
                 'offset' => $cursor
             ]
         );
