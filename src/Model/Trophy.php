@@ -93,7 +93,7 @@ class Trophy extends Api implements Fetchable
     }
     
     /**
-     * Gets the trophy group icon URL.
+     * Gets the trophy icon URL.
      *
      * @return string
      */
