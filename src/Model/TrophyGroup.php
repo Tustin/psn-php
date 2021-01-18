@@ -20,7 +20,7 @@ class TrophyGroup extends Api implements Fetchable
     private $groupName;
     private $groupIconUrl;
 
-    public function __construct(AbstractTrophyTitle $trophyTitle, string $groupId, string $groupName, string $groupIconUrl)
+    public function __construct(AbstractTrophyTitle $trophyTitle, string $groupId, string $groupName = '', string $groupIconUrl = '')
     {
         parent::__construct($trophyTitle->getHttpClient());
         $this->trophyTitle = $trophyTitle;
