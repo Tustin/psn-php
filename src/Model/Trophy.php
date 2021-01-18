@@ -92,6 +92,26 @@ class Trophy extends Api implements Fetchable
         return $this->pluck('trophyHidden');
     }
     
+    /**
+     * Gets the trophy group icon URL.
+     *
+     * @return string
+     */
+    public function iconUrl() : string
+    {
+        return $this->pluck('trophyIconUrl');
+    }
+
+    /**
+     * Gets the trophy progress target value, if any.
+     *
+     * @return string
+     */
+    public function progressTargetValue() : string
+    {
+        return $this->pluck('trophyProgressTargetValue') ?? '';
+    }
+    
     public function fetch() : object
     {
         return $this->get('trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophyGroups/'  . $this->trophyGroup->id() . '/trophies/' . $this->id(), [
