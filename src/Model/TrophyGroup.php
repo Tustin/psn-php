@@ -14,23 +14,23 @@ class TrophyGroup extends Api implements Fetchable
 {
     use Model;
 
-	private $trophyTitle;
+    private $trophyTitle;
 	
-	private $groupId;
+    private $groupId;
 
     public function __construct(AbstractTrophyTitle $trophyTitle, string $groupId)
     {
-		parent::__construct($trophyTitle->getHttpClient());
+        parent::__construct($trophyTitle->getHttpClient());
         $this->trophyTitle = $trophyTitle;
-		$this->groupId = $groupId;
+        $this->groupId = $groupId;
     }
 
     public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data) : TrophyGroup
     {
-		$instance = new static($trophyTitle, $data->trophyGroupId);
-		$instance->setCache($data);
-		
-		return $instance;
+        $instance = new static($trophyTitle, $data->trophyGroupId);
+        $instance->setCache($data);
+        
+        return $instance;
     }
 
     /**
@@ -144,15 +144,15 @@ class TrophyGroup extends Api implements Fetchable
         switch ($trophyType)
         {
             case TrophyType::bronze():
-            return $this->bronze();
+                return $this->bronze();
             case TrophyType::silver():
-            return $this->silver();
+                return $this->silver();
             case TrophyType::gold():
-            return $this->gold();
+                return $this->gold();
             case TrophyType::platinum():
-            return (int)$this->hasPlatinum();
+                return (int)$this->hasPlatinum();
             default:
-            throw new InvalidArgumentException("Trophy type [$trophyType] does not contain a count method.");
+                throw new InvalidArgumentException("Trophy type [$trophyType] does not contain a count method.");
         }
     }
 
@@ -166,15 +166,15 @@ class TrophyGroup extends Api implements Fetchable
         $count = $this->bronze() + $this->silver() + $this->gold();
 
         return $this->hasPlatinum() ? ++$count : $count;
-	}
-	
-	public function fetch() : object
-	{
-		return $this->get(
-			'trophy/v1/npCommunicationIds/' . $this->title()->npCommunicationId()  . '/trophyGroups',
-			[
-				'npServiceName' => $this->title()->serviceName()
-			]
-		);
-	}
+    }
+    
+    public function fetch() : object
+    {
+        return $this->get(
+            'trophy/v1/npCommunicationIds/' . $this->title()->npCommunicationId()  . '/trophyGroups',
+            [
+                'npServiceName' => $this->title()->serviceName()
+            ]
+        );
+    }
 }
