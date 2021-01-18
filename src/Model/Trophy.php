@@ -95,7 +95,7 @@ class Trophy extends Api implements Fetchable
     public function fetch() : object
     {
         return $this->get('trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophyGroups/'  . $this->trophyGroup->id() . '/trophies/' . $this->id(), [
-            'npServiceName' => 'trophy'
+            'npServiceName' => $this->trophyGroup->title()->serviceName()
         ]);
     }
 }
