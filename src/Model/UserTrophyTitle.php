@@ -55,16 +55,20 @@ class UserTrophyTitle extends AbstractTrophyTitle
     }
 
     /**
-     * Gets the platform this title is for.
-     * 
-     * @TODO: This might need to return an array??
+     * Gets the platform(s) this title is for.
      *
-     * @return ConsoleType
+     * @return array
      */
-    public function platform() : ConsoleType
+    public function platform() : array
     {
-        // @CheckMe
-        return new ConsoleType($this->pluck('trophyTitlePlatform'));
+        $platforms = [];
+
+        foreach (explode(",", $this->pluck('trophyTitlePlatform')) as $platform)
+        {
+            $platforms[] = new ConsoleType($platform);
+        }
+        
+        return $platforms;
     }
 
     /**
