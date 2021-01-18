@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation;
@@ -35,11 +36,10 @@ class UsersSearchIterator extends AbstractApiIterator
      * @var UsersFactory
      */
     private $usersFactory;
-    
+
     public function __construct(UsersFactory $usersFactory, string $query, string $languageCode = 'en', string $countryCode = 'us')
     {
-        if (empty($query))
-        {
+        if (empty($query)) {
             throw new InvalidArgumentException('[query] must contain a value.');
         }
 
@@ -48,10 +48,11 @@ class UsersSearchIterator extends AbstractApiIterator
         $this->query = $query;
         $this->languageCode = $languageCode;
         $this->countryCode = $countryCode;
-        $this->access(0);
+        $this->limit = 20;
+        $this->access('');
     }
 
-    public function access($cursor) : void
+    public function access($cursor): void
     {
         // @TODO: Since the search function seems to be streamlined now, we could probably throw this into the abstract api iterator??
         $results = $this->postJson('search/v1/universalSearch', [
@@ -61,7 +62,7 @@ class UsersSearchIterator extends AbstractApiIterator
                 [
                     'domain' => 'SocialAllAccounts',
                     'pagination' => [
-                        'cursor' => '',
+                        'cursor' => $cursor,
                         'pageSize' => '20' // @TODO: Test if this can be altered.
                     ]
                 ]
@@ -70,15 +71,17 @@ class UsersSearchIterator extends AbstractApiIterator
             'searchTerm' => $this->query
         ]);
 
-        $this->update($results->domainResponses[0]->totalResultCount, $results->domainResponses[0]->results);
+        $domainResponse = $results->domainResponses[0];
+
+        $this->update($domainResponse->totalResultCount, $domainResponse->results, $domainResponse->next);
     }
 
     public function current()
     {
         $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;
-        
+
         return new User(
-            $this->usersFactory->getHttpClient(), 
+            $this->usersFactory->getHttpClient(),
             $socialMetadata->accountId,
             $socialMetadata->country
         );

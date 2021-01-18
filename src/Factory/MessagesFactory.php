@@ -27,7 +27,13 @@ class MessagesFactory extends Api implements IteratorAggregate
         $this->thread = $thread;
     }
 
-    public function of(string $class)
+    /**
+     * Gets messages only of a certain type.
+     *
+     * @param string $class
+     * @return MessagesFactory
+     */
+    public function of(string $class): MessagesFactory
     {
         $this->typeFilter = $class;
 

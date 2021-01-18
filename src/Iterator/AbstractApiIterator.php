@@ -159,7 +159,11 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
         }
 
         if ($this->currentOffset % $this->limit === 0 && $this->currentOffset < $this->getTotalResults()) {
-            $this->access($this->currentOffset);
+            if ($this->customCursor) {
+                $this->access($this->customCursor);
+            } else {
+                $this->access($this->currentOffset);
+            }
         }
     }
 
