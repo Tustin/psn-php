@@ -170,11 +170,23 @@ class TrophyGroup extends Api implements Fetchable
     
     public function fetch() : object
     {
-        return $this->get(
-            'trophy/v1/npCommunicationIds/' . $this->title()->npCommunicationId()  . '/trophyGroups',
-            [
-                'npServiceName' => $this->title()->serviceName()
-            ]
-        );
+        if ($this->title() instanceof UserTrophyTitle)
+        {
+            return $this->get(
+                'trophy/v1/users/' . $this->title()->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->title()->npCommunicationId() .'/trophyGroups',
+                [
+                    'npServiceName' => $this->title()->serviceName()
+                ]
+            );
+        }
+        else
+        {
+            return $this->get(
+                'trophy/v1/npCommunicationIds/' . $this->title()->npCommunicationId()  . '/trophyGroups',
+                [
+                    'npServiceName' => $this->title()->serviceName()
+                ]
+            );
+        }
     }
 }
