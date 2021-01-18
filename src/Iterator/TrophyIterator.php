@@ -25,13 +25,25 @@ class TrophyIterator extends AbstractApiIterator
 
     public function access($cursor) : void
     {
-        $results = $this->get(
-            'trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId() . '/trophyGroups/' . $this->trophyGroup->id() . '/trophies',
-            [
-                'npServiceName' => $this->trophyGroup->title()->serviceName(),
-                'offset' => $cursor
-            ]
-        );
+        if ($this->trophyGroup->title() instanceof UserTrophyTitle)
+        {
+            $results = $this->get(
+                'trophy/v1/users/' . $this->trophyGroup->title()->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId() .'/trophyGroups/' . $this->trophyGroup->id() . '/trophies',
+                [
+                    'npServiceName' => $this->trophyGroup->title()->serviceName()
+                ]
+            );
+        }
+        else
+        {
+            $results = $this->get(
+                'trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId() . '/trophyGroups/' . $this->trophyGroup->id() . '/trophies',
+                [
+                    'npServiceName' => $this->trophyGroup->title()->serviceName(),
+                    'offset' => $cursor
+                ]
+            );
+        }
         
         $this->update($results->totalItemCount, $results->trophies);
     }
