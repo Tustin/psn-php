@@ -49,6 +49,6 @@ class TrophyGroupsIterator extends AbstractApiIterator
 
     public function current()
     {
-        return new TrophyGroup($this->title, $this->getFromOffset($this->currentOffset)->trophyGroupId);
+        return new TrophyGroup($this->title, $this->getFromOffset($this->currentOffset)->trophyGroupId, $this->getFromOffset($this->currentOffset)->trophyGroupName, $this->getFromOffset($this->currentOffset)->trophyGroupIconUrl);
     }
 }
