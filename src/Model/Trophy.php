@@ -16,26 +16,26 @@ class Trophy extends Api implements Fetchable
      *
      * @var TrophyGroup
      */
-	private $trophyGroup;
-	
-	/**
-	 * @var int
-	 */
-	private $id;
+    private $trophyGroup;
+    
+    /**
+     * @var int
+     */
+    private $id;
     
     public function __construct(TrophyGroup $trophyGroup, int $id)
     {
-		$this->trophyGroup = $trophyGroup;
-		
-		$this->id = $id;
+        $this->trophyGroup = $trophyGroup;
+        
+        $this->id = $id;
     }
 
     public static function fromObject(TrophyGroup $trophyGroup, object $data) : Trophy
     {
-		$trophy = new static($trophyGroup, $data->trophyId);
-		$trophy->setCache($data);
+        $trophy = new static($trophyGroup, $data->trophyId);
+        $trophy->setCache($data);
 
-		return $trophy;
+        return $trophy;
     }
     /**
      * Gets the trophy name.
@@ -45,12 +45,12 @@ class Trophy extends Api implements Fetchable
     public function name() : string
     {
         return $this->pluck('trophyName');
-	}
-	
-	public function id() : int
-	{
-		return $this->id ??= $this->pluck('id');
-	}
+    }
+    
+    public function id() : int
+    {
+        return $this->id ??= $this->pluck('id');
+    }
 
     /**
      * Gets the trophy details.
@@ -90,12 +90,12 @@ class Trophy extends Api implements Fetchable
     public function hidden() : bool
     {
         return $this->pluck('trophyHidden');
-	}
-	
-	public function fetch() : object
-	{
+    }
+    
+    public function fetch() : object
+    {
         return $this->get('trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophyGroups/'  . $this->trophyGroup->id() . '/trophies/' . $this->id(), [
-			'npServiceName' => 'trophy'
-		]);
-	}
+            'npServiceName' => 'trophy'
+        ]);
+    }
 }
