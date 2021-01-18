@@ -25,30 +25,30 @@ class TrophyGroupsIterator extends AbstractApiIterator
 
     public function access($cursor) : void
     {
-		if ($this->title instanceof UserTrophyTitle)
-		{
-			$results = $this->get(
-				'trophy/v1/users/' . $this->title->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->title->npCommunicationId() .'/trophyGroups',
-				[
-					'npServiceName' => $this->title->serviceName()
-				]
-			);
-		}
-		else
-		{
-			$results = $this->get(
-				'trophy/v1/npCommunicationIds/' . $this->title->npCommunicationId()  . '/trophyGroups',
-				[
-					'npServiceName' => $this->title->serviceName()
-				]
-			);
-		}
+        if ($this->title instanceof UserTrophyTitle)
+        {
+            $results = $this->get(
+                'trophy/v1/users/' . $this->title->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->title->npCommunicationId() . '/trophyGroups',
+                [
+                    'npServiceName' => $this->title->serviceName()
+                ]
+            );
+        }
+        else
+        {
+            $results = $this->get(
+                'trophy/v1/npCommunicationIds/' . $this->title->npCommunicationId() . '/trophyGroups',
+                [
+                    'npServiceName' => $this->title->serviceName()
+                ]
+            );
+        }
 
         $this->update(count($results->trophyGroups), $results->trophyGroups);
     }
 
     public function current()
     {
-		return new TrophyGroup($this->title, $this->getFromOffset($this->currentOffset)->trophyGroupId);
+        return new TrophyGroup($this->title, $this->getFromOffset($this->currentOffset)->trophyGroupId);
     }
 }
