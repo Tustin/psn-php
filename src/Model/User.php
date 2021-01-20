@@ -14,25 +14,33 @@ use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 class User extends Api implements Fetchable
 {
     use Model;
-    
+
     private $profile;
 
     private $accountId;
 
     private $country;
-    
+
     /**
      * Constructs a new user object.
      *
      * @param UsersFactory $usersFactory
      * @param string $accountId
      */
-    public function __construct(Client $client, string $accountId, string $country = '') 
+    public function __construct(Client $client, string $accountId, string $country = '')
     {
         parent::__construct($client);
 
         $this->accountId = $accountId;
         $this->country = $country;
+    }
+
+    public static function fromObject(Client $client, object $data)
+    {
+        $instance = new User($client, $data->accountId, $data->country);
+        $instance->setCache($data);
+
+        return $instance;
     }
 
     public function trophyTitles()
@@ -55,17 +63,17 @@ class User extends Api implements Fetchable
      *
      * @return string
      */
-    public function onlineId() : string
+    public function onlineId(): string
     {
         return $this->pluck('onlineId');
     }
-    
+
     /**
      * Gets the about me.
      *
      * @return string
      */
-    public function aboutMe() : string
+    public function aboutMe(): string
     {
         return $this->pluck('aboutMe');
     }
@@ -75,7 +83,7 @@ class User extends Api implements Fetchable
      *
      * @return string
      */
-    public function accountId() : string
+    public function accountId(): string
     {
         return $this->accountId;
     }
@@ -85,11 +93,11 @@ class User extends Api implements Fetchable
      *
      * @return string
      */
-    public function country() : string
+    public function country(): string
     {
         return $this->country;
     }
-    
+
     /**
      * Returns all the available avatar URL sizes.
      * 
@@ -97,12 +105,11 @@ class User extends Api implements Fetchable
      *
      * @return array
      */
-    public function avatarUrls() : array
+    public function avatarUrls(): array
     {
         $urls = [];
 
-        foreach ($this->pluck('avatars') as $avatar)
-        {
+        foreach ($this->pluck('avatars') as $avatar) {
             $urls[$avatar['size']] = $avatar['url'];
         }
 
@@ -116,14 +123,12 @@ class User extends Api implements Fetchable
      *
      * @return string
      */
-    public function avatarUrl() : string
+    public function avatarUrl(): string
     {
         $sizes = ['xl', 'l', 'm', 's'];
-        
-        foreach ($sizes as $size)
-        {
-            if (array_key_exists($size, $this->avatarUrls()))
-            {
+
+        foreach ($sizes as $size) {
+            if (array_key_exists($size, $this->avatarUrls())) {
                 return $this->avatarUrls()[$size];
             }
         }
@@ -137,7 +142,7 @@ class User extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function isBlocking() : bool
+    public function isBlocking(): bool
     {
         return $this->pluck('blocking');
     }
@@ -147,7 +152,7 @@ class User extends Api implements Fetchable
      *
      * @return integer
      */
-    public function followerCount() : int
+    public function followerCount(): int
     {
         return $this->pluck('followerCount');
     }
@@ -157,7 +162,7 @@ class User extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function isFollowing() : bool
+    public function isFollowing(): bool
     {
         return $this->pluck('following');
     }
@@ -167,7 +172,7 @@ class User extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function isVerified() : bool
+    public function isVerified(): bool
     {
         return $this->pluck('isOfficiallyVerified');
     }
@@ -177,7 +182,7 @@ class User extends Api implements Fetchable
      *
      * @return array
      */
-    public function languages() : array
+    public function languages(): array
     {
         return $this->pluck('languagesUsed');
     }
@@ -189,7 +194,7 @@ class User extends Api implements Fetchable
      *
      * @return integer
      */
-    public function mutualFriendCount() : int
+    public function mutualFriendCount(): int
     {
         return $this->pluck('mutualFriendsCount');
     }
@@ -199,7 +204,7 @@ class User extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function hasMutualFriends() : bool
+    public function hasMutualFriends(): bool
     {
         return $this->mutualFriendCount() > 0;
     }
@@ -209,7 +214,7 @@ class User extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function isCloseFriend() : bool
+    public function isCloseFriend(): bool
     {
         return $this->pluck('personalDetailSharing') !== 'no';
     }
@@ -221,7 +226,7 @@ class User extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function hasFriendRequested() : bool
+    public function hasFriendRequested(): bool
     {
         return $this->pluck('friendRelation') === 'requesting';
     }
@@ -231,7 +236,7 @@ class User extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function isOnline() : bool
+    public function isOnline(): bool
     {
         return $this->pluck('presences.0.onlineStatus') === 'online';
     }
@@ -241,7 +246,7 @@ class User extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function hasPlus() : bool
+    public function hasPlus(): bool
     {
         return $this->pluck('isPlus');
     }
@@ -251,7 +256,7 @@ class User extends Api implements Fetchable
      *
      * @return object
      */
-    public function fetch() : object
+    public function fetch(): object
     {
         return $this->get('userProfile/v1/internal/users/' . $this->accountId . '/profiles');
     }
