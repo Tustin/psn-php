@@ -63,7 +63,7 @@ class UsersSearchIterator extends AbstractApiIterator
                     'domain' => 'SocialAllAccounts',
                     'pagination' => [
                         'cursor' => $cursor,
-                        'pageSize' => '20' // @TODO: Test if this can be altered.
+                        'pageSize' => '50' // 50 is max.
                     ]
                 ]
             ],
@@ -79,10 +79,12 @@ class UsersSearchIterator extends AbstractApiIterator
     public function current()
     {
         $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;
+        $token = $this->getFromOffset($this->currentOffset)->id;
 
         return User::fromObject(
             $this->usersFactory->getHttpClient(),
-            $socialMetadata
+            $socialMetadata,
+            $token
         );
     }
 }

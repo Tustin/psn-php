@@ -21,23 +21,29 @@ class User extends Api implements Fetchable
 
     private $country;
 
+    private $onlineId;
+
+    private $token;
+
     /**
      * Constructs a new user object.
      *
      * @param UsersFactory $usersFactory
      * @param string $accountId
      */
-    public function __construct(Client $client, string $accountId, string $country = '')
+    public function __construct(Client $client, string $accountId, string $country = '', string $onlineId = '', string $token = '')
     {
         parent::__construct($client);
 
         $this->accountId = $accountId;
         $this->country = $country;
+        $this->onlineId = $onlineId;
+        $this->token = $token;
     }
 
-    public static function fromObject(Client $client, object $data)
+    public static function fromObject(Client $client, object $data, string $token)
     {
-        $instance = new User($client, $data->accountId, $data->country);
+        $instance = new User($client, $data->accountId, $data->country, $data->onlineId, $token);
         $instance->setCache($data);
 
         return $instance;
@@ -59,13 +65,28 @@ class User extends Api implements Fetchable
     }
 
     /**
+     * Gets token ID.
+     * Can be "token_invalidated:deleted"
+     *
+     * @return string
+     */
+    public function token(): string
+    {
+        return $this->token;
+    }
+
+    /**
      * Gets online ID.
      *
      * @return string
      */
     public function onlineId(): string
     {
-        return $this->pluck('onlineId');
+        if (empty($this->onlineId)) {
+            return $this->pluck('onlineId');
+        }
+
+        return $this->onlineId;
     }
 
     /**
