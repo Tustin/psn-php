@@ -48,7 +48,7 @@ class UsersSearchIterator extends AbstractApiIterator
         $this->query = $query;
         $this->languageCode = $languageCode;
         $this->countryCode = $countryCode;
-        $this->limit = 20;
+        $this->limit = 50;
         $this->access('');
     }
 
