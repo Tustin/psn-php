@@ -60,6 +60,12 @@ class User extends Api implements Fetchable
         return new GameListFactory($this);
     }
 
+    /**
+     * Get the communication id (NPWR...) from a title id (CUSA...)
+     * 
+     * Only works for PS4/PS5 titles.
+     * Doesn't work with PPSA... title ids.
+     */
     public function titleIdToCommunicationId($npTitleId) : string
     {
         $body = [
@@ -67,6 +73,10 @@ class User extends Api implements Fetchable
         ];
 
         $results = $this->get('trophy/v1/users/' . $this->accountId() . '/titles/trophyTitles', $body);
+
+        if (count($results->titles[0]->trophyTitles) == 0) {
+            return '';
+        }
 
         return $results->titles[0]->trophyTitles[0]->npCommunicationId;
     }
