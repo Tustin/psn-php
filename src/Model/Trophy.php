@@ -124,6 +124,16 @@ class Trophy extends Api implements Fetchable
     }
 
     /**
+     * Gets the trophy reward image url, if any.
+     * 
+     * @return string
+     */
+    public function rewardImageUrl() : string
+    {
+        return $this->pluck('trophyRewardImageUrl') ?? '';
+    }
+
+    /**
      * Check if the user have earned this trophy.
      *
      * @return boolean
