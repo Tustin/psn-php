@@ -9,6 +9,7 @@ use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Model\TrophySummary;
 use Tustin\PlayStation\Factory\UsersFactory;
 use Tustin\PlayStation\Interfaces\Fetchable;
+use Tustin\PlayStation\Factory\GameListFactory;
 use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 
 class User extends Api implements Fetchable
@@ -52,6 +53,11 @@ class User extends Api implements Fetchable
     public function trophyTitles()
     {
         return new TrophyTitlesFactory($this);
+    }
+
+    public function gameList()
+    {
+        return new GameListFactory($this);
     }
 
     /**
