@@ -60,6 +60,17 @@ class User extends Api implements Fetchable
         return new GameListFactory($this);
     }
 
+    public function titleIdToCommunicationId($npTitleId) : string
+    {
+        $body = [
+            'npTitleIds' => $npTitleId
+        ];
+
+        $results = $this->get('trophy/v1/users/' . $this->accountId() . '/titles/trophyTitles', $body);
+
+        return $results->titles[0]->trophyTitles[0]->npCommunicationId;
+    }
+
     /**
      * Gets the trophy summary for the user.
      *
