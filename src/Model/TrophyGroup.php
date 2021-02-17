@@ -18,20 +18,22 @@ class TrophyGroup extends Api implements Fetchable
 	
     private $groupId;
     private $groupName;
+    private $groupDetail;
     private $groupIconUrl;
 
-    public function __construct(AbstractTrophyTitle $trophyTitle, string $groupId, string $groupName = '', string $groupIconUrl = '')
+    public function __construct(AbstractTrophyTitle $trophyTitle, string $groupId, string $groupName = '', string $groupIconUrl = '', string $groupDetail = '')
     {
         parent::__construct($trophyTitle->getHttpClient());
         $this->trophyTitle = $trophyTitle;
         $this->groupId = $groupId;
         $this->groupName = $groupName;
+        $this->groupDetail = $groupDetail;
         $this->groupIconUrl = $groupIconUrl;
     }
 
     public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data) : TrophyGroup
     {
-        $instance = new static($trophyTitle, $data->trophyGroupId, $data->trophyGroupName, $data->trophyGroupIconUrl);
+        $instance = new static($trophyTitle, $data->trophyGroupId, $data->trophyGroupName, $data->trophyGroupIconUrl, $data->trophyGroupDetail);
         $instance->setCache($data);
         
         return $instance;
@@ -65,6 +67,16 @@ class TrophyGroup extends Api implements Fetchable
     public function name() : string
     {
         return $this->groupName;
+    }
+
+    /**
+     * Gets the trophy group detail.
+     *
+     * @return string
+     */
+    public function detail() : string
+    {
+        return $this->groupDetail ?? '';
     }
 
     /**

@@ -55,7 +55,11 @@ class TrophyGroupsIterator extends AbstractApiIterator
         }
         else
         {
-            return new TrophyGroup($this->title, $this->getFromOffset($this->currentOffset)->trophyGroupId, $this->getFromOffset($this->currentOffset)->trophyGroupName, $this->getFromOffset($this->currentOffset)->trophyGroupIconUrl);
+            return new TrophyGroup($this->title,
+                $this->getFromOffset($this->currentOffset)->trophyGroupId,
+                $this->getFromOffset($this->currentOffset)->trophyGroupName,
+                $this->getFromOffset($this->currentOffset)->trophyGroupIconUrl,
+                $this->getFromOffset($this->currentOffset)->trophyGroupDetail ?? '');
         }
     }
 }
