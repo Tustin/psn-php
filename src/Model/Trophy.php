@@ -113,6 +113,17 @@ class Trophy extends Api implements Fetchable
     }
     
     /**
+     * Gets the trophy reward name, if any.
+     * Examples: "Emote", "Profile Avatar", "Profile Banner"
+     * 
+     * @return string
+     */
+    public function rewardName() : string
+    {
+        return $this->pluck('trophyRewardName') ?? '';
+    }
+
+    /**
      * Check if the user have earned this trophy.
      *
      * @return boolean
