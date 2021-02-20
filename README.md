@@ -13,7 +13,7 @@ Pull in the project with composer:
 
 ## Documentation
 
-Please visit [the psn-php documentation](https://tusticles.com/psn-php/) page to see how to use this library.
+Please visit [the psn-php documentation](https://tustin.dev/psn-php/) page to see how to use this library.
 
 ## Disclaimer
 
