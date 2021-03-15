@@ -2,6 +2,12 @@
 
 A PHP wrapper for the PlayStation API.
 
+# NOTICE:
+
+The current version of this library (v2.1.3) will no longer work as Sony has disabled the login method using this version of the API. You _can_ pull in the master branch using Composer, but just know that it is not 100% working and there are a lot of breaking changes that have not been documented yet. Only update if absolutely necessary.
+
+I will be working on this whenever I have the time to try to get it updated ASAP!
+
 
 [![GitHub stars](https://img.shields.io/github/stars/Tustin/psn-php.svg)](https://github.com/Tustin/psn-php/stargazers)
 [![GitHub license](https://img.shields.io/github/license/Tustin/psn-php.svg)](https://github.com/Tustin/psn-php/blob/master/LICENSE)
