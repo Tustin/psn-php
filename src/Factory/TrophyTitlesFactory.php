@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Factory;
 
 use Iterator;
@@ -11,8 +12,8 @@ use Tustin\PlayStation\Model\UserTrophyTitle;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Exception\NoTrophiesException;
 use Tustin\PlayStation\Iterator\TrophyTitlesIterator;
-use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleNameFilter;
-use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleHasGroupsFilter;
+use Tustin\PlayStation\Iterator\Filter\TrophyTitleNameFilter;
+use Tustin\PlayStation\Iterator\Filter\TrophyTitleHasGroupsFilter;
 
 class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInterface
 {
@@ -28,8 +29,8 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      *
      * @var string
      */
-	private $withName = '';
-	
+    private $withName = '';
+
     /**
      * The user to get trophy titles for.
      *
@@ -44,8 +45,8 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      *
      * @var boolean|null
      */
-	private ?bool $hasTrophyGroups = null;
-	
+    private ?bool $hasTrophyGroups = null;
+
     public function __construct(User $user)
     {
         parent::__construct($user->getHttpClient());
@@ -59,7 +60,7 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      * @param boolean $value
      * @return TrophyTitlesFactory
      */
-    public function hasTrophyGroups(bool $value = true) : TrophyTitlesFactory
+    public function hasTrophyGroups(bool $value = true): TrophyTitlesFactory
     {
         $this->hasTrophyGroups = $value;
 
@@ -72,77 +73,75 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      * @param string $name
      * @return TrophyTitlesFactory
      */
-    public function withName(string $name) : TrophyTitlesFactory
+    public function withName(string $name): TrophyTitlesFactory
     {
         $this->withName = $name;
-        
-        return $this;
-	}
-	
-	/**
-	 * Filters trophy titles to only get trophies for the specific user.
-	 *
-	 * @param User $user
-	 * @return TrophyTitlesFactory
-	 */
-	public function forUser(User $user) : TrophyTitlesFactory
-	{
-		$this->user = $user;
 
-		return $this;
-	}
+        return $this;
+    }
+
+    /**
+     * Filters trophy titles to only get trophies for the specific user.
+     *
+     * @param User $user
+     * @return TrophyTitlesFactory
+     */
+    public function forUser(User $user): TrophyTitlesFactory
+    {
+        $this->user = $user;
+
+        return $this;
+    }
     /**
      * Gets the iterator and applies any filters.
      *
      * @return Iterator
      */
-    public function getIterator() : Iterator
+    public function getIterator(): Iterator
     {
         $iterator = new TrophyTitlesIterator($this);
 
-        if ($this->withName)
-        {
+        if ($this->withName) {
             $iterator = new TrophyTitleNameFilter($iterator, $this->withName);
         }
 
-        if (!is_null($this->hasTrophyGroups))
-        {
+        if (!is_null($this->hasTrophyGroups)) {
             $iterator = new TrophyTitleHasGroupsFilter($iterator, $this->hasTrophyGroups);
         }
 
         return $iterator;
     }
 
-	/**
-	 * Gets the current user (if specified) to get trophies for.
-	 *
-	 * @return User|null
-	 */
-    public function getUser() : ?User
+    /**
+     * Gets the current user (if specified) to get trophies for.
+     *
+     * @return User|null
+     */
+    public function getUser(): ?User
     {
         return $this->user;
-	}
+    }
 
-	/**
-	 * Checks to see if this factory should be looking at a specific user's trophies.
-	 *
-	 * @return boolean
-	 */
-	public function hasUser() : bool
-	{
-		return $this->user !== null;
-	}
+    /**
+     * Checks to see if this factory should be looking at a specific user's trophies.
+     *
+     * @return boolean
+     */
+    public function hasUser(): bool
+    {
+        return $this->user !== null;
+    }
 
     /**
      * Gets the current platforms passed to this instance.
      *
      * @return array
      */
-    public function getPlatforms() : array
+    public function getPlatforms(): array
     {
         return $this->platforms;
     }
-    
+
     /**
      * Gets the current language passed to this instance.
      * 
@@ -150,7 +149,7 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      *
      * @return LanguageType
      */
-    public function getLanguage() : LanguageType
+    public function getLanguage(): LanguageType
     {
         return $this->language ?? LanguageType::english();
     }
@@ -160,14 +159,11 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
      *
      * @return UserTrophyTitle
      */
-    public function first() : UserTrophyTitle
+    public function first(): UserTrophyTitle
     {
-        try
-        {
+        try {
             return $this->getIterator()->current();
-        }
-        catch (InvalidArgumentException $e)
-        {
+        } catch (InvalidArgumentException $e) {
             throw new NoTrophiesException("Client has no trophy titles.");
         }
     }
