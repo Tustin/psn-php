@@ -6,6 +6,7 @@ use Iterator;
 use Carbon\Carbon;
 use IteratorAggregate;
 use Tustin\PlayStation\Api;
+use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Model\Group;
 use Tustin\PlayStation\Model\MessageThread;
 use Tustin\PlayStation\Iterator\GroupsIterator;
@@ -123,39 +124,22 @@ class GroupsFactory extends Api implements IteratorAggregate
      * Creates a new message thread.
      * 
      * Will return an existing message thread if a thread already exists containing the same users you pass to this method.
-     * 
-     * @TODO: Update for new API
      *
-     * @param string ...$onlineIds
+     * @param User ...$users
      * @return MessageThread
      */
-    public function create(string ...$onlineIds): MessageThread
+    public function create(User ...$users): MessageThread
     {
-        // We need our onlineId when creating a new group.
-        $clientOnlineId = (new UsersFactory($this->getHttpClient()))->me()->onlineId();
+        $invitees = [];
 
-        $membersToAdd = [];
-
-        $membersToAdd[] = ['onlineId' => $clientOnlineId];
-
-        foreach ($onlineIds as $onlineId) {
-            $membersToAdd[] = ['onlineId' => $onlineId];
+        foreach ($users as $user) {
+            $invitees[] = ['accountId' => $user->accountId()]; // TODO: Test if onlineId can still be used here.
         }
 
-        $response = $this->postMultiPart('https://us-gmsg.np.community.playstation.net/groupMessaging/v1/threads/', [
-            [
-                'name' => 'threadDetail',
-                'contents' => json_encode([
-                    'threadDetail' => [
-                        'threadMembers' => $membersToAdd
-                    ]
-                ], JSON_PRETTY_PRINT),
-                'headers' => [
-                    'Content-Type' => 'application/json; charset=utf-8'
-                ]
-            ]
+        $response = $this->postJson('gamingLoungeGroups/v1/groups', [
+            'invitees' => $invitees
         ]);
 
-        return new MessageThread($this->httpClient, $response->threadId);
+        return new MessageThread(new Group($this, $response->groupId), $response->mainThread->threadId);
     }
 }
