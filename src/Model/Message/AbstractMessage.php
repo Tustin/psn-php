@@ -3,13 +3,12 @@
 namespace Tustin\PlayStation\Model\Message;
 
 use Carbon\Carbon;
-use RuntimeException;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Enum\MessageType;
 use Tustin\PlayStation\Model\MessageThread;
 
-class AbstractMessage
+abstract class AbstractMessage
 {
     use Model;
 
@@ -20,12 +19,22 @@ class AbstractMessage
      */
     private $thread;
 
-    protected function __construct(MessageThread $thread, object $messageData)
+    public static function fromObject(MessageThread $thread, object $messageData)
     {
-        $this->setCache($messageData);
+        $instance = new static('');
+        $instance->setCache($messageData);
 
-        $this->thread = $thread;
+        $instance->thread = $thread;
+
+        return $instance;
     }
+
+    /**
+     * Gets the message type.
+     *
+     * @return MessageType
+     */
+    public abstract function type(): MessageType;
 
     /**
      * Gets the message id.
@@ -91,16 +100,16 @@ class AbstractMessage
     {
         switch (new MessageType($messageData->messageType)) {
             case MessageType::audio():
-                return new AudioMessage($thread, $messageData);
+                return AudioMessage::fromObject($thread, $messageData);
             case MessageType::image():
-                return new ImageMessage($thread, $messageData);
+                return ImageMessage::fromObject($thread, $messageData);
             case MessageType::video():
-                return new VideoMessage($thread, $messageData);
+                return VideoMessage::fromObject($thread, $messageData);
             case MessageType::sticker():
-                return new StickerMessage($thread, $messageData);
+                return StickerMessage::fromObject($thread, $messageData);
             default:
                 // We'll just default to a text message because there are certain types of messages (new voice chat, etc) that are basically text messages.
-                return new TextMessage($thread, $messageData);
+                return TextMessage::fromObject($thread, $messageData);
         }
     }
 }

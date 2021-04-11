@@ -65,15 +65,4 @@ class MessagesFactory extends Api implements IteratorAggregate
     {
         return $this->getIterator()->current();
     }
-
-    /**
-     * Creates and sends a new message in the message thread.
-     *
-     * @param AbstractMessage $message
-     * @return Message
-     */
-    // public function create(AbstractMessage $message) : Message
-    // {
-    //     return $this->thread->sendMessage($message);
-    // }
 }
