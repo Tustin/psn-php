@@ -73,7 +73,7 @@ class UsersSearchIterator extends AbstractApiIterator
 
         $domainResponse = $results->domainResponses[0];
 
-        $this->update($domainResponse->totalResultCount, $domainResponse->results, $domainResponse->next);
+        $this->update($domainResponse->totalResultCount, $domainResponse->results, $domainResponse->next ?? "");
     }
 
     public function current()
