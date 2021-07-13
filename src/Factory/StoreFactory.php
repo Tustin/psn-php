@@ -5,6 +5,7 @@ namespace Tustin\PlayStation\Factory;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
+use Tustin\PlayStation\Iterator\StoreSearchIterator;
 use Tustin\PlayStation\Iterator\UsersSearchIterator;
 
 class StoreFactory extends Api implements FactoryInterface

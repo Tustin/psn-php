@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Traits;
 
 use ReflectionClass;
@@ -31,23 +32,18 @@ trait Model
      * @param bool $ignoreCache
      * @return mixed
      */
-    public function pluck(string $property, bool $ignoreCache = false)
+    public function pluck($property, $ignoreCache = false)
     {
-        if (!$this->hasCached() || $ignoreCache)
-        {
-            if (!(new ReflectionClass($this))->implementsInterface(Fetchable::class))
-            {
-				return null;
-                // throw new RuntimeException('Model [' . get_class($this) . '] has not been cached, 
-                // but doesn\'t implement Fetchable to make requests.');
+        if (!$this->hasCached() || $ignoreCache) {
+            if (!(new ReflectionClass($this))->implementsInterface(Fetchable::class)) {
+                return null;
             }
 
             $this->setCache($this->fetch());
             $this->pluck($property);
         }
-        
-        if (empty($this->cache))
-        {
+
+        if (empty($this->cache)) {
             throw new InvalidArgumentException('Failed to populate cache for model [' . get_class($this) . ']');
         }
 
@@ -55,46 +51,64 @@ trait Model
 
         $root = $pieces[0];
 
-        if (!array_key_exists($root, $this->cache))
-        {
+        if (!array_key_exists($root, $this->cache)) {
             return null;
-            // throw new InvalidArgumentException("[$root] is not a valid property for model [" . get_class($this) . "]");
         }
 
         $value = $this->cache[$root];
 
         array_shift($pieces);
 
-        foreach ($pieces as $piece)
-        {
-            if (!is_array($value))
-            {
+        foreach ($pieces as $piece) {
+            if (!is_array($value)) {
                 throw new RuntimeException("Value [$value] passed to pluck is not an array, but tried accessing a key from it.");
             }
-            
+
             $value = $value[$piece];
         }
 
         return $value;
     }
 
-    protected function hasCached() : bool
+    /**
+     * Checks if the cache has been set.
+     *
+     * @return boolean
+     */
+    protected function hasCached()
     {
         return isset($this->cache) && !empty($this->cache);
     }
 
+    /**
+     * Sets the cache property.
+     *
+     * @param object $data
+     * @return void
+     */
     public function setCache($data)
     {
         // So this is bad and probably slow, but it's less annoying than some recursive method.
         $this->cache = json_decode(json_encode($data, JSON_FORCE_OBJECT), true);
     }
 
-    public function getFactory() : FactoryInterface
+    /**
+     * Gets the factory for this model.
+     *
+     * @return FactoryInterface
+     */
+    public function getFactory()
     {
         return $this->factory;
     }
 
-    public function setFactory(FactoryInterface $factory)
+    /**
+     * Sets the factory for this model
+     *
+     * @param FactoryInterface $factory
+     * @return void
+     */
+    public function setFactory($factory)
     {
         $this->factory = $factory;
     }

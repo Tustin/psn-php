@@ -4,8 +4,10 @@ namespace Tustin\PlayStation\Iterator;
 use GuzzleHttp\Client;
 use Tustin\PlayStation;
 use InvalidArgumentException;
+use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Factory\UsersFactory;
+use Tustin\PlayStation\Model\Store\Concept;
 
 class StoreSearchIterator extends AbstractApiIterator
 {
@@ -30,14 +32,14 @@ class StoreSearchIterator extends AbstractApiIterator
      */
     protected $countryCode;
 
-    public function __construct(Client $client, string $query, string $languageCode = 'en', string $countryCode = 'us')
+    public function __construct(StoreFactory $storeFactory, string $query, string $languageCode = 'en', string $countryCode = 'us')
     {
         if (empty($query))
         {
             throw new InvalidArgumentException('[query] must contain a value.');
         }
 
-        parent::__construct($client);
+        parent::__construct($storeFactory->getHttpClient());
         $this->query = $query;
         $this->languageCode = $languageCode;
         $this->countryCode = $countryCode;
@@ -76,12 +78,8 @@ class StoreSearchIterator extends AbstractApiIterator
 
     public function current()
     {
-        $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;
+        $concept = $this->getFromOffset($this->currentOffset)->conceptProductMetadata;
         
-        return new User(
-            $this->getHttpClient(), 
-            $socialMetadata->accountId,
-            $socialMetadata->country
-        );
+        return Concept::fromObject($this->getHttpClient(), $concept);
     }
 }

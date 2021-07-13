@@ -7,6 +7,7 @@ use Tustin\PlayStation\OAuthToken;
 
 use Tustin\PlayStation\Model\Media;
 use Tustin\PlayStation\Model\TrophyTitle;
+use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Factory\UsersFactory;
 use Tustin\PlayStation\Factory\GroupsFactory;
 use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
@@ -202,7 +203,7 @@ class Client extends AbstractClient
 
     public function store()
     {
-        // TODO
+        return new StoreFactory($this->getHttpClient());
     }
 
     public function groups(): GroupsFactory
