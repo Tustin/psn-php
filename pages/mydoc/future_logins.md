@@ -14,12 +14,12 @@ To get a refresh token, you need to have logged into the library once befire usi
 ```php
 require_once 'vendor/autoload.php';
 
-use PlayStation\Client;
+use Tustin\PlayStation\Client;
 
 $client = new Client();
 $client->login('b17b5ce5-xxxx-yyyy-zzzz-5996a213b834');
 
-$refreshToken = $client->refreshToken();
+$refreshToken = $client->getRefreshToken()->getToken();
 ```
 
 Again, make sure you save the new refresh token once you login with an existing one. Your old token will still work, but saving the newest tokens is the best way to prevent login issues in the future when the token eventually expires.

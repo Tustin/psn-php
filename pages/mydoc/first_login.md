@@ -5,6 +5,30 @@ permalink: first_login.html
 folder: mydoc
 ---
 
+
+The easiest way to login to PlayStation for the first time using this library is via your NPSSO token. Once you login with this token, you can retrieve a refresh token to use
+for future logins, OR you can keep using this NPSSO token. I've found that the NPSSO token tends to last longer before expiring.
+
+## Easy Method
+
+1. Login [to the official PlayStation website](https://www.playstation.com/)
+2. Visit [this page](https://ca.account.sony.com/api/v1/ssocookie) and copy your NPSSO token.
+3. Login using the PHP code below:
+
+```php
+require_once 'vendor/autoload.php';
+
+use Tustin\PlayStation\Client;
+
+$client = new Client();
+//                           v code from above
+$client->loginWithNpsso('<64 character npsso code>');
+
+$refreshToken = $client->getRefreshToken()->getToken(); // Save this code somewhere (database, file, cache) and use this for future logins
+```
+
+## Verbose Method
+
 Before you begin, copy this JavaScript code:
 
 ```js
@@ -39,13 +63,11 @@ Before you begin, copy this JavaScript code:
 ```php
 require_once 'vendor/autoload.php';
 
-use PlayStation\Client;
+use Tustin\PlayStation\Client;
 
 $client = new Client();
 //                           v code from above
 $client->loginWithNpsso('<64 character npsso code>');
 
-$refreshToken = $client->refreshToken(); // Save this code somewhere (database, file, cache) and use this for future logins
+$refreshToken = $client->getRefreshToken()->getToken(); // Save this code somewhere (database, file, cache) and use this for future logins
 ```
-
-You can now call `$client->refreshToken();` to get the refresh token for your account and automate all future logins by following the next authentication method.
