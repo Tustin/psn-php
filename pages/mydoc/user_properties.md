@@ -5,7 +5,7 @@ permalink: user_properties.html
 folder: mydoc
 ---
 
-To see how to get a `PlayStation\Api\User` object, please read [Getting A User](getting_user.html).
+To see how to get a `Tustin\PlayStation\Model\User` object, please read [Getting A User](getting_user.html).
 
 ## User Properties
 
