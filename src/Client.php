@@ -127,7 +127,7 @@ class Client extends AbstractClient
     public function loginWithRefreshToken(string $refreshToken)
     {
         // @TODO: Handle errors.
-        $response = $this->getHttpClient()->post('authz/v3/oauth/token', [
+        $response = $this->post('authz/v3/oauth/token', [
             'scope' => 'psn:mobile.v1 psn:clientapp',
             'refresh_token' => $refreshToken,
             'grant_type' => 'refresh_token',
