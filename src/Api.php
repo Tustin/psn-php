@@ -20,6 +20,20 @@ class Api extends HttpClient
             'metGetConceptByProductIdQuery' => '0a4c9f3693b3604df1c8341fdc3e481f42eeecf961a996baaa65e65a657a6433',
             'metGetConceptById' => 'cc90404ac049d935afbd9968aef523da2b6723abfb9d586e5f77ebf7c5289006',
             'metGetProductById' => 'a128042177bd93dd831164103d53b73ef790d56f51dae647064cb8f9d9fc9d1a',
+            // Need hashes for these
+            // 'metGetAddOnsByTitleId' => '',
+            // 'metGetCategoryGrid'=> '',
+            // 'metGetCategoryGrids'=> '',
+            // 'metGetCategoryStrand'=> '',
+            // 'metGetCategoryStrands'=> '',
+            // 'metGetDefaultView'=> '',
+            // 'metGetFilterAndSortItemsCount'=> '',
+            // 'metGetPricingDataByConceptId'=> '',
+            // 'metGetStoreWishlist'=> '',
+            // 'metGetViews'=> '',
+            // 'metGetWebCheckoutCart'=> '',
+            // 'metGetWishlistedItemIds'=> '',
+            // 'metGetExperience' => ''
         ];
 
         if (!array_key_exists($op, $hashMap)) {
