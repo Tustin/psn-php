@@ -4,7 +4,6 @@ namespace Tustin\PlayStation;
 
 use Tustin\Haste\AbstractClient;
 use Tustin\PlayStation\OAuthToken;
-
 use Tustin\PlayStation\Model\Media;
 use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\Factory\StoreFactory;
@@ -201,7 +200,7 @@ class Client extends AbstractClient
         return new TrophyTitle($this->getHttpClient(), $npCommunicationId, $serviceName);
     }
 
-    public function store()
+    public function store(): StoreFactory
     {
         return new StoreFactory($this->getHttpClient());
     }
