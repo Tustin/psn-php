@@ -5,6 +5,7 @@ use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Interfaces\Fetchable;
 use Tustin\PlayStation\Factory\GameListFactory;
+use Tustin\PlayStation\Model\Store\Concept;
 
 class GameTitle extends Api implements Fetchable
 {
@@ -31,13 +32,13 @@ class GameTitle extends Api implements Fetchable
     }
 
     /**
-     * Gets the concept.
+     * Gets the store concept for the game.
      *
-     * @return object
+     * @return Concept
      */
-    public function concept() : object
+    public function concept() : Concept
     {
-        return $this->pluck('concept');
+        return new Concept($this->getHttpClient(), $this->pluck('concept.id'));
     }
 
     /**

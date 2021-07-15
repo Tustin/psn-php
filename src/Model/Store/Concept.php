@@ -44,7 +44,7 @@ class Concept extends Api implements Fetchable
 
     public function publisher() : string
     {
-        return ($this->pluck('publisher') ?? $this->pluck('leadPublisherName'));
+        return ($this->pluck('publisherName') ?? $this->pluck('leadPublisherName'));
     }
 
 	public function fetch() : object
@@ -52,6 +52,6 @@ class Concept extends Api implements Fetchable
         return $this->graphql('metGetConceptById', [
             'conceptId' => $this->conceptId(),
             'productId' => ''
-        ]);
+        ])->conceptRetrieve;
     }
 }
