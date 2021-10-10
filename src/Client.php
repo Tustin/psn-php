@@ -24,7 +24,7 @@ class Client extends AbstractClient
     public function __construct(array $guzzleOptions = [])
     {
         $guzzleOptions['allow_redirects'] = false;
-        $guzzleOptions['headers']['User-Agent'] = 'psn-php/' . self::VERSION;
+        $guzzleOptions['headers']['User-Agent'] = 'PlayStation/21090100 CFNetwork/1126 Darwin/19.5.0';
         $guzzleOptions['headers']['Accept-Language'] = 'en-US';
         $guzzleOptions['base_uri'] = self::BASE_URL;
 
