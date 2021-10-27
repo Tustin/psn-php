@@ -39,6 +39,8 @@ class UsersFactory extends Api implements FactoryInterface
      */
     public function me() : User
     {
-        return new User($this->getHttpClient(), 'me');
+        // Resolve account id
+        $response = $this->get('https://dms.api.playstation.com/api/v1/devices/accounts/me');
+        return new User($this->getHttpClient(), $response->accountId);
     }
 }
