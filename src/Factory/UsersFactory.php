@@ -16,7 +16,7 @@ class UsersFactory extends Api implements FactoryInterface
      * @param array $searchFields
      * @return UsersSearchIterator
      */
-    public function search(string $query) : UsersSearchIterator
+    public function search(string $query): UsersSearchIterator
     {
         return new UsersSearchIterator($this, $query);
     }
@@ -27,7 +27,7 @@ class UsersFactory extends Api implements FactoryInterface
      * @param string $accountId
      * @return User
      */
-    public function find(string $accountId) : User
+    public function find(string $accountId): User
     {
         return new User($this->getHttpClient(), $accountId);
     }
@@ -37,7 +37,7 @@ class UsersFactory extends Api implements FactoryInterface
      *
      * @return User
      */
-    public function me() : User
+    public function me(): User
     {
         // Resolve account id
         $response = $this->get('https://dms.api.playstation.com/api/v1/devices/accounts/me');

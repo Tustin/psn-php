@@ -29,7 +29,7 @@ class TrophySummary extends Api implements Fetchable
      *
      * @return integer
      */
-    public function progress() : int
+    public function progress(): int
     {
         return $this->pluck('progress');
     }
@@ -41,7 +41,7 @@ class TrophySummary extends Api implements Fetchable
      *
      * @return integer
      */
-    public function tier() : int
+    public function tier(): int
     {
         return $this->pluck('tier');
     }
@@ -51,7 +51,7 @@ class TrophySummary extends Api implements Fetchable
      *
      * @return integer
      */
-    public function level() : int
+    public function level(): int
     {
         return $this->pluck('trophyLevel');
     }
@@ -61,7 +61,7 @@ class TrophySummary extends Api implements Fetchable
      *
      * @return integer
      */
-    public function bronze() : int
+    public function bronze(): int
     {
         return $this->pluck('earnedTrophies.bronze');
     }
@@ -71,7 +71,7 @@ class TrophySummary extends Api implements Fetchable
      *
      * @return integer
      */
-    public function silver() : int
+    public function silver(): int
     {
         return $this->pluck('earnedTrophies.silver');
     }
@@ -81,7 +81,7 @@ class TrophySummary extends Api implements Fetchable
      *
      * @return integer
      */
-    public function gold() : int
+    public function gold(): int
     {
         return $this->pluck('earnedTrophies.gold');
     }
@@ -92,7 +92,7 @@ class TrophySummary extends Api implements Fetchable
      *
      * @return integer
      */
-    public function platinum() : int
+    public function platinum(): int
     {
         return $this->pluck('earnedTrophies.platinum');
     }
@@ -102,7 +102,7 @@ class TrophySummary extends Api implements Fetchable
      *
      * @return object
      */
-    public function fetch() : object
+    public function fetch(): object
     {
         return $this->get('trophy/v1/users/' . $this->user->accountId() . '/trophySummary');
     }

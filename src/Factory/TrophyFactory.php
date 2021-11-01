@@ -43,7 +43,7 @@ class TrophyFactory implements IteratorAggregate
      *
      * @return Trophy
      */
-    public function first() : Trophy
+    public function first(): Trophy
     {
         return $this->getIterator()->current();
     }

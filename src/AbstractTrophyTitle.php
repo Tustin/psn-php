@@ -39,14 +39,14 @@ abstract class AbstractTrophyTitle extends Api
 		$this->serviceName = $serviceName;
 	}
 
-	public abstract function npCommunicationId() : string;
+	public abstract function npCommunicationId(): string;
 
 	/**
      * Gets all the trophy groups for the trophy title.
      *
      * @return TrophyGroupsFactory
      */
-    public function trophyGroups() : TrophyGroupsFactory
+    public function trophyGroups(): TrophyGroupsFactory
     {
         return new TrophyGroupsFactory($this);
 	}
@@ -58,5 +58,5 @@ abstract class AbstractTrophyTitle extends Api
 	 *
 	 * @return string
 	 */
-	public abstract function serviceName() : string;
+	public abstract function serviceName(): string;
 }

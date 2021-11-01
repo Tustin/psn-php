@@ -25,47 +25,47 @@ class Media extends Api implements Fetchable
 		$this->ugcId = $ugcId;
 	}
 
-	public function spoiler() : bool
+	public function spoiler(): bool
 	{
 		return $this->pluck('isSpoiler');
 	}
 
-	public function language() : string
+	public function language(): string
 	{
 		return $this->pluck('language');
 	}
 
-	public function type() : UgcType
+	public function type(): UgcType
 	{
 		return new UgcType($this->pluck('ugcType'));
 	}
 
-	public function uploadDate() : Carbon
+	public function uploadDate(): Carbon
 	{
 		return Carbon::parse($this->pluck('uploadDate'));
 	}
 
-	public function npCommunicationId() : string
+	public function npCommunicationId(): string
 	{
 		return $this->pluck('npCommId');
 	}
 
-	public function titleName() : string
+	public function titleName(): string
 	{
 		return $this->pluck('sceTitleName');
 	}
 
-	public function sender() : User
+	public function sender(): User
 	{
 		return new User($this->getHttpClient(), $this->pluck('sceUserAccountId'));
 	}
 	
-	public function trophyTitle() : TrophyTitle
+	public function trophyTitle(): TrophyTitle
 	{
 		return new TrophyTitle($this->getHttpClient(), $this->npCommunicationId())
 	}
 
-	public function titleId() : string
+	public function titleId(): string
 	{
 		return $this->pluck('sceTitleId');
 	}
@@ -77,7 +77,7 @@ class Media extends Api implements Fetchable
 	 *
 	 * @return string
 	 */
-	public function url() : string
+	public function url(): string
 	{
 		try {
 			if ($this->type() == UgcType::video()) {
@@ -91,7 +91,7 @@ class Media extends Api implements Fetchable
 		}
 	}
 
-	public function fetch() : object
+	public function fetch(): object
 	{
 		return $this->get('gameMediaService/v2/c2s/content', [
 			'fields' => implode(',', [

@@ -31,7 +31,7 @@ class TrophyGroup extends Api implements Fetchable
         $this->groupIconUrl = $groupIconUrl;
     }
 
-    public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data) : TrophyGroup
+    public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data): TrophyGroup
     {
         $instance = new static($trophyTitle, $data->trophyGroupId, $data->trophyGroupName, $data->trophyGroupIconUrl, $data->trophyGroupDetail);
         $instance->setCache($data);
@@ -44,7 +44,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return AbstractTrophyTitle
      */
-    public function title() : AbstractTrophyTitle
+    public function title(): AbstractTrophyTitle
     {
         return $this->trophyTitle;
     }
@@ -54,7 +54,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return TrophyFactory
      */
-    public function trophies() : TrophyFactory
+    public function trophies(): TrophyFactory
     {
         return new TrophyFactory($this);
     }
@@ -64,7 +64,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return string
      */
-    public function name() : string
+    public function name(): string
     {
         return $this->groupName;
     }
@@ -74,7 +74,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return string
      */
-    public function detail() : string
+    public function detail(): string
     {
         return $this->groupDetail ?? '';
     }
@@ -84,7 +84,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return string
      */
-    public function id() : string
+    public function id(): string
     {
         return $this->groupId;
     }
@@ -94,7 +94,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return string
      */
-    public function iconUrl() : string
+    public function iconUrl(): string
     {
         return $this->groupIconUrl;
     }
@@ -104,7 +104,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return array
      */
-    public function definedTrophies() : array
+    public function definedTrophies(): array
     {
         return $this->pluck('definedTrophies');
     }
@@ -114,7 +114,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return integer
      */
-    public function bronze() : int
+    public function bronze(): int
     {
         return $this->pluck('definedTrophies.bronze');
     }
@@ -124,7 +124,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return integer
      */
-    public function silver() : int
+    public function silver(): int
     {
         return $this->pluck('definedTrophies.silver');
     }
@@ -134,7 +134,7 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return integer
      */
-    public function gold() : int
+    public function gold(): int
     {
         return $this->pluck('definedTrophies.gold');
     }
@@ -144,7 +144,7 @@ class TrophyGroup extends Api implements Fetchable
      * 
      * @return boolean
      */
-    public function hasPlatinum() : bool
+    public function hasPlatinum(): bool
     {
         return $this->pluck('definedTrophies.platinum') == 1;
     }
@@ -155,7 +155,7 @@ class TrophyGroup extends Api implements Fetchable
      * @param TrophyType $trophyType
      * @return integer
      */
-    public function trophyCount(TrophyType $trophyType) : int
+    public function trophyCount(TrophyType $trophyType): int
     {
         switch ($trophyType)
         {
@@ -177,14 +177,14 @@ class TrophyGroup extends Api implements Fetchable
      *
      * @return integer
      */
-    public function totalTrophyCount() : int
+    public function totalTrophyCount(): int
     {
         $count = $this->bronze() + $this->silver() + $this->gold();
 
-        return $this->hasPlatinum() ? ++$count : $count;
+        return $this->hasPlatinum() ? ++$count: $count;
     }
     
-    public function fetch() : object
+    public function fetch(): object
     {
         if ($this->title() instanceof UserTrophyTitle)
         {

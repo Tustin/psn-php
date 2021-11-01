@@ -19,7 +19,7 @@ trait OperandParser
      * @return bool
      * @throws RuntimeException
      */
-    protected function parse($lhs, $rhs) : bool
+    protected function parse($lhs, $rhs): bool
     {
         if (!$this->operator)
         {

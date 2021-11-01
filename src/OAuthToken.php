@@ -23,7 +23,7 @@ class OAuthToken
      *
      * @return string
      */
-    public function getToken() : string
+    public function getToken(): string
     {
         return $this->token;
     }
@@ -33,7 +33,7 @@ class OAuthToken
      *
      * @return \DateTime
      */
-    public function getExpiration() : \DateTime
+    public function getExpiration(): \DateTime
     {
         return $this->expiration;
     }

@@ -13,7 +13,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return boolean
      */
-    public function hasTrophyGroups() : bool
+    public function hasTrophyGroups(): bool
     {
         return $this->pluck('hasTrophyGroups');
     }
@@ -23,7 +23,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return string
      */
-    public function name() : string
+    public function name(): string
     {
         return $this->pluck('trophyTitleName');
     }
@@ -33,7 +33,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return string
      */
-    public function detail() : string
+    public function detail(): string
     {
         // PS5 titles doesn't seem to have the detail data.
         if ($this->serviceName() == 'trophy2')
@@ -49,7 +49,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return string
      */
-    public function iconUrl() : string
+    public function iconUrl(): string
     {
         return $this->pluck('trophyTitleIconUrl');
     }
@@ -59,7 +59,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return array
      */
-    public function platform() : array
+    public function platform(): array
     {
         $platforms = [];
 
@@ -76,7 +76,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return boolean
      */
-    public function hasTrophies() : bool
+    public function hasTrophies(): bool
     {
         $value = $this->pluck('definedTrophies');
         
@@ -88,7 +88,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return boolean
      */
-    public function hasPlatinum() : bool
+    public function hasPlatinum(): bool
     {
         return $this->pluck('definedTrophies.platinum') ?? false;
     }
@@ -98,7 +98,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return integer
      */
-    public function trophyCount() : int
+    public function trophyCount(): int
     {
         $count = ($this->bronzeTrophyCount() + $this->silverTrophyCount() + $this->goldTrophyCount());
         
@@ -115,7 +115,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return integer
      */
-    public function bronzeTrophyCount() : int
+    public function bronzeTrophyCount(): int
     {
         return $this->pluck('definedTrophies.bronze');
     }
@@ -125,7 +125,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return integer
      */
-    public function silverTrophyCount() : int
+    public function silverTrophyCount(): int
     {
         return $this->pluck('definedTrophies.silver');
     }
@@ -135,7 +135,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return integer
      */
-    public function goldTrophyCount() : int
+    public function goldTrophyCount(): int
     {
         return $this->pluck('definedTrophies.gold');
     }
@@ -145,7 +145,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return string
      */
-    public function npCommunicationId() : string
+    public function npCommunicationId(): string
     {
         return $this->pluck('npCommunicationId');
     }
@@ -155,7 +155,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return string
      */
-    public function trophySetVersion() : string
+    public function trophySetVersion(): string
     {
         return $this->pluck('trophySetVersion');
     }
@@ -165,7 +165,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return string
      */
-    public function lastUpdatedDateTime() : string
+    public function lastUpdatedDateTime(): string
     {
         return $this->pluck('lastUpdatedDateTime');
     }
@@ -175,7 +175,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return integer
      */
-    public function earnedTrophiesBronzeCount() : int
+    public function earnedTrophiesBronzeCount(): int
     {
         return $this->pluck('earnedTrophies.bronze');
     }
@@ -185,7 +185,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return integer
      */
-    public function earnedTrophiesSilverCount() : int
+    public function earnedTrophiesSilverCount(): int
     {
         return $this->pluck('earnedTrophies.silver');
     }
@@ -195,7 +195,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return integer
      */
-    public function earnedTrophiesGoldCount() : int
+    public function earnedTrophiesGoldCount(): int
     {
         return $this->pluck('earnedTrophies.gold');
     }
@@ -205,7 +205,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return integer
      */
-    public function earnedTrophiesPlatinumCount() : int
+    public function earnedTrophiesPlatinumCount(): int
     {
         return $this->pluck('earnedTrophies.platinum');
     }
@@ -215,12 +215,17 @@ class UserTrophyTitle extends AbstractTrophyTitle
      *
      * @return integer
      */
-    public function progress() : int
+    public function progress(): int
     {
         return $this->pluck('progress');
 	}
 	
-	public function serviceName() : string
+    /**
+     * Gets the trophy service name for this trophy.
+     *
+     * @return string
+     */
+	public function serviceName(): string
 	{
 		return $this->serviceName ??= $this->pluck('npServiceName');
 	}

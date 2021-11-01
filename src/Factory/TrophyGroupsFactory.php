@@ -63,7 +63,7 @@ class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInter
      *
      * @return Iterator
      */
-    public function getIterator() : Iterator
+    public function getIterator(): Iterator
     {
         $iterator = new TrophyGroupsIterator($this->title);
 
@@ -93,7 +93,7 @@ class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInter
      *
      * @return TrophyGroup
      */
-    public function first() : TrophyGroup
+    public function first(): TrophyGroup
     {
         return $this->getIterator()->current();
     }

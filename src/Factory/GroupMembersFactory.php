@@ -33,7 +33,7 @@ class GroupMembersFactory implements IteratorAggregate, Countable
      * @param string $name
      * @return MessageThreadMembersFactory
      */
-    public function withName(string $name) : GroupMembersFactory
+    public function withName(string $name): GroupMembersFactory
     {
         $this->name = $name;
 
@@ -46,7 +46,7 @@ class GroupMembersFactory implements IteratorAggregate, Countable
      * @param string $onlineId
      * @return boolean
      */
-    public function contains(string $onlineId) : bool
+    public function contains(string $onlineId): bool
     {
         foreach ($this as $member)
         {
@@ -65,7 +65,7 @@ class GroupMembersFactory implements IteratorAggregate, Countable
      * @param string $onlineId
      * @return boolean
      */
-    public function containsOnly(string $onlineId) : bool
+    public function containsOnly(string $onlineId): bool
     {
         return $this->contains($onlineId) && $this->count() === 2;
     }
@@ -75,7 +75,7 @@ class GroupMembersFactory implements IteratorAggregate, Countable
      *
      * @return Iterator
      */
-    public function getIterator() : Iterator
+    public function getIterator(): Iterator
     {
         $iterator = yield from array_map(
             fn($member) => new User($this->group->getHttpClient(), $member['accountId']),
@@ -93,7 +93,7 @@ class GroupMembersFactory implements IteratorAggregate, Countable
         return $iterator;
     }
 
-    public function count() : int
+    public function count(): int
     {
         return \count($this->messageThread->membersArray());
     }

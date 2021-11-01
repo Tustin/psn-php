@@ -46,7 +46,7 @@ class StoreSearchIterator extends AbstractApiIterator
         $this->access('');
     }
 
-    public function access($cursor) : void
+    public function access($cursor): void
     {
         $results = $this->postJson('search/v1/universalSearch', [
             'age' => '69',
@@ -67,7 +67,7 @@ class StoreSearchIterator extends AbstractApiIterator
         $this->update($results->domainResponses[0]->totalResultCount, $results->domainResponses[0]->results, $results->domainResponses[0]->next);
 	}
 	
-	public function next() : void
+	public function next(): void
     {
         $this->currentOffset++;
         if (($this->currentOffset % $this->limit) == 0)

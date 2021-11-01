@@ -6,7 +6,6 @@ use Tustin\PlayStation\AbstractTrophyTitle;
 
 class TrophyTitle extends AbstractTrophyTitle
 {
-	
 	public function __construct(Client $client, string $npCommunicationId, string $serviceName = 'trophy')
 	{
 		parent::__construct($client);
@@ -19,12 +18,16 @@ class TrophyTitle extends AbstractTrophyTitle
      *
      * @return string
      */
-    public function npCommunicationId() : string
+    public function npCommunicationId(): string
     {
         return $this->npCommuncationId;
 	}
 
-
+    /**
+     * Gets the trophy service name.
+     *
+     * @return string
+     */
 	public function serviceName(): string
     {
         return $this->serviceName;

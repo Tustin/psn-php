@@ -76,7 +76,7 @@ class MessageThread extends Api
     }
 
     /**
-     * The group.
+     * The message group for this thread.
      *
      * @return Group
      */

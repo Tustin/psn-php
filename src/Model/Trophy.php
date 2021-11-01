@@ -30,7 +30,7 @@ class Trophy extends Api implements Fetchable
         $this->id = $id;
     }
 
-    public static function fromObject(TrophyGroup $trophyGroup, object $data) : Trophy
+    public static function fromObject(TrophyGroup $trophyGroup, object $data): Trophy
     {
         $trophy = new static($trophyGroup, $data->trophyId);
         $trophy->setCache($data);
@@ -42,12 +42,17 @@ class Trophy extends Api implements Fetchable
      *
      * @return string
      */
-    public function name() : string
+    public function name(): string
     {
         return $this->pluck('trophyName');
     }
     
-    public function id() : int
+    /**
+     * Gets the trophy id.
+     *
+     * @return integer
+     */
+    public function id(): int
     {
         return $this->id ??= $this->pluck('id');
     }
@@ -57,7 +62,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return string
      */
-    public function detail() : string
+    public function detail(): string
     {
         return $this->pluck('trophyDetail');
     }
@@ -67,7 +72,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return TrophyType
      */
-    public function type() : TrophyType
+    public function type(): TrophyType
     {
         return new TrophyType($this->pluck('trophyType'));
     }
@@ -77,7 +82,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return float
      */
-    public function earnedRate() : float
+    public function earnedRate(): float
     {
         return $this->pluck('trophyEarnedRate');
     }
@@ -87,7 +92,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function hidden() : bool
+    public function hidden(): bool
     {
         return $this->pluck('trophyHidden');
     }
@@ -97,7 +102,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return string
      */
-    public function iconUrl() : string
+    public function iconUrl(): string
     {
         return $this->pluck('trophyIconUrl');
     }
@@ -107,7 +112,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return string
      */
-    public function progressTargetValue() : string
+    public function progressTargetValue(): string
     {
         return $this->pluck('trophyProgressTargetValue') ?? '';
     }
@@ -118,7 +123,7 @@ class Trophy extends Api implements Fetchable
      * 
      * @return string
      */
-    public function rewardName() : string
+    public function rewardName(): string
     {
         return $this->pluck('trophyRewardName') ?? '';
     }
@@ -128,7 +133,7 @@ class Trophy extends Api implements Fetchable
      * 
      * @return string
      */
-    public function rewardImageUrl() : string
+    public function rewardImageUrl(): string
     {
         return $this->pluck('trophyRewardImageUrl') ?? '';
     }
@@ -138,7 +143,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return boolean
      */
-    public function earned() : bool
+    public function earned(): bool
     {
         return $this->pluck('earned');
     }
@@ -148,7 +153,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return string
      */
-    public function earnedDateTime() : string
+    public function earnedDateTime(): string
     {
         return $this->pluck('earnedDateTime') ?? '';
     }
@@ -158,7 +163,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return string
      */
-    public function progress() : string
+    public function progress(): string
     {
         return $this->pluck('progress') ?? '';
     }
@@ -168,7 +173,7 @@ class Trophy extends Api implements Fetchable
      *
      * @return string
      */
-    public function progressRate() : string
+    public function progressRate(): string
     {
         return $this->pluck('progressRate') ?? '';
     }
@@ -178,12 +183,17 @@ class Trophy extends Api implements Fetchable
      *
      * @return string
      */
-    public function progressedDateTime() : string
+    public function progressedDateTime(): string
     {
         return $this->pluck('progressedDateTime') ?? '';
     }
     
-    public function fetch() : object
+    /**
+     * Fetches the trophy data from the API.
+     *
+     * @return object
+     */
+    public function fetch(): object
     {
         return $this->get('trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophyGroups/'  . $this->trophyGroup->id() . '/trophies/' . $this->id(), [
             'npServiceName' => $this->trophyGroup->title()->serviceName()

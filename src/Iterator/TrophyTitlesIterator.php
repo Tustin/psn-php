@@ -24,7 +24,7 @@ class TrophyTitlesIterator extends AbstractApiIterator
         $this->access(0);
     }
 
-    public function access($cursor) : void
+    public function access($cursor): void
     {
         $body = [
             'limit' => $this->limit,

@@ -23,7 +23,7 @@ class TrophyGroupsIterator extends AbstractApiIterator
         $this->access(0);
     }
 
-    public function access($cursor) : void
+    public function access($cursor): void
     {
         if ($this->title instanceof UserTrophyTitle)
         {

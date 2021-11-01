@@ -32,7 +32,7 @@ class GameListFactory extends Api implements IteratorAggregate, FactoryInterface
      * @param User $user
      * @return GameListFactory
      */
-    public function forUser(User $user) : GameListFactory
+    public function forUser(User $user): GameListFactory
     {
         $this->user = $user;
 
@@ -43,7 +43,7 @@ class GameListFactory extends Api implements IteratorAggregate, FactoryInterface
      *
      * @return Iterator
      */
-    public function getIterator() : Iterator
+    public function getIterator(): Iterator
     {
         $iterator = new GameListIterator($this);
 
@@ -55,7 +55,7 @@ class GameListFactory extends Api implements IteratorAggregate, FactoryInterface
      *
      * @return User|null
      */
-    public function getUser() : ?User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -65,7 +65,7 @@ class GameListFactory extends Api implements IteratorAggregate, FactoryInterface
      *
      * @return boolean
      */
-    public function hasUser() : bool
+    public function hasUser(): bool
     {
         return $this->user !== null;
     }
@@ -75,7 +75,7 @@ class GameListFactory extends Api implements IteratorAggregate, FactoryInterface
      *
      * @return GameTitle
      */
-    public function first() : GameTitle
+    public function first(): GameTitle
     {
         try
         {

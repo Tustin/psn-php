@@ -23,7 +23,7 @@ class GameTitle extends Api implements Fetchable
         $this->id = $id;
     }
 
-    public static function fromObject(GameListFactory $gameListFactory, object $data) : GameTitle
+    public static function fromObject(GameListFactory $gameListFactory, object $data): GameTitle
     {
         $game = new static($gameListFactory, $data->titleId);
         $game->setCache($data);
@@ -36,7 +36,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return Concept
      */
-    public function concept() : Concept
+    public function concept(): Concept
     {
         return new Concept($this->getHttpClient(), $this->pluck('concept.id'));
     }
@@ -47,7 +47,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function playDuration() : string
+    public function playDuration(): string
     {
         return $this->pluck('playDuration');
     }
@@ -58,7 +58,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function firstPlayedDateTime() : string
+    public function firstPlayedDateTime(): string
     {
         return $this->pluck('firstPlayedDateTime');
     }
@@ -69,7 +69,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function lastPlayedDateTime() : string
+    public function lastPlayedDateTime(): string
     {
         return $this->pluck('lastPlayedDateTime');
     }
@@ -79,7 +79,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return int
      */
-    public function playCount() : int
+    public function playCount(): int
     {
         return $this->pluck('playCount');
     }
@@ -90,7 +90,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function category() : string
+    public function category(): string
     {
         return $this->pluck('category');
     }
@@ -100,7 +100,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function localizedImageUrl() : string
+    public function localizedImageUrl(): string
     {
         return $this->pluck('localizedImageUrl');
     }
@@ -110,7 +110,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function imageUrl() : string
+    public function imageUrl(): string
     {
         return $this->pluck('imageUrl');
     }
@@ -120,7 +120,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function localizedName() : string
+    public function localizedName(): string
     {
         return $this->pluck('localizedName');
     }
@@ -130,7 +130,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function name() : string
+    public function name(): string
     {
         return $this->pluck('name');
     }
@@ -141,7 +141,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function id() : string
+    public function id(): string
     {
         return $this->id ??= $this->pluck('titleId');
     }
@@ -152,7 +152,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return string
      */
-    public function service() : string
+    public function service(): string
     {
         return $this->pluck('service');
     }
@@ -162,7 +162,7 @@ class GameTitle extends Api implements Fetchable
      *
      * @return object
      */
-    public function stats() : object
+    public function stats(): object
     {
         return $this->pluck('stats');
     }
@@ -172,12 +172,12 @@ class GameTitle extends Api implements Fetchable
      *
      * @return object
      */
-    public function media() : object
+    public function media(): object
     {
         return $this->pluck('media');
     }
     
-    public function fetch() : object
+    public function fetch(): object
     {
         return $this->get('gamelist/v2/users/' . $this->getFactory()->getUser()->accountId() . '/titles/' . $this->id());
     }

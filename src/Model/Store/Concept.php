@@ -27,27 +27,27 @@ class Concept extends Api implements Fetchable
         return $instance;
     }
 
-    public function productId() : string
+    public function productId(): string
     {
         return $this->pluck('id');
     }
 
-    public function name() : string
+    public function name(): string
     {
         return $this->pluck('name');
     }
 
-    public function conceptId() : string
+    public function conceptId(): string
     {
         return $this->conceptId;
     }
 
-    public function publisher() : string
+    public function publisher(): string
     {
         return ($this->pluck('publisherName') ?? $this->pluck('leadPublisherName'));
     }
 
-	public function fetch() : object
+	public function fetch(): object
     {
         return $this->graphql('metGetConceptById', [
             'conceptId' => $this->conceptId(),

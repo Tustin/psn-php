@@ -50,12 +50,22 @@ class User extends Api implements Fetchable
         return $instance;
     }
 
-    public function trophyTitles()
+    /**
+     * Get the trophy titles associated with this user's account.
+     * 
+     * @return TrophyTitlesFactory
+     */
+    public function trophyTitles(): TrophyTitlesFactory
     {
         return new TrophyTitlesFactory($this);
     }
 
-    public function gameList()
+    /**
+     * Get the game list for this user's account.
+     *
+     * @return GameListFactory
+     */
+    public function gameList(): GameListFactory
     {
         return new GameListFactory($this);
     }
@@ -65,8 +75,10 @@ class User extends Api implements Fetchable
      * 
      * Only works for PS4/PS5 titles.
      * Doesn't work with PPSA... title ids.
+     * 
+     * @return string
      */
-    public function titleIdToCommunicationId($npTitleId) : string
+    public function titleIdToCommunicationId($npTitleId): string
     {
         $body = [
             'npTitleIds' => $npTitleId
@@ -84,9 +96,9 @@ class User extends Api implements Fetchable
     /**
      * Gets the trophy summary for the user.
      *
-     * @return void
+     * @return TrophySummary
      */
-    public function trophySummary()
+    public function trophySummary(): TrophySummary
     {
         return new TrophySummary($this);
     }
@@ -300,7 +312,7 @@ class User extends Api implements Fetchable
     }
 
     /**
-     * Fetches the user's profile information.
+     * Fetches the user's profile information from the API.
      *
      * @return object
      */

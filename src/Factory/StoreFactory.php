@@ -17,7 +17,7 @@ class StoreFactory extends Api implements FactoryInterface
      * @param array $searchFields
      * @return UsersSearchIterator
      */
-    public function search(string $query) : StoreSearchIterator
+    public function search(string $query): StoreSearchIterator
     {
         return new StoreSearchIterator($this, $query);
     }

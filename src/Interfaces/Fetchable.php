@@ -3,5 +3,5 @@ namespace Tustin\PlayStation\Interfaces;
 
 interface Fetchable
 {
-    function fetch() : object;
+    function fetch(): object;
 }
