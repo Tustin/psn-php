@@ -5,6 +5,7 @@ namespace Tustin\PlayStation\Model;
 use GuzzleHttp\Client;
 use Tustin\PlayStation\Api;
 use Tustin\Haste\Http\HttpClient;
+use Tustin\PlayStation\Factory\FriendsListFactory;
 use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Model\TrophySummary;
 use Tustin\PlayStation\Factory\UsersFactory;
@@ -16,15 +17,12 @@ class User extends Api implements Fetchable
 {
     use Model;
 
-    private $profile;
-
-    private $accountId;
-
-    private $country;
-
-    private $onlineId;
-
-    private $token;
+    /**
+     * The user's account id.
+     *
+     * @var string
+     */
+    private string $accountId;
 
     /**
      * Constructs a new user object.
@@ -32,19 +30,16 @@ class User extends Api implements Fetchable
      * @param UsersFactory $usersFactory
      * @param string $accountId
      */
-    public function __construct(Client $client, string $accountId, string $country = '', string $onlineId = '', string $token = '')
+    public function __construct(Client $client, string $accountId)
     {
         parent::__construct($client);
 
         $this->accountId = $accountId;
-        $this->country = $country;
-        $this->onlineId = $onlineId;
-        $this->token = $token;
     }
 
-    public static function fromObject(Client $client, object $data, string $token)
+    public static function fromObject(Client $client, object $data)
     {
-        $instance = new User($client, $data->accountId, $data->country, $data->onlineId, $token);
+        $instance = new User($client, $data->accountId);
         $instance->setCache($data);
 
         return $instance;
@@ -68,6 +63,16 @@ class User extends Api implements Fetchable
     public function gameList(): GameListFactory
     {
         return new GameListFactory($this);
+    }
+
+    /**
+     * Gets the user's friends list.
+     *
+     * @return FriendsListFactory
+     */
+    public function friends(): FriendsListFactory
+    {
+        return new FriendsListFactory($this);
     }
 
     /**
@@ -104,28 +109,13 @@ class User extends Api implements Fetchable
     }
 
     /**
-     * Gets token ID.
-     * Can be "token_invalidated:deleted"
-     *
-     * @return string
-     */
-    public function token(): string
-    {
-        return $this->token;
-    }
-
-    /**
      * Gets online ID.
      *
      * @return string
      */
     public function onlineId(): string
     {
-        if (empty($this->onlineId)) {
-            return $this->pluck('onlineId');
-        }
-
-        return $this->onlineId;
+        return $this->pluck('onlineId');
     }
 
     /**
@@ -149,13 +139,19 @@ class User extends Api implements Fetchable
     }
 
     /**
-     * Gets the user's country.
+     * This property is only returned in some API responses (namely the user search response), which can make this value inconsistent.
+     * If this is needed, maybe we can have a setter method for setting this value? It would be a bit nicer than polluting the constructor.
+     * Tustin - Nov 11, 2021.
+     * 
+     * @deprecated v3.0.1
+     * 
+     * @ignore
      *
      * @return string
      */
     public function country(): string
     {
-        return $this->country;
+        return '';
     }
 
     /**
@@ -276,7 +272,7 @@ class User extends Api implements Fetchable
      */
     public function isCloseFriend(): bool
     {
-        return $this->pluck('personalDetailSharing') !== 'no';
+        return $this->pluck('personalDetail') !== null;
     }
 
     /**

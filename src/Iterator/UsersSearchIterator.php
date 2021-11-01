@@ -79,12 +79,11 @@ class UsersSearchIterator extends AbstractApiIterator
     public function current()
     {
         $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;
-        $token = $this->getFromOffset($this->currentOffset)->id;
+        //$token = $this->getFromOffset($this->currentOffset)->id; // Do we need this??
 
         return User::fromObject(
             $this->usersFactory->getHttpClient(),
-            $socialMetadata,
-            $token
+            $socialMetadata
         );
     }
 }
