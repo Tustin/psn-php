@@ -13,8 +13,6 @@ use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
 
 class Client extends AbstractClient
 {
-    private const VERSION = 'dev-3.0.0';
-
     const AUTH_URL = 'https://ca.account.sony.com/api/';
     const BASE_URL = 'https://m.np.playstation.net/api/';
 
@@ -195,21 +193,44 @@ class Client extends AbstractClient
         return new UsersFactory($this->getHttpClient());
     }
 
-    public function trophies(string $npCommunicationId, string $serviceName): TrophyTitle
+    /**
+     * Gets a trophy title from the API using a communication id (NPWRxxxxx_00).
+     *
+     * @param string $npCommunicationId
+     * @param string $serviceName
+     * @return TrophyTitle
+     */
+    public function trophies(string $npCommunicationId, string $serviceName = 'trophy'): TrophyTitle
     {
         return new TrophyTitle($this->getHttpClient(), $npCommunicationId, $serviceName);
     }
 
+    /**
+     * Creates a store factory to navigate the PlayStation Store.
+     *
+     * @return StoreFactory
+     */
     public function store(): StoreFactory
     {
         return new StoreFactory($this->getHttpClient());
     }
 
+    /**
+     * Creates a group factory to query your chat groups (parties and text message groups).
+     *
+     * @return GroupsFactory
+     */
     public function groups(): GroupsFactory
     {
         return new GroupsFactory($this->getHttpClient());
     }
 
+    /**
+     * Get a media object from the API.
+     *
+     * @param string $ugcId
+     * @return Media
+     */
     public function media(string $ugcId): Media
     {
         return new Media($this->getHttpClient(), $ugcId);
