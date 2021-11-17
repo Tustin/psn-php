@@ -1,7 +1,6 @@
 <?php
 namespace Tustin\PlayStation\Iterator;
 
-use GuzzleHttp\Cookie\CookieJar;
 use Tustin\PlayStation\Model\Media;
 use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
 
@@ -9,8 +8,6 @@ class CloudMediaGalleryIterator extends AbstractApiIterator
 {
     private CloudMediaGalleryFactory $cloudMediaGalleryFactory;
 
-    private CookieJar $jar;
-    
     public function __construct(CloudMediaGalleryFactory $cloudMediaGalleryFactory)
     {
         parent::__construct($cloudMediaGalleryFactory->getHttpClient());
@@ -19,8 +16,6 @@ class CloudMediaGalleryIterator extends AbstractApiIterator
 
         $this->limit = 20;
 
-        $this->jar = new CookieJar();
-        
         $this->access(0);
     }
 
@@ -39,17 +34,9 @@ class CloudMediaGalleryIterator extends AbstractApiIterator
 
     public function current()
     {
-        $media = Media::fromObject(
+        return Media::fromObject(
             $this->cloudMediaGalleryFactory->getHttpClient(),
             $this->getFromOffset($this->currentOffset)
         );
-
-        $lastResponse = $this->getLastResponse();
-
-        $headers = $lastResponse->getHeader('Set-Cookie');
-
-        $media->setCookies($headers);
-
-        return $media;
     }
 }

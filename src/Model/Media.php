@@ -33,15 +33,6 @@ class Media extends Model
         return $media;
     }
 
-	public function setCookies(array $cookies)
-	{
-		$cookieParser = new CookieParser;
-		foreach ($cookies as $cookie) {
-			$cookie = $cookieParser->fromString($cookie);
-			$this->cookies[$cookie->getName()] = $cookie->getValue();
-		}
-	}
-
 	public function creator(): User
 	{
 		return new User($this->getHttpClient(), $this->pluck('sceUserAccountId'));
@@ -55,6 +46,11 @@ class Media extends Model
 	public function game(): GameTitle
 	{
 		return new GameTitle($this->getHttpClient(), $this->titleId());
+	}
+
+	public function id(): string
+	{
+		return $this->pluck('id');
 	}
 
 	public function spoiler(): bool
@@ -124,45 +120,43 @@ class Media extends Model
 	 */
 	public function url(): string
 	{
-		if (empty($this->cookies)) {
-			throw new MissingKeyPairIdException('The CloudFront key pair is missing');
-		}
-
 		switch ($this->type())
 		{
 			case UgcType::video():
-				return $this->generateUrl($this->pluck('downloadUrl'));
+				return $this->generateUrls()->downloadUrl;
 			break;
 
 			case UgcType::image():
-				return $this->generateUrl($this->pluck('screenshotUrl'));
+				return $this->generateUrls()->screenshotUrl;
 			break;
 		}
 	}
 
 	/**
-	 * Generates a parameterized URL for the media asset.
+	 * Generates parameterized URLs for the media asset.
 	 *
-	 * @param string $url
-	 * @return string
+	 * @return object
 	 */
-	private function generateUrl(string $url): string
+	private function generateUrls(): object
 	{
-		$url .= '?';
+		return $this->get('gameMediaService/v2/c2s/ugc/' . $this->id() . '/url');
 
-		if (array_key_exists('CloudFront-Policy', $this->cookies)) {
-			$url .= 'Policy=' . $this->cookies['CloudFront-Policy'] . '&';
-		}
+		// Lol so you dont need to do this below.
+		// $url .= '?';
 
-		if (array_key_exists('CloudFront-Key-Pair-Id', $this->cookies)) {
-			$url .= 'Key-Pair-Id=' . $this->cookies['CloudFront-Key-Pair-Id'] . '&';
-		}
+		// if (array_key_exists('CloudFront-Policy', $this->cookies)) {
+		// 	$url .= 'Policy=' . $this->cookies['CloudFront-Policy'] . '&';
+		// }
 
-		if (array_key_exists('CloudFront-Signature', $this->cookies)) {
-			$url .= 'Signature=' . $this->cookies['CloudFront-Signature'] . '&';
-		}
+		// if (array_key_exists('CloudFront-Key-Pair-Id', $this->cookies)) {
+		// 	$url .= 'Key-Pair-Id=' . $this->cookies['CloudFront-Key-Pair-Id'] . '&';
+		// }
 
-		return $url;
+		// if (array_key_exists('CloudFront-Signature', $this->cookies)) {
+		// 	$url .= 'Signature=' . $this->cookies['CloudFront-Signature'] . '&';
+		// }
+
+		// return $url;
 	}
 
 	public function fetch(): object
