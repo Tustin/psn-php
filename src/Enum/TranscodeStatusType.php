@@ -7,5 +7,5 @@ use MyCLabs\Enum\Enum;
 class TranscodeStatusType extends Enum
 {
     private const complete = 'complete';
-    private const notComplete = 'not_complete'; // ???
+    private const inProgress = 'in_progress';
 }

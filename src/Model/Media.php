@@ -9,6 +9,8 @@ use Tustin\PlayStation\Enum\UgcType;
 use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 use Tustin\PlayStation\Exception\MissingKeyPairIdException;
 use GuzzleHttp\Cookie\SetCookie as CookieParser;
+use Tustin\PlayStation\Enum\CloudStatusType;
+use Tustin\PlayStation\Enum\TranscodeStatusType;
 
 class Media extends Model
 {
@@ -95,6 +97,26 @@ class Media extends Model
 		return $this->pluck('sceTitleId');
 	}
 
+	public function fileSize(): int
+	{
+		return $this->pluck('fileSize');
+	}
+
+	public function fileType(): string
+	{
+		return $this->pluck('fileType');
+	}
+
+	public function cloudStatus(): CloudStatusType
+	{
+		return new CloudStatusType($this->pluck('cloudStatus'));
+	}
+
+	public function transcodeStatus(): TranscodeStatusType
+	{
+		return new TranscodeStatusType($this->pluck('transcodeStatus'));
+	}
+
 	/**
 	 * Generates a URL with the required parameters to access the asset. 
 
@@ -109,7 +131,7 @@ class Media extends Model
 		switch ($this->type())
 		{
 			case UgcType::video():
-			 // @TODO
+				return $this->generateUrl($this->pluck('downloadUrl'));
 			break;
 
 			case UgcType::image():
