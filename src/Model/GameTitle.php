@@ -1,16 +1,12 @@
 <?php
 namespace Tustin\PlayStation\Model;
 
-use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Traits\Model;
-use Tustin\PlayStation\Interfaces\Fetchable;
-use Tustin\PlayStation\Factory\GameListFactory;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\Store\Concept;
+use Tustin\PlayStation\Factory\GameListFactory;
 
-class GameTitle extends Api implements Fetchable
+class GameTitle extends Model
 {
-    use Model;
-
     /**
      * @var string
      */

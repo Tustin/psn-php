@@ -3,15 +3,13 @@
 namespace Tustin\PlayStation\Model\Message;
 
 use Carbon\Carbon;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\User;
-use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Enum\MessageType;
 use Tustin\PlayStation\Model\MessageThread;
 
-abstract class AbstractMessage
+abstract class AbstractMessage extends Model
 {
-    use Model;
-
     /**
      * The message thread this message is in.
      *
@@ -21,7 +19,7 @@ abstract class AbstractMessage
 
     public static function fromObject(MessageThread $thread, object $messageData)
     {
-        $instance = new static('');
+        $instance = new static($thread->getHttpClient());
         $instance->setCache($messageData);
 
         $instance->thread = $thread;

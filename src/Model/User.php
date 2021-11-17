@@ -3,20 +3,15 @@
 namespace Tustin\PlayStation\Model;
 
 use GuzzleHttp\Client;
-use Tustin\PlayStation\Api;
-use Tustin\Haste\Http\HttpClient;
-use Tustin\PlayStation\Factory\FriendsListFactory;
-use Tustin\PlayStation\Traits\Model;
-use Tustin\PlayStation\Model\TrophySummary;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Factory\UsersFactory;
-use Tustin\PlayStation\Interfaces\Fetchable;
 use Tustin\PlayStation\Factory\GameListFactory;
+use Tustin\PlayStation\Factory\FriendsListFactory;
+use Tustin\PlayStation\Model\Trophy\TrophySummary;
 use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 
-class User extends Api implements Fetchable
+class User extends Model
 {
-    use Model;
-
     /**
      * The user's account id.
      *

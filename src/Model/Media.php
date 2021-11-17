@@ -1,18 +1,15 @@
 <?php
 namespace Tustin\PlayStation\Model;
 
+use Exception;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use Tustin\PlayStation\Api;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\UgcType;
-use Tustin\PlayStation\Traits\Model;
-use Tustin\PlayStation\Enum\MessageType;
-use Tustin\PlayStation\Interfaces\Fetchable;
+use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 
-class Media extends Api implements Fetchable
+class Media extends Model
 {
-	use Model;
-
 	/**
 	 * @var string
 	 */
@@ -24,6 +21,14 @@ class Media extends Api implements Fetchable
 
 		$this->ugcId = $ugcId;
 	}
+
+	public static function fromObject(Client $client, object $data): Media
+    {
+        $media = new static($client, $client->sourceUgcId);
+        $media->setCache($data);
+
+        return $media;
+    } 
 
 	public function spoiler(): bool
 	{
@@ -62,7 +67,7 @@ class Media extends Api implements Fetchable
 	
 	public function trophyTitle(): TrophyTitle
 	{
-		return new TrophyTitle($this->getHttpClient(), $this->npCommunicationId())
+		return new TrophyTitle($this->getHttpClient(), $this->npCommunicationId());
 	}
 
 	public function titleId(): string
@@ -74,7 +79,10 @@ class Media extends Api implements Fetchable
 	 * Gives a URL (with a token) for the media.
 	 * 
 	 * Media can only be consumed using a valid JWT token generated from this method.
-	 *
+	 * 
+	 * Actually I don't believe the above is true. CloudFront just needs a Key-Pair-Id sent with the request. Needs more investigating.
+	 * - Tustin, November 16, 2021.
+	 * 
 	 * @return string
 	 */
 	public function url(): string
@@ -88,6 +96,9 @@ class Media extends Api implements Fetchable
 				$response = $this->get($this->pluck('screenshotUrl'));
 				var_dump($response); // @TestMe!
 			}
+		}
+		catch (Exception $ex) {
+			die($ex); // @TODO Debug.
 		}
 	}
 

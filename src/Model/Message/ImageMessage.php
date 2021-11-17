@@ -3,6 +3,7 @@
 namespace Tustin\PlayStation\Model\Message;
 
 use Tustin\PlayStation\Model\Media;
+use Tustin\PlayStation\Enum\MessageType;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class ImageMessage extends AbstractMessage
@@ -25,5 +26,15 @@ class ImageMessage extends AbstractMessage
     public function resourceId(): string
     {
         return $this->pluck('messageDetail.imageMessageDetail.resourceId');
+    }
+
+    public function type(): MessageType
+    {
+        return MessageType::image();
+    }
+
+    public function fetch(): object
+    {
+        throw new \BadMethodCallException();
     }
 }

@@ -1,19 +1,13 @@
 <?php
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Model\Trophy;
 
-use Tustin\PlayStation\Api;
 use InvalidArgumentException;
-use Tustin\PlayStation\Traits\Model;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\TrophyType;
-use Tustin\PlayStation\Model\TrophyTitle;
-use Tustin\PlayStation\AbstractTrophyTitle;
-use Tustin\PlayStation\Interfaces\Fetchable;
 use Tustin\PlayStation\Factory\TrophyFactory;
 
-class TrophyGroup extends Api implements Fetchable
+class TrophyGroup extends Model
 {
-    use Model;
-
     private $trophyTitle;
 	
     private $groupId;

@@ -3,9 +3,9 @@ namespace Tustin\PlayStation\Factory;
 
 use Iterator;
 use IteratorAggregate;
-use Tustin\PlayStation\Model\Trophy;
-use Tustin\PlayStation\Model\TrophyGroup;
+use Tustin\PlayStation\Model\Trophy\Trophy;
 use Tustin\PlayStation\Iterator\TrophyIterator;
+use Tustin\PlayStation\Model\Trophy\TrophyGroup;
 
 class TrophyFactory implements IteratorAggregate
 {

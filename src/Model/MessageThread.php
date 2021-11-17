@@ -2,17 +2,14 @@
 
 namespace Tustin\PlayStation\Model;
 
-use Tustin\PlayStation\Api;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\Group;
-use Tustin\PlayStation\Traits\Model;
 use Tustin\PlayStation\Model\Message\Sendable;
 use Tustin\PlayStation\Factory\MessagesFactory;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
-class MessageThread extends Api
+class MessageThread extends Model
 {
-    use Model;
-
     /**
      * @var Group
      */
@@ -93,5 +90,11 @@ class MessageThread extends Api
     public function messageCount(): int
     {
         return $this->pluck('messageCount') ?? 0;
+    }
+
+    // @TODO: Implement this.
+    public function fetch(): object
+    {
+        throw new \BadMethodCallException();
     }
 }

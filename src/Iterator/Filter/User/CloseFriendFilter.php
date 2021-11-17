@@ -14,6 +14,10 @@ class CloseFriendFilter extends FilterIterator
 
     public function accept()
     {
-        return $this->current()->isCloseFriend() === true;
+        // Kind of a hack so we don't need to fetch the whole user's profile for each iteration.
+        // This property will only exist if the user is a close friend, otherwise it is completely omitted.
+        // Might be due for a refactor at some point, but should be okay for now...
+        // Tustin, November 16, 2021.
+        return array_key_exists('personalDetail', $this->current()->getCache());
     }
 }

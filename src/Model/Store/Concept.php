@@ -2,14 +2,10 @@
 namespace Tustin\PlayStation\Model\Store;
 
 use GuzzleHttp\Client;
-use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Traits\Model;
-use Tustin\PlayStation\Interfaces\Fetchable;
+use Tustin\PlayStation\Model;
 
-class Concept extends Api implements Fetchable
+class Concept extends Model
 {
-    use Model;
-
     private string $conceptId;
     
 	public function __construct(Client $client, string $conceptId)

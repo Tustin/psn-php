@@ -1,8 +1,7 @@
 <?php
-namespace Tustin\PlayStation;
+namespace Tustin\PlayStation\Model\Trophy;
 
-use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Traits\Model;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Factory\TrophyGroupsFactory;
 
 /**
@@ -15,10 +14,8 @@ use Tustin\PlayStation\Factory\TrophyGroupsFactory;
  * 
  * - Tustin, Jan 11, 2021
  */
-abstract class AbstractTrophyTitle extends Api
+abstract class AbstractTrophyTitle extends Model
 {
-	use Model;
-
     /**
 	 * @var string
 	 */

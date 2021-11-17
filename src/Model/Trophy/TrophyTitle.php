@@ -1,8 +1,7 @@
 <?php
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Model\Trophy;
 
 use GuzzleHttp\Client;
-use Tustin\PlayStation\AbstractTrophyTitle;
 
 class TrophyTitle extends AbstractTrophyTitle
 {
@@ -32,4 +31,10 @@ class TrophyTitle extends AbstractTrophyTitle
     {
         return $this->serviceName;
 	}
+
+    // @TODO: Implement
+    public function fetch(): object
+    {
+        throw new \BadMethodCallException();
+    }
 }

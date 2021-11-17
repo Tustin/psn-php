@@ -1,9 +1,8 @@
 <?php
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Model\TrophyTitle;
-use Tustin\PlayStation\Model\UserTrophyTitle;
 use Tustin\PlayStation\Factory\TrophyTitlesFactory;
+use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
 
 class TrophyTitlesIterator extends AbstractApiIterator
 {

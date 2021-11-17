@@ -1,8 +1,7 @@
 <?php
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Model\Trophy;
 
 use Tustin\PlayStation\Enum\ConsoleType;
-use Tustin\PlayStation\AbstractTrophyTitle;
 
 class UserTrophyTitle extends AbstractTrophyTitle
 {
@@ -229,4 +228,10 @@ class UserTrophyTitle extends AbstractTrophyTitle
 	{
 		return $this->serviceName ??= $this->pluck('npServiceName');
 	}
+
+    // @TODO: Implement
+    public function fetch(): object
+    {
+        throw new \BadMethodCallException();
+    }
 }

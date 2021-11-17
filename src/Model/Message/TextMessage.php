@@ -27,4 +27,9 @@ class TextMessage extends AbstractMessage implements Sendable
             'body' => $this->textMessage
         ];
     }
+
+    public function fetch(): object
+    {
+        throw new \BadMethodCallException();
+    }
 }

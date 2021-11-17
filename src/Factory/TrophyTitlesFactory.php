@@ -8,12 +8,12 @@ use Tustin\PlayStation\Api;
 use InvalidArgumentException;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Enum\LanguageType;
-use Tustin\PlayStation\Model\UserTrophyTitle;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
+use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
 use Tustin\PlayStation\Exception\NoTrophiesException;
 use Tustin\PlayStation\Iterator\TrophyTitlesIterator;
-use Tustin\PlayStation\Iterator\Filter\TrophyTitleNameFilter;
-use Tustin\PlayStation\Iterator\Filter\TrophyTitleHasGroupsFilter;
+use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleNameFilter;
+use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleHasGroupsFilter;
 
 class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInterface
 {

@@ -1,16 +1,11 @@
 <?php
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Model\Trophy;
 
-use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Traits\Model;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\TrophyType;
-use Tustin\PlayStation\Model\TrophyGroup;
-use Tustin\PlayStation\Interfaces\Fetchable;
 
-class Trophy extends Api implements Fetchable
+class Trophy extends Model
 {
-    use Model;
-
     /**
      * The trophy group this trophy is in.
      *

@@ -2,6 +2,7 @@
 
 namespace Tustin\PlayStation\Model\Message;
 
+use Tustin\PlayStation\Enum\MessageType;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class StickerMessage extends AbstractMessage
@@ -26,8 +27,13 @@ class StickerMessage extends AbstractMessage
         return $this->pluck('messageDetail.stickerMessageDetail.number');
     }
 
-    public function type(): string
+    public function type(): MessageType
     {
-        return $this->pluck('messageDetail.stickerMessageDetail.type');
+        return MessageType::sticker();
+    }
+
+    public function fetch(): object
+    {
+        throw new \BadMethodCallException();
     }
 }

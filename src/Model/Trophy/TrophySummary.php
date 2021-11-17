@@ -1,16 +1,12 @@
 <?php
 
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Model\Trophy;
 
-use Tustin\PlayStation\Api;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\User;
-use Tustin\PlayStation\Traits\Model;
-use Tustin\PlayStation\Interfaces\Fetchable;
 
-class TrophySummary extends Api implements Fetchable
+class TrophySummary extends Model
 {
-    use Model;
-
     /**
      * The user for the trophy summary.
      *

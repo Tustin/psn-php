@@ -3,20 +3,14 @@
 namespace Tustin\PlayStation\Model;
 
 use Carbon\Carbon;
-use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Traits\Model;
-use Tustin\PlayStation\Interfaces\Fetchable;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Factory\GroupsFactory;
 use Tustin\PlayStation\Model\Message\Sendable;
-use Tustin\PlayStation\Factory\MessagesFactory;
 use Tustin\PlayStation\Factory\GroupMembersFactory;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
-use Tustin\PlayStation\Factory\MessageThreadMembersFactory;
 
-class Group extends Api implements Fetchable
+class Group extends Model
 {
-    use Model;
-
     private string $groupId;
 
     private array $members;
