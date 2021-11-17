@@ -7,13 +7,14 @@ use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\UgcType;
 use Tustin\PlayStation\Model\Trophy\TrophyTitle;
+use Tustin\PlayStation\Exception\MissingKeyPairIdException;
+use GuzzleHttp\Cookie\SetCookie as CookieParser;
 
 class Media extends Model
 {
-	/**
-	 * @var string
-	 */
-	private $ugcId;
+	private string $ugcId;
+
+	private array $cookies = [];
 
 	public function __construct(Client $client, string $ugcId)
 	{
@@ -24,11 +25,35 @@ class Media extends Model
 
 	public static function fromObject(Client $client, object $data): Media
     {
-        $media = new static($client, $client->sourceUgcId);
+        $media = new static($client, $data->sourceUgcId);
         $media->setCache($data);
 
         return $media;
-    } 
+    }
+
+	public function setCookies(array $cookies)
+	{
+		$cookieParser = new CookieParser;
+		foreach ($cookies as $cookie) {
+			$cookie = $cookieParser->fromString($cookie);
+			$this->cookies[$cookie->getName()] = $cookie->getValue();
+		}
+	}
+
+	public function creator(): User
+	{
+		return new User($this->getHttpClient(), $this->pluck('sceUserAccountId'));
+	}
+	
+	public function trophyTitle(): TrophyTitle
+	{
+		return new TrophyTitle($this->getHttpClient(), $this->npCommunicationId());
+	}
+
+	public function game(): GameTitle
+	{
+		return new GameTitle($this->getHttpClient(), $this->titleId());
+	}
 
 	public function spoiler(): bool
 	{
@@ -43,6 +68,11 @@ class Media extends Model
 	public function type(): UgcType
 	{
 		return new UgcType($this->pluck('ugcType'));
+	}
+
+	public function title(): string
+	{
+		return $this->pluck('title');
 	}
 
 	public function uploadDate(): Carbon
@@ -60,46 +90,57 @@ class Media extends Model
 		return $this->pluck('sceTitleName');
 	}
 
-	public function sender(): User
-	{
-		return new User($this->getHttpClient(), $this->pluck('sceUserAccountId'));
-	}
-	
-	public function trophyTitle(): TrophyTitle
-	{
-		return new TrophyTitle($this->getHttpClient(), $this->npCommunicationId());
-	}
-
 	public function titleId(): string
 	{
 		return $this->pluck('sceTitleId');
 	}
 
 	/**
-	 * Gives a URL (with a token) for the media.
-	 * 
-	 * Media can only be consumed using a valid JWT token generated from this method.
-	 * 
-	 * Actually I don't believe the above is true. CloudFront just needs a Key-Pair-Id sent with the request. Needs more investigating.
-	 * - Tustin, November 16, 2021.
-	 * 
+	 * Generates a URL with the required parameters to access the asset. 
+
 	 * @return string
 	 */
 	public function url(): string
 	{
-		try {
-			if ($this->type() == UgcType::video()) {
-				$response = $this->get('gameMediaService/v2/c2s/ugc/' . $this->ugcId . '/url');
-				return $response->videoUrl;
-			}
-			else if ($this->type() == UgcType::image()) {
-				$response = $this->get($this->pluck('screenshotUrl'));
-				var_dump($response); // @TestMe!
-			}
+		if (empty($this->cookies)) {
+			throw new MissingKeyPairIdException('The CloudFront key pair is missing');
 		}
-		catch (Exception $ex) {
-			die($ex); // @TODO Debug.
+
+		switch ($this->type())
+		{
+			case UgcType::video():
+			 // @TODO
+			break;
+
+			case UgcType::image():
+				return $this->generateUrl($this->pluck('screenshotUrl'));
+			break;
 		}
+	}
+
+	/**
+	 * Generates a parameterized URL for the media asset.
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	private function generateUrl(string $url): string
+	{
+		$url .= '?';
+
+		if (array_key_exists('CloudFront-Policy', $this->cookies)) {
+			$url .= 'Policy=' . $this->cookies['CloudFront-Policy'] . '&';
+		}
+
+		if (array_key_exists('CloudFront-Key-Pair-Id', $this->cookies)) {
+			$url .= 'Key-Pair-Id=' . $this->cookies['CloudFront-Key-Pair-Id'] . '&';
+		}
+
+		if (array_key_exists('CloudFront-Signature', $this->cookies)) {
+			$url .= 'Signature=' . $this->cookies['CloudFront-Signature'] . '&';
+		}
+
+		return $url;
 	}
 
 	public function fetch(): object

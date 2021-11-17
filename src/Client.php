@@ -5,10 +5,11 @@ namespace Tustin\PlayStation;
 use Tustin\Haste\AbstractClient;
 use Tustin\PlayStation\OAuthToken;
 use Tustin\PlayStation\Model\Media;
-use Tustin\PlayStation\Model\TrophyTitle;
 use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Factory\UsersFactory;
 use Tustin\PlayStation\Factory\GroupsFactory;
+use Tustin\PlayStation\Model\Trophy\TrophyTitle;
+use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
 use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
 
 class Client extends AbstractClient
@@ -234,5 +235,15 @@ class Client extends AbstractClient
     public function media(string $ugcId): Media
     {
         return new Media($this->getHttpClient(), $ugcId);
+    }
+
+    /**
+     * Gets the cloud media gallery for the user.
+     *
+     * @return CloudMediaGalleryFactory
+     */
+    public function cloudMediaGallery(): CloudMediaGalleryFactory
+    {
+        return new CloudMediaGalleryFactory($this->getHttpClient());
     }
 }
