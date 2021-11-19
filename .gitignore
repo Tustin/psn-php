@@ -2,3 +2,4 @@ vendor/
 /.idea
 test.php
 .vscode/launch.json
+composer.lock

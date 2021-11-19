@@ -11,7 +11,7 @@
     },
     "require": {
         "guzzlehttp/guzzle": "^7.0",
-        "php": "^7.4",
+        "php": "^7.4|^8.0",
         "tustin/haste": "^1.0.7",
         "nesbot/carbon": "^2.41",
         "myclabs/php-enum": "^1.7"
