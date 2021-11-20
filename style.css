@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=PT+Sans&Source+Sans+Pro&Roboto+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source%20Code%20Pro:ital,wght@0,400&display=swap");
+
 * {
 	-webkit-font-smoothing: antialiased;
 	-webkit-overflow-scrolling: touch;
@@ -855,13 +856,13 @@ body {
     margin: 0 2px;
     padding: 3px 5px;
     white-space: pre-wrap;
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 .markdown-section code,
 .markdown-section pre {
 	background-color: var(--codeBackgroundColor);
-	font-family: var(--codeFontFamily);
+	/* font-family: var(--codeFontFamily); */
 }
 
 .markdown-section pre {
@@ -978,7 +979,7 @@ body {
 	border-radius: 2px;
 	color: var(--codeTextColor);
 	display: block;
-	font-family: Roboto Mono, Monaco, courier, monospace;
+	font-family: Source Code Pro;
 	font-size: .8rem;
 	line-height: inherit;
 	margin: 0 2px;
