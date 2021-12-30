@@ -5,7 +5,6 @@ namespace Tustin\PlayStation;
 use Carbon\Carbon;
 
 
-
 class OAuthToken
 {
     private string $token;
@@ -14,6 +13,9 @@ class OAuthToken
 
     public function __construct(string $token, int $expiresIn)
     {
+        if (0 >= $expiresIn) {
+            throw new \InvalidArgumentException('expiresIn has to be an integer > 0');
+        }
         $this->token = $token;
         $this->expiration = Carbon::now()->addSeconds($expiresIn);
     }
