@@ -9,6 +9,11 @@
             "Tustin\\PlayStation\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "require": {
         "guzzlehttp/guzzle": "^7.0",
         "php": "^7.4|^8.0",
@@ -17,6 +22,9 @@
         "myclabs/php-enum": "^1.7"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.1"
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "phpunit": "composer dump-autoload && vendor/bin/phpunit"
     }
 }

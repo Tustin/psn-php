@@ -1,8 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+         backupGlobals="false"
+         colors="true">
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <server name="SHELL_VERBOSITY" value="-1"/>
+    </php>
     <testsuites>
-        <testsuite name="psn-php">
+        <testsuite name="unit-tests">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
