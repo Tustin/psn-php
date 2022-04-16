@@ -3,3 +3,4 @@ vendor/
 test.php
 .vscode/launch.json
 composer.lock
+/.phpunit.result.cache
