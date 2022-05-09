@@ -32,7 +32,12 @@ class StoreSearchIterator extends AbstractApiIterator
      */
     protected $countryCode;
 
-    public function __construct(StoreFactory $storeFactory, string $query, string $languageCode = 'en', string $countryCode = 'us')
+    /**
+     * @var int
+     */
+    protected $limit = 20; // Default limit previously set at 'pageSize'
+
+    public function __construct(StoreFactory $storeFactory, string $query, string $languageCode = 'en', string $countryCode = 'us', int $limit = 20)
     {
         if (empty($query))
         {
@@ -40,6 +45,7 @@ class StoreSearchIterator extends AbstractApiIterator
         }
 
         parent::__construct($storeFactory->getHttpClient());
+        $this->limit = $limit;
         $this->query = $query;
         $this->languageCode = $languageCode;
         $this->countryCode = $countryCode;
@@ -56,30 +62,30 @@ class StoreSearchIterator extends AbstractApiIterator
                     'domain' => 'ConceptGameMobileApp',
                     'pagination' => [
                         'cursor' => $cursor,
-                        'pageSize' => '20' // @TODO: Test if this can be altered.
+                        'pageSize' => $this->limit // @TODO: Test if this can be altered.
                     ]
                 ]
             ],
             'languageCode' => $this->languageCode,
             'searchTerm' => $this->query
-		]);
-		
+        ]);
+
         $this->update($results->domainResponses[0]->totalResultCount, $results->domainResponses[0]->results, $results->domainResponses[0]->next);
-	}
-	
-	public function next(): void
+    }
+
+    public function next(): void
     {
         $this->currentOffset++;
-        if (($this->currentOffset % $this->limit) == 0)
+        if (($this->currentOffset % $this->limit) === 0)
         {
-            $this->access($this->maxEventIndexCursor);
+            $this->access($this->customCursor);
         }
     }
 
     public function current()
     {
         $concept = $this->getFromOffset($this->currentOffset)->conceptProductMetadata;
-        
+
         return Concept::fromObject($this->getHttpClient(), $concept);
     }
 }
