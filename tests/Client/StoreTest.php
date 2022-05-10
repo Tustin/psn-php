@@ -2,9 +2,9 @@
 
 namespace Tests\UseCases;
 
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use Tests\Client\Factories\StoreTestFactory;
-use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Iterator\StoreSearchIterator;
 use Tustin\PlayStation\Model\Store\Concept;
@@ -31,7 +31,8 @@ class StoreTest extends TestCase
         $items = (new StoreTestFactory)->emptyDataProducts(100);
         $products->update(count($items), $items, null);
 
-        while($products->valid()) {
+        while ($products->valid()) {
+            $products->current()->conceptId();
             $products->next();
         }
 

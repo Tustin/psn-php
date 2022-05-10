@@ -20,9 +20,14 @@ class StoreTestFactory
                 'id' => random_int(1111, 9999),
                 'conceptProductMetadata' => [
                     'id' => random_int(1111, 9999),
-                    'conceptId' => random_int(1111, 9999),
+                    'name' => 'Random name',
+                    'leadPublisherName' => 'Random Publisher',
                 ]
             ];
+
+            if (random_int(0, 1)) {
+                $item['conceptProductMetadata']['conceptId'] = random_int(1111, 9999);
+            }
 
             $items[] = json_decode(json_encode($item, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
         }
