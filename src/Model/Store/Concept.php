@@ -25,12 +25,12 @@ class Concept extends Model
 
     public function productId(): string
     {
-        return $this->pluck('id');
+        return $this->issetPluck('id');
     }
 
     public function name(): string
     {
-        return $this->pluck('name');
+        return $this->issetPluck('name');
     }
 
     public function conceptId(): string
@@ -40,7 +40,7 @@ class Concept extends Model
 
     public function publisher(): string
     {
-        return ($this->pluck('publisherName') ?? $this->pluck('leadPublisherName'));
+        return ($this->issetPluck('publisherName') ?? $this->issetPluck('leadPublisherName'));
     }
 
 	public function fetch(): object

@@ -48,6 +48,19 @@ abstract class Model extends Api
     }
 
     /**
+     * Return strictly a string in case pluck return a null value.
+     * Some Concept could have empty values when fetched through gameList()
+     *
+     * @param string $property
+     * @param bool $ignoreCache Ignores the existing cache and fetches fresh API data.
+     * @return string
+     */
+    final protected function issetPluck(string $property, bool $ignoreCache = false): string
+    {
+        return $this->pluck($property, $ignoreCache) ?? '';
+    }
+
+    /**
      * Plucks an API property from the cache. Will populate cache if necessary.
      *
      * @param string $property
