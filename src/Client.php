@@ -18,10 +18,10 @@ class Client {
 
     const AUTH_API      = 'https://auth.api.sonyentertainmentnetwork.com/2.0/';
 
-    private const CLIENT_ID     = 'ebee17ac-99fd-487c-9b1e-18ef50c39ab5';
-    private const CLIENT_SECRET = 'e4Ru_s*LrL4_B2BD';
+    private const CLIENT_ID     = 'ba495a24-818c-472b-b12d-ff231c1b5745';
+    private const CLIENT_SECRET = 'mvaiZkRsAsI1IBkY';
     private const DUID          = '0000000d00040080027BC1C3FBB84112BFC9A4300A78E96A';
-    private const SCOPE         = 'kamaji:get_players_met kamaji:get_account_hash kamaji:activity_feed_submit_feed_story kamaji:activity_feed_internal_feed_submit_story kamaji:activity_feed_get_news_feed kamaji:communities kamaji:game_list kamaji:ugc:distributor oauth:manage_device_usercodes psn:sceapp user:account.profile.get user:account.attributes.validate user:account.settings.privacy.get kamaji:activity_feed_set_feed_privacy kamaji:satchel kamaji:satchel_delete user:account.profile.update';
+    private const SCOPE         = 'psn:clientapp referenceDataService:countryConfig.read pushNotification:webSocket.desktop.connect sessionManager:remotePlaySession.system.update';
 
     private $httpClient;
     private $onlineId;
@@ -49,11 +49,11 @@ class Client {
     {
         if ($code === null) {
             $response = $this->httpClient()->post(self::AUTH_API . 'oauth/token', [
-                "app_context" => "inapp_ios",
+                // "app_context" => "inapp_ios",
                 "client_id" => self::CLIENT_ID,
                 "client_secret" => self::CLIENT_SECRET,
                 "refresh_token" => $ticketUuidOrRefreshToken,
-                "duid" => self::DUID,
+                // "duid" => self::DUID,
                 "grant_type" => "refresh_token",
                 "scope" => self::SCOPE
             ]);
