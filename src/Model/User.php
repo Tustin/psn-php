@@ -22,7 +22,7 @@ class User extends Model
     /**
      * Constructs a new user object.
      *
-     * @param UsersFactory $usersFactory
+     * @param Client $client
      * @param string $accountId
      */
     public function __construct(Client $client, string $accountId)
@@ -32,7 +32,7 @@ class User extends Model
         $this->accountId = $accountId;
     }
 
-    public static function fromObject(Client $client, object $data)
+    public static function fromObject(Client $client, object $data): User
     {
         $instance = new User($client, $data->accountId);
         $instance->setCache($data);
@@ -86,7 +86,7 @@ class User extends Model
 
         $results = $this->get('trophy/v1/users/' . $this->accountId() . '/titles/trophyTitles', $body);
 
-        if (count($results->titles[0]->trophyTitles) == 0) {
+        if (count($results->titles[0]->trophyTitles) === 0) {
             return '';
         }
 
@@ -235,7 +235,7 @@ class User extends Model
      */
     public function languages(): array
     {
-        return $this->pluck('languagesUsed');
+        return $this->pluck('languages');
     }
 
     /**
