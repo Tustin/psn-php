@@ -221,4 +221,14 @@ class UserTest extends TestCase
         $data = $this->user->fetch();
         $this->assertIsObject($data);
     }
+
+    public function test_trophyTitles() {/* TODO - Unit test */ }
+
+    public function test_gameList() {/* TODO - Unit test */ }
+
+    public function test_friends() {/* TODO - Unit test */ }
+
+    public function test_titleIdToCommunicationId() {/* TODO - Unit test */ }
+
+    public function test_trophySummary() {/* TODO - Unit test */ }
 }
