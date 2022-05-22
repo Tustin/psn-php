@@ -41,6 +41,22 @@ class User extends Model
     }
 
     /**
+     * TODO - This can be improved, only a temporary method
+     *
+     * Check if a plucked value is equal to the expected.
+     * Some pluck methods get a null response and parse it into a bool returning a false-positive.
+     *
+     * @param string $pluckVal
+     * @param string|null $expectVal
+     * @param bool $isEqual
+     * @return bool
+     */
+    private function isValidResponse(string $pluckVal, ?string $expectVal, bool $isEqual = true): bool
+    {
+        return $isEqual ? $pluckVal === $expectVal : $pluckVal !== $expectVal;
+    }
+
+    /**
      * Get the trophy titles associated with this user's account.
      * 
      * @return TrophyTitlesFactory
@@ -267,7 +283,11 @@ class User extends Model
      */
     public function isCloseFriend(): bool
     {
-        return $this->pluck('personalDetail') !== null;
+        return $this->isValidResponse(
+            $this->pluck('personalDetail'),
+            null,
+            false
+        );
     }
 
     /**
@@ -279,7 +299,10 @@ class User extends Model
      */
     public function hasFriendRequested(): bool
     {
-        return $this->pluck('friendRelation') === 'requesting';
+        return $this->isValidResponse(
+            $this->pluck('friendRelation'),
+            'requesting'
+        );
     }
 
     /**
@@ -289,7 +312,10 @@ class User extends Model
      */
     public function isOnline(): bool
     {
-        return $this->pluck('presences.0.onlineStatus') === 'online';
+        return $this->isValidResponse(
+            $this->pluck('presences.0.onlineStatus'),
+            'online'
+        );
     }
 
     /**
