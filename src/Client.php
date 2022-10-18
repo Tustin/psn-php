@@ -15,7 +15,7 @@ use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
 class Client extends AbstractClient
 {
     const AUTH_URL = 'https://ca.account.sony.com/api/';
-    const BASE_URL = 'https://m.np.playstation.net/api/';
+    const BASE_URL = 'https://m.np.playstation.com/api/';
 
     private $accessToken;
     private $refreshToken;
