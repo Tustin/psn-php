@@ -82,7 +82,13 @@ class Client extends AbstractClient
             throw new \Exception('Missing redirect location from oauth/authorize.');
         }
 
-        parse_str(parse_url($location, PHP_URL_QUERY), $params);
+        $parsedUrl = parse_url($location, PHP_URL_QUERY);
+
+        if ($parsedUrl === null) {
+            throw new \Exception('Failed parsing location header');
+        }
+
+        parse_str($parsedUrl, $params);
 
         if (!array_key_exists('code', $params)) {
             throw new \Exception('Missing code from oauth/authorize.');
