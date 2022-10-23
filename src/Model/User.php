@@ -9,6 +9,7 @@ use Tustin\PlayStation\Factory\GameListFactory;
 use Tustin\PlayStation\Factory\FriendsListFactory;
 use Tustin\PlayStation\Model\Trophy\TrophySummary;
 use Tustin\PlayStation\Factory\TrophyTitlesFactory;
+use Tustin\PlayStation\Model\Loyalty\LoyaltyAccount;
 
 class User extends Model
 {
@@ -68,6 +69,18 @@ class User extends Model
     public function friends(): FriendsListFactory
     {
         return new FriendsListFactory($this);
+    }
+
+    /**
+     * Gets the user's PlayStation Stars account information.
+     *
+     * @return LoyaltyAccount
+     */
+    public function loyaltyAccount(): LoyaltyAccount
+    {
+        return new LoyaltyAccount($this->graphql('metGetAccount', [
+            'accountId' => $this->accountId()
+        ]));
     }
 
     /**

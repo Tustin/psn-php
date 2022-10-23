@@ -32,7 +32,10 @@ class Api extends HttpClient
             'metGetViews'=> '6fd98ff7fecb603006fb5d92db176d5028435be163c8d1ee9f7c598ab4677dd1',
             'metGetWebCheckoutCart'=> '2d4165c4de76877a32f3d08c91ce2af0e01d69300131fed0a8022868235e85b1',
             // 'metGetWishlistedItemIds'=> '',
-            'metGetExperience' => '054e61ee68bbeadc21435caebcc4f2bba0919a99b06629d141b0b82dc55f10c4'
+            'metGetExperience' => '054e61ee68bbeadc21435caebcc4f2bba0919a99b06629d141b0b82dc55f10c4',
+            'metGetAccount' => '743c32289cdd6fbdead3b34ea80b48d63f8ddab34581469c4dda4ea412e6cf6b',
+            'metGetCollectibleDisplay' => '0299b65abf4385e097e6848d14b0423df5464632855c330bdd002dfc42f4c71e',
+            'metGetUserCollectibles' => '35e365310aa44393f6cdc5d6b53127e137a9a87749692ca3c4c3c49dca92c4ba',
         ];
 
         if (!array_key_exists($op, $hashMap)) {
