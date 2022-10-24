@@ -17,3 +17,6 @@ Please visit [the psn-php documentation](https://tustin.dev/psn-php/) page to se
 ## Disclaimer
 
 This project was not intended to be used for spam, abuse, or anything of the sort. Any use of this project for those purposes is not endorsed. Please keep this in mind when creating applications using this API wrapper.
+
+## Credits
+- [andshrew](https://github.com/andshrew) - Loyalty program [documentation](https://andshrew.github.io/PlayStation-Stars/)
