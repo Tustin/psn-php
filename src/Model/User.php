@@ -10,6 +10,7 @@ use Tustin\PlayStation\Factory\FriendsListFactory;
 use Tustin\PlayStation\Model\Trophy\TrophySummary;
 use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 use Tustin\PlayStation\Model\Loyalty\LoyaltyAccount;
+use Tustin\PlayStation\Model\Loyalty\LoyaltyCollectibleDisplay;
 
 class User extends Model
 {
@@ -72,13 +73,25 @@ class User extends Model
     }
 
     /**
-     * Gets the user's PlayStation Stars account information.
+     * Gets the user's loyalty account information.
      *
      * @return LoyaltyAccount
      */
     public function loyaltyAccount(): LoyaltyAccount
     {
         return new LoyaltyAccount($this->graphql('metGetAccount', [
+            'accountId' => $this->accountId()
+        ]));
+    }
+
+    /**
+     * Gets the user's loyalty display case.
+     *
+     * @return LoyaltyCollectibleDisplay
+     */
+    public function displayCase(): LoyaltyCollectibleDisplay
+    {
+        return new LoyaltyCollectibleDisplay($this->graphql('metGetCollectibleDisplay', [
             'accountId' => $this->accountId()
         ]));
     }

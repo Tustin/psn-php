@@ -1,7 +1,7 @@
 <?php
 namespace Tustin\PlayStation\Model\Loyalty;
 
-class Media
+class SceneMedia
 {
     /**
      * Media data
@@ -15,13 +15,25 @@ class Media
         $this->media = $media;
     }
 
+    /**
+     * Gets the role for the media.
+     * 
+     * BACKGROUND, TITLE, PREVIEW
+     *
+     * @return string
+     */
     public function role(): string
     {
-        return $this->data->role;
+        return $this->media->role;
     }
 
+    /**
+     * Gets the URL for the media.
+     *
+     * @return string
+     */
     public function url(): string
     {
-        return $this->data->url;
+        return $this->media->url;
     }
 }
