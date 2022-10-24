@@ -20,6 +20,8 @@ class Trophy extends Model
     
     public function __construct(TrophyGroup $trophyGroup, int $id)
     {
+        parent::__construct($trophyGroup->getHttpClient());
+
         $this->trophyGroup = $trophyGroup;
         
         $this->id = $id;
@@ -190,7 +192,7 @@ class Trophy extends Model
      */
     public function fetch(): object
     {
-        return $this->get('trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophyGroups/'  . $this->trophyGroup->id() . '/trophies/' . $this->id(), [
+        return $this->get('trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophies/' . $this->id(), [
             'npServiceName' => $this->trophyGroup->title()->serviceName()
         ]);
     }
