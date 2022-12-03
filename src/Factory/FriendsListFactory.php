@@ -13,22 +13,13 @@ use Tustin\PlayStation\Iterator\Filter\User\VerifiedUserFilter;
 
 class FriendsListFactory extends Api implements IteratorAggregate, FactoryInterface
 {
-    /**
-     * The user.
-     *
-     * @var User
-     */
-    private $user;
-
     private string $onlineId = '';
     private bool $useCloseFriends = false;
     private bool $verified = false;
 
-    public function __construct(User $user)
+    public function __construct(private User $user)
     {
         parent::__construct($user->getHttpClient());
-
-        $this->user = $user;
     }
 
     /**

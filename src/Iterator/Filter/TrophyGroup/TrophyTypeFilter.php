@@ -21,7 +21,7 @@ class TrophyTypeFilter extends FilterIterator
         $this->count = $count;
     }
    
-    public function accept()
+    public function accept(): bool
     {
         return $this->parse($this->current()->trophyCount($this->trophyType), $this->count);
     }

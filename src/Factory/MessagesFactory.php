@@ -13,15 +13,11 @@ use Tustin\PlayStation\Iterator\Filter\MessageTypeFilter;
 
 class MessagesFactory extends Api implements IteratorAggregate
 {
-    private MessageThread $thread;
-
     private string $typeFilter;
 
-    public function __construct(MessageThread $thread)
+    public function __construct(private MessageThread $thread)
     {
         parent::__construct($thread->getHttpClient());
-
-        $this->thread = $thread;
     }
 
     /**

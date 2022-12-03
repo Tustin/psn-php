@@ -8,21 +8,14 @@ use Tustin\PlayStation\Factory\TrophyFactory;
 
 class TrophyGroup extends Model
 {
-    private $trophyTitle;
-	
-    private $groupId;
-    private $groupName;
-    private $groupDetail;
-    private $groupIconUrl;
-
-    public function __construct(AbstractTrophyTitle $trophyTitle, string $groupId, string $groupName = '', string $groupIconUrl = '', string $groupDetail = '')
+    public function __construct(
+        private AbstractTrophyTitle $trophyTitle, 
+        private string $groupId, 
+        private string $groupName = '',
+        private string $groupIconUrl = '', 
+        private string $groupDetail = '')
     {
         parent::__construct($trophyTitle->getHttpClient());
-        $this->trophyTitle = $trophyTitle;
-        $this->groupId = $groupId;
-        $this->groupName = $groupName;
-        $this->groupDetail = $groupDetail;
-        $this->groupIconUrl = $groupIconUrl;
     }
 
     public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data): TrophyGroup
@@ -153,13 +146,13 @@ class TrophyGroup extends Model
     {
         switch ($trophyType)
         {
-            case TrophyType::bronze():
+            case TrophyType::Bronze:
                 return $this->bronze();
-            case TrophyType::silver():
+            case TrophyType::Silver:
                 return $this->silver();
-            case TrophyType::gold():
+            case TrophyType::Gold:
                 return $this->gold();
-            case TrophyType::platinum():
+            case TrophyType::Platinum:
                 return (int)$this->hasPlatinum();
             default:
                 throw new InvalidArgumentException("Trophy type [$trophyType] does not contain a count method.");

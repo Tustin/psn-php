@@ -4,5 +4,5 @@ namespace Tustin\PlayStation\Model\Message;
 
 interface Sendable
 {
-    public function build();
+    public function build(): array;
 }

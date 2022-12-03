@@ -6,10 +6,7 @@ use FilterIterator;
 
 class DetailFilter extends FilterIterator
 {
-	/**
-	 * @var string
-	 */
-    private $detail;
+    private string $detail;
    
     public function __construct(Iterator $iterator, string $detail)
     {

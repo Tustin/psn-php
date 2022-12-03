@@ -11,13 +11,9 @@ use Tustin\PlayStation\Enum\TranscodeStatusType;
 
 class Media extends Model
 {
-	private string $ugcId;
-
-	public function __construct(Client $client, string $ugcId)
+	public function __construct(Client $client, private string $ugcId)
 	{
 		parent::__construct($client);
-
-		$this->ugcId = $ugcId;
 	}
 
 	public static function fromObject(Client $client, object $data): Media

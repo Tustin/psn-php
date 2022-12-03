@@ -10,16 +10,9 @@ use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class MessageThread extends Model
 {
-    private Group $group;
-
-    private string $threadId;
-
-    public function __construct(Group $group, string $threadId)
+    public function __construct(private Group $group, private string $threadId)
     {
         parent::__construct($group->getHttpClient());
-
-        $this->group = $group;
-        $this->threadId = $threadId;
     }
 
     public static function fromObject(Group $group, object $data)

@@ -9,21 +9,13 @@ use Tustin\PlayStation\Model\Trophy\TrophyGroup;
 
 class TrophyFactory implements IteratorAggregate
 {
-    /**
-     * The trophy groups' title.
-     *
-     * @var TrophyGroup
-     */
-    private $group;
-    
     private array $platforms = [];
 
     private string $withName = '';
     private string $withDetail = '';
 
-    public function __construct(TrophyGroup $group)
+    public function __construct(private TrophyGroup $group)
     {
-        $this->group = $group;
     }
 
     /**

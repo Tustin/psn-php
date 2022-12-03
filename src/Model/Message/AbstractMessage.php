@@ -12,8 +12,6 @@ abstract class AbstractMessage extends Model
 {
     /**
      * The message thread this message is in.
-     *
-     * @var MessageThread
      */
     private MessageThread $thread;
 
