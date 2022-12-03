@@ -29,7 +29,7 @@ class StickerMessage extends AbstractMessage
 
     public function type(): MessageType
     {
-        return MessageType::sticker();
+        return MessageType::Sticker;
     }
 
     public function fetch(): object

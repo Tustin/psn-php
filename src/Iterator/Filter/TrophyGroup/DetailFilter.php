@@ -17,7 +17,7 @@ class DetailFilter extends FilterIterator
         $this->detail = $detail;
     }
    
-    public function accept()
+    public function accept(): bool
     {
         return stripos($this->current()->detail(), $this->detail) !== false;
     }

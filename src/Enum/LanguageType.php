@@ -1,39 +1,37 @@
 <?php
 namespace Tustin\PlayStation\Enum;
 
-use MyCLabs\Enum\Enum;
-
-class LanguageType extends Enum
+enum LanguageType: string
 {
-    private const english = 'en';
-    private const czech = 'cs';
-    private const danish = 'da';
-    private const german = 'de';
-    private const english_uk = 'en-GB';
-    private const english_us = 'en-US';
-    private const spanish = 'es'; //Spain
-    private const latin_america = 'es-MX';
-    private const french = 'fr';
-    private const french_canada = 'fr-CA'; // Canada (Quebec)
-    private const indonesian = 'id';
-    private const italian = 'it';
-    private const hungarian = 'hu';
-    private const dutch = 'nl';
-    private const norwegian = 'no';
-    private const polish = 'pl';
-    private const portuguese_brazil = 'pt-BR';
-    private const portuguese_portugal = 'pt';
-    private const russian = 'ru';
-    private const romanian = 'ro';
-    private const finnish = 'fi';
-    private const swedish = 'sv';
-    private const vietnamese = 'vi';
-    private const turkish = 'tr';
-    private const arabic = 'ar';
-    private const greek = 'el';
-    private const japanese = 'ja';
-    private const korean = 'ko';
-    private const thai = 'th';
-    private const chinese_simplified = 'zh-CN';
-    private const chinese_taiwan = 'zh-TW';
+    case English = 'en';
+    case Czech = 'cs';
+    case Danish = 'da';
+    case German = 'de';
+    case EnglishUK = 'en-GB';
+    case EnglishUS = 'en-US';
+    case Spanish = 'es'; //Spain
+    case LatinAmerica = 'es-MX';
+    case French = 'fr';
+    case FrenchCanada = 'fr-CA'; // Canada (Quebec)
+    case Indonesian = 'id';
+    case Italian = 'it';
+    case Hungarian = 'hu';
+    case Dutch = 'nl';
+    case Norwegian = 'no';
+    case Polish = 'pl';
+    case PortugueseBrazil = 'pt-BR';
+    case PortuguesePortugal = 'pt';
+    case Russian = 'ru';
+    case Romanian = 'ro';
+    case Finnish = 'fi';
+    case Swedish = 'sv';
+    case Vietnamese = 'vi';
+    case Turkish = 'tr';
+    case Arabic = 'ar';
+    case Greek = 'el';
+    case Japanese = 'ja';
+    case Korean = 'ko';
+    case Thai = 'th';
+    case ChineseSimplified = 'zh-CN';
+    case ChineseTaiwan = 'zh-TW';
 }

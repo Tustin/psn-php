@@ -17,13 +17,13 @@ class TextMessage extends AbstractMessage implements Sendable
 
     public function type(): MessageType
     {
-        return MessageType::text();
+        return MessageType::Text;
     }
 
     public function build()
     {
         return [
-            'messageType' => $this->type()->getValue(),
+            'messageType' => $this->type(),
             'body' => $this->textMessage
         ];
     }

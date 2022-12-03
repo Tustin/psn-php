@@ -1,22 +1,17 @@
 <?php
 namespace Tustin\PlayStation\Model;
 
-use Exception;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\UgcType;
 use Tustin\PlayStation\Model\Trophy\TrophyTitle;
-use Tustin\PlayStation\Exception\MissingKeyPairIdException;
-use GuzzleHttp\Cookie\SetCookie as CookieParser;
 use Tustin\PlayStation\Enum\CloudStatusType;
 use Tustin\PlayStation\Enum\TranscodeStatusType;
 
 class Media extends Model
 {
 	private string $ugcId;
-
-	private array $cookies = [];
 
 	public function __construct(Client $client, string $ugcId)
 	{
@@ -122,11 +117,11 @@ class Media extends Model
 	{
 		switch ($this->type())
 		{
-			case UgcType::video():
+			case UgcType::Video:
 				return $this->generateUrls()->downloadUrl;
 			break;
 
-			case UgcType::image():
+			case UgcType::Image:
 				return $this->generateUrls()->screenshotUrl;
 			break;
 		}
@@ -140,23 +135,6 @@ class Media extends Model
 	private function generateUrls(): object
 	{
 		return $this->get('gameMediaService/v2/c2s/ugc/' . $this->id() . '/url');
-
-		// Lol so you dont need to do this below.
-		// $url .= '?';
-
-		// if (array_key_exists('CloudFront-Policy', $this->cookies)) {
-		// 	$url .= 'Policy=' . $this->cookies['CloudFront-Policy'] . '&';
-		// }
-
-		// if (array_key_exists('CloudFront-Key-Pair-Id', $this->cookies)) {
-		// 	$url .= 'Key-Pair-Id=' . $this->cookies['CloudFront-Key-Pair-Id'] . '&';
-		// }
-
-		// if (array_key_exists('CloudFront-Signature', $this->cookies)) {
-		// 	$url .= 'Signature=' . $this->cookies['CloudFront-Signature'] . '&';
-		// }
-
-		// return $url;
 	}
 
 	public function fetch(): object

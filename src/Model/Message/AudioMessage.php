@@ -9,7 +9,7 @@ class AudioMessage extends AbstractMessage
 {
     public function type(): MessageType
     {
-        return MessageType::audio();
+        return MessageType::Audio;
     }
 
 	public function fetch(): object

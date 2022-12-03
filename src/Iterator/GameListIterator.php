@@ -19,7 +19,7 @@ class GameListIterator extends AbstractApiIterator
         $this->access(0);
     }
 
-    public function access($cursor): void
+    public function access(mixed $cursor): void
     {
         $body = [
             'limit' => $this->limit,
@@ -31,7 +31,7 @@ class GameListIterator extends AbstractApiIterator
         $this->update($results->totalItemCount, $results->titles);
     }
 
-    public function current()
+    public function current(): GameTitle
     {
         return GameTitle::fromObject(
             $this->gameListFactory,

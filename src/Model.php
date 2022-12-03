@@ -25,15 +25,11 @@ abstract class Model extends Api
 
     /**
      * Fetches the model data from the API.
-     *
-     * @return object
      */
     abstract public function fetch(): object;
 
     /**
      * Performs the fetch method while flagging the model as being fetched.
-     *
-     * @return object
      */
     private function performFetch(): object
     {
@@ -49,12 +45,8 @@ abstract class Model extends Api
 
     /**
      * Plucks an API property from the cache. Will populate cache if necessary.
-     *
-     * @param string $property
-     * @param bool $ignoreCache Ignores the existing cache and fetches fresh API data.
-     * @return mixed
      */
-    public function pluck($property, $ignoreCache = false)
+    public function pluck(string $property, bool $ignoreCache = false): mixed
     {
         $pieces = explode('.', $property);
 
@@ -96,8 +88,6 @@ abstract class Model extends Api
 
     /**
      * Checks if data has been fetched from the API.
-     *
-     * @return boolean
      */
     protected function hasFetched(): bool
     {
@@ -106,11 +96,8 @@ abstract class Model extends Api
 
     /**
      * Sets the cache property.
-     *
-     * @param object $data
-     * @return void
      */
-    public function setCache($data): void
+    public function setCache(object $data): void
     {
         // So this is bad and probably slow, but it's less annoying than some recursive method.
         $this->cache = json_decode(json_encode($data, JSON_FORCE_OBJECT), true);
@@ -118,8 +105,6 @@ abstract class Model extends Api
 
     /**
      * Gets the current model's cache.
-     *
-     * @return array
      */
     public function getCache(): array
     {
@@ -128,8 +113,6 @@ abstract class Model extends Api
 
     /**
      * Gets the factory for this model.
-     *
-     * @return FactoryInterface
      */
     public function getFactory(): FactoryInterface
     {
@@ -138,11 +121,8 @@ abstract class Model extends Api
 
     /**
      * Sets the factory for this model
-     *
-     * @param FactoryInterface $factory
-     * @return void
      */
-    public function setFactory($factory): void
+    public function setFactory(FactoryInterface $factory): void
     {
         $this->factory = $factory;
     }

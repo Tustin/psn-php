@@ -15,7 +15,7 @@ abstract class AbstractMessage extends Model
      *
      * @var MessageThread
      */
-    private $thread;
+    private MessageThread $thread;
 
     public static function fromObject(MessageThread $thread, object $messageData)
     {
@@ -97,13 +97,13 @@ abstract class AbstractMessage extends Model
     public static function create(MessageThread $thread, object $messageData): AbstractMessage
     {
         switch (new MessageType($messageData->messageType)) {
-            case MessageType::audio():
+            case MessageType::Audio:
                 return AudioMessage::fromObject($thread, $messageData);
-            case MessageType::image():
+            case MessageType::Image:
                 return ImageMessage::fromObject($thread, $messageData);
-            case MessageType::video():
+            case MessageType::Video:
                 return VideoMessage::fromObject($thread, $messageData);
-            case MessageType::sticker():
+            case MessageType::Sticker:
                 return StickerMessage::fromObject($thread, $messageData);
             default:
                 // We'll just default to a text message because there are certain types of messages (new voice chat, etc) that are basically text messages.

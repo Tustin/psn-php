@@ -12,7 +12,7 @@ class CloseFriendFilter extends FilterIterator
         parent::__construct($iterator);
     }
 
-    public function accept()
+    public function accept(): bool
     {
         // Kind of a hack so we don't need to fetch the whole user's profile for each iteration.
         // This property will only exist if the user is a close friend, otherwise it is completely omitted.

@@ -33,7 +33,7 @@ class MessagesIterator extends AbstractApiIterator
         $this->access(null);
     }
 
-    public function access($cursor): void
+    public function access(mixed $cursor): void
     {
         $params = [];
 
@@ -66,7 +66,7 @@ class MessagesIterator extends AbstractApiIterator
         }
     }
 
-    public function current()
+    public function current(): AbstractMessage
     {
         return AbstractMessage::create(
             $this->thread,

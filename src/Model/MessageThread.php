@@ -10,15 +10,9 @@ use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class MessageThread extends Model
 {
-    /**
-     * @var Group
-     */
-    private $group;
+    private Group $group;
 
-    /**
-     * @var string
-     */
-    private $threadId;
+    private string $threadId;
 
     public function __construct(Group $group, string $threadId)
     {
@@ -38,9 +32,6 @@ class MessageThread extends Model
 
     /**
      * Sends a message to the message thread.
-     *
-     * @param Sendable $message
-     * @return Message
      */
     public function sendMessage(Sendable $message): AbstractMessage
     {

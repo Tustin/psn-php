@@ -15,7 +15,7 @@ class TrophyTitleNameFilter extends FilterIterator
         $this->titleName = $titleName;
     }
 
-    public function accept()
+    public function accept(): bool
     {
         return stripos($this->current()->name(), $this->titleName) !== false;
     }

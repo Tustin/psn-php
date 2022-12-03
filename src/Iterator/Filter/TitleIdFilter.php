@@ -15,7 +15,7 @@ class TitleIdFilter extends FilterIterator
         $this->value = $value;
     }
 
-    public function accept()
+    public function accept(): bool
     {
         return $this->current()->titleId() === $this->value;
     }

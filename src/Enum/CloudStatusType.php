@@ -2,10 +2,8 @@
 
 namespace Tustin\PlayStation\Enum;
 
-use MyCLabs\Enum\Enum;
-
-class CloudStatusType extends Enum
+enum CloudStatusType: string
 {
-    private const uploading = 'uploading';
-    private const active = 'active';
+    case Uploading = 'uploading';
+    case Active = 'active';
 }

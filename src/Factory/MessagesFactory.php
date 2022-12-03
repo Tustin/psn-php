@@ -13,12 +13,9 @@ use Tustin\PlayStation\Iterator\Filter\MessageTypeFilter;
 
 class MessagesFactory extends Api implements IteratorAggregate
 {
-    /**
-     * @var MessageThread
-     */
-    private $thread;
+    private MessageThread $thread;
 
-    private $typeFilter;
+    private string $typeFilter;
 
     public function __construct(MessageThread $thread)
     {
@@ -29,9 +26,6 @@ class MessagesFactory extends Api implements IteratorAggregate
 
     /**
      * Gets messages only of a certain type.
-     *
-     * @param string $class
-     * @return MessagesFactory
      */
     public function of(string $class): MessagesFactory
     {
@@ -42,8 +36,6 @@ class MessagesFactory extends Api implements IteratorAggregate
 
     /**
      * Gets the iterator and applies any filters.
-     *
-     * @return Iterator
      */
     public function getIterator(): Iterator
     {
@@ -58,8 +50,6 @@ class MessagesFactory extends Api implements IteratorAggregate
 
     /**
      * Gets the first message in the message thread.
-     *
-     * @return Message
      */
     public function first(): AbstractMessage
     {

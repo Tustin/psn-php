@@ -7,10 +7,7 @@ use Tustin\PlayStation\Factory\GameListFactory;
 
 class GameTitle extends Model
 {
-    /**
-     * @var string
-     */
-    private $id;
+    private string $id;
     
     public function __construct(GameListFactory $gameListFactory, string $id)
     {
