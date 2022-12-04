@@ -11,31 +11,23 @@ class UsersSearchIterator extends AbstractApiIterator
 {
     /**
      * The search query.
-     *
-     * @var string
      */
-    protected $query;
+    protected string $query;
 
     /**
      * The language to search with.
-     *
-     * @var string
      */
-    protected $languageCode;
+    protected string $languageCode;
 
     /**
      * The country code.
-     *
-     * @var string
      */
-    protected $countryCode;
+    protected string $countryCode;
 
     /**
      * The users factory.
-     *
-     * @var UsersFactory
      */
-    private $usersFactory;
+    private UsersFactory $usersFactory;
 
     public function __construct(UsersFactory $usersFactory, string $query, string $languageCode = 'en', string $countryCode = 'us')
     {
@@ -52,7 +44,7 @@ class UsersSearchIterator extends AbstractApiIterator
         $this->access('');
     }
 
-    public function access($cursor): void
+    public function access(mixed $cursor): void
     {
         // @TODO: Since the search function seems to be streamlined now, we could probably throw this into the abstract api iterator??
         $results = $this->postJson('search/v1/universalSearch', [
@@ -76,7 +68,7 @@ class UsersSearchIterator extends AbstractApiIterator
         $this->update($domainResponse->totalResultCount, $domainResponse->results, $domainResponse->next ?? "");
     }
 
-    public function current()
+    public function current(): User
     {
         $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;
         //$token = $this->getFromOffset($this->currentOffset)->id; // Do we need this??

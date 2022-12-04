@@ -19,35 +19,22 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
 {
     /**
      * Platforms for filtering.
-     *
-     * @var array
      */
-    protected $platforms = [];
+    protected array $platforms = [];
 
     /**
      * The trophy title name for filtering.
-     *
-     * @var string
      */
-    private $withName = '';
-
-    /**
-     * The user to get trophy titles for.
-     *
-     * @var User|null
-     */
-    private $user;
+    private string $withName = '';
 
     /**
      * Filter property for having trophy groups.
      * 
      * We want this to be null by default so that if the client doesn't call hasTrophyGroups, it will return all titles.
-     *
-     * @var boolean|null
      */
     private ?bool $hasTrophyGroups = null;
 
-    public function __construct(User $user)
+    public function __construct(private ?User $user)
     {
         parent::__construct($user->getHttpClient());
 
@@ -145,13 +132,13 @@ class TrophyTitlesFactory extends Api implements IteratorAggregate, FactoryInter
     /**
      * Gets the current language passed to this instance.
      * 
-     * If the language has not been set prior, this will return LanguageType::english().
+     * If the language has not been set prior, this will return LanguageType::English.
      *
      * @return LanguageType
      */
     public function getLanguage(): LanguageType
     {
-        return $this->language ?? LanguageType::english();
+        return $this->language ?? LanguageType::English;
     }
 
     /**

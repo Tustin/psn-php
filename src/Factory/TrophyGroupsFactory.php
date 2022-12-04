@@ -15,21 +15,13 @@ use Tustin\PlayStation\Iterator\Filter\TrophyGroup\TrophyTypeFilter;
 
 class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInterface
 {
-    /**
-     * The trophy groups' title.
-     *
-     * @var AbstractTrophyTitle
-     */
-    private $title;
-
     private string $withName = '';
     private string $withDetail = '';
 
     private array $certainTrophyTypeFilter = [];
 
-    public function __construct(AbstractTrophyTitle $title)
+    public function __construct(private AbstractTrophyTitle $title)
     {
-        $this->title = $title;
     }
 
     public function withName(string $name)

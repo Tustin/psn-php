@@ -6,10 +6,7 @@ use FilterIterator;
 
 class DetailFilter extends FilterIterator
 {
-	/**
-	 * @var string
-	 */
-    private $detail;
+    private string $detail;
    
     public function __construct(Iterator $iterator, string $detail)
     {
@@ -17,7 +14,7 @@ class DetailFilter extends FilterIterator
         $this->detail = $detail;
     }
    
-    public function accept()
+    public function accept(): bool
     {
         return stripos($this->current()->detail(), $this->detail) !== false;
     }

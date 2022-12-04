@@ -16,15 +16,9 @@ use Tustin\PlayStation\Factory\TrophyGroupsFactory;
  */
 abstract class AbstractTrophyTitle extends Model
 {
-    /**
-	 * @var string
-	 */
-	protected $npCommuncationId;
+	protected string $npCommuncationId;
 
-	/**
-	 * @var string
-	 */
-	protected $serviceName;
+	protected string $serviceName;
 
 	protected function setNpCommuncationId(string $npCommuncationId)
 	{

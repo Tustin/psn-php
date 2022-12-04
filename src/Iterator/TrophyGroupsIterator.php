@@ -10,10 +10,8 @@ class TrophyGroupsIterator extends AbstractApiIterator
 {
     /**
      * Current trophy title.
-     *
-     * @var AbstractTrophyTitle
      */
-    private $title;
+    private AbstractTrophyTitle $title;
 
     public function __construct(AbstractTrophyTitle $title)
     {
@@ -24,7 +22,7 @@ class TrophyGroupsIterator extends AbstractApiIterator
         $this->access(0);
     }
 
-    public function access($cursor): void
+    public function access(mixed $cursor): void
     {
         if ($this->title instanceof UserTrophyTitle)
         {
@@ -48,7 +46,7 @@ class TrophyGroupsIterator extends AbstractApiIterator
         $this->update(count($results->trophyGroups), $results->trophyGroups);
     }
 
-    public function current()
+    public function current(): TrophyGroup
     {
         if ($this->title instanceof UserTrophyTitle)
         {

@@ -15,7 +15,7 @@ class OnlineIdFilter extends FilterIterator
         $this->onlineId = $onlineId;
     }
 
-    public function accept()
+    public function accept(): bool
     {
         return stripos($this->current()->onlineId(), $this->onlineId) !== false;
     }

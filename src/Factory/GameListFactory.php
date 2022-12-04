@@ -12,18 +12,9 @@ use Tustin\PlayStation\Iterator\GameListIterator;
 
 class GameListFactory extends Api implements IteratorAggregate, FactoryInterface
 {
-    /**
-     * The user to get game list for.
-     *
-     * @var User|null
-     */
-    private $user;
-
-    public function __construct(User $user)
+    public function __construct(private ?User $user)
     {
         parent::__construct($user->getHttpClient());
-
-        $this->user = $user;
     }
 
     /**

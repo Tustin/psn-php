@@ -18,7 +18,7 @@ class FriendsListIterator extends AbstractApiIterator
         $this->access(0);
     }
 
-    public function access($cursor): void
+    public function access(mixed $cursor): void
     {
         $results = $this->get('userProfile/v1/internal/users/' . $this->userAccountId . '/friends', [
             'limit' => $this->limit,

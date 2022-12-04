@@ -8,13 +8,9 @@ use Tustin\PlayStation\Enum\DescriptionType;
 
 class Concept extends Model
 {
-    private string $conceptId;
-    
-	public function __construct(Client $client, string $conceptId)
+	public function __construct(Client $client, private string $conceptId)
 	{
 		parent::__construct($client);
-
-		$this->conceptId = $conceptId;
 	}
 
     public static function fromObject(Client $client, object $data)

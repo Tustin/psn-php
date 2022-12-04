@@ -7,16 +7,10 @@ use Tustin\PlayStation\Model\User;
 
 class TrophySummary extends Model
 {
-    /**
-     * The user for the trophy summary.
-     *
-     * @var User
-     */
-    private $user;
-
-    public function __construct(User $user)
+    public function __construct(private User $user)
     {
         $this->user = $user;
+
         parent::__construct($user->getHttpClient());
     }
 

@@ -12,7 +12,7 @@ class VerifiedUserFilter extends FilterIterator
         parent::__construct($iterator);
     }
 
-    public function accept()
+    public function accept(): bool
     {
         return $this->current()->isVerified() === true;
     }

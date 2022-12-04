@@ -13,7 +13,7 @@ class Api extends HttpClient
         $this->httpClient = $client;
     }
 
-    public function graphql(string $op, array $variables)
+    public function graphql(string $op, array $variables): object
     {
         // @Temp: This will hopefully be removed at some point for dynamic operation hashing.
         $hashMap = [

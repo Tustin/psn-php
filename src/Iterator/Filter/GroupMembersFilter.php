@@ -16,7 +16,7 @@ class GroupMembersFilter extends FilterIterator
         $this->includesOnly = $includesOnly;
     }
    
-    public function accept()
+    public function accept(): bool
     {
         $thread = $this->current();
 

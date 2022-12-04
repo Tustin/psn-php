@@ -11,15 +11,11 @@ use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class Group extends Model
 {
-    private string $groupId;
-
     private array $members;
 
-    public function __construct(GroupsFactory $groupsFactory, string $groupId)
+    public function __construct(GroupsFactory $groupsFactory, private string $groupId)
     {
         parent::__construct($groupsFactory->getHttpClient());
-
-        $this->groupId = $groupId;
     }
 
     public static function fromObject(GroupsFactory $groupsFactory, object $data)

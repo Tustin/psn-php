@@ -13,24 +13,18 @@ class StoreSearchIterator extends AbstractApiIterator
 {
     /**
      * The search query.
-     *
-     * @var string
      */
-    protected $query;
+    protected string $query;
 
     /**
      * The language to search with.
-     *
-     * @var string
      */
-    protected $languageCode;
+    protected string $languageCode;
 
     /**
      * The country code.
-     *
-     * @var string
      */
-    protected $countryCode;
+    protected string $countryCode;
 
     public function __construct(StoreFactory $storeFactory, string $query, string $languageCode = 'en', string $countryCode = 'us')
     {
@@ -46,7 +40,7 @@ class StoreSearchIterator extends AbstractApiIterator
         $this->access('');
     }
 
-    public function access($cursor): void
+    public function access(mixed $cursor): void
     {
         $results = $this->postJson('search/v1/universalSearch', [
             'age' => '69',
@@ -76,7 +70,7 @@ class StoreSearchIterator extends AbstractApiIterator
         }
     }
 
-    public function current()
+    public function current(): Concept
     {
         $concept = $this->getFromOffset($this->currentOffset)->conceptProductMetadata;
         

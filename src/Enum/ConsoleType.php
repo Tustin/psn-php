@@ -2,12 +2,10 @@
 
 namespace Tustin\PlayStation\Enum;
 
-use MyCLabs\Enum\Enum;
-
-class ConsoleType extends Enum
+enum ConsoleType: string
 {
-    private const vita = 'PSVITA';
-    private const ps3 = 'PS3';
-    private const ps4 = 'PS4';
-    private const ps5 = 'PS5';
+    case Vita = 'PSVITA';
+    case PS3 = 'PS3';
+    case PS4 = 'PS4';
+    case PS5 = 'PS5';
 }
