@@ -2,12 +2,10 @@
 
 namespace Tustin\PlayStation\Enum;
 
-use MyCLabs\Enum\Enum;
-
-class SessionType extends Enum
+enum SessionType: int
 {
     // Flags
-    private const unknown = 1;
-    private const game = 2;
-    private const party = 4;
+    case Unknown = 1;
+    case Game = 2;
+    case Party = 4;
 }

@@ -32,7 +32,7 @@ class CloudMediaGalleryIterator extends AbstractApiIterator
         $this->update($this->limit, $results->ugcDocument, $results->nextCursorMark);
     }
 
-    public function current()
+    public function current(): object
     {
         return Media::fromObject(
             $this->cloudMediaGalleryFactory->getHttpClient(),

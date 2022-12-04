@@ -20,7 +20,7 @@ class VideoMessage extends AbstractMessage
 
     public function type(): MessageType
     {
-        return MessageType::video();
+        return MessageType::Video;
     }
 
     public function fetch(): object

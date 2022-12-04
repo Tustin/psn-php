@@ -8,22 +8,19 @@ use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class TextMessage extends AbstractMessage implements Sendable
 {
-    private $textMessage;
-
-    public function __construct(string $textMessage)
+    public function __construct(private string $textMessage)
     {
-        $this->textMessage = $textMessage;
     }
 
     public function type(): MessageType
     {
-        return MessageType::text();
+        return MessageType::Text;
     }
 
-    public function build()
+    public function build(): array
     {
         return [
-            'messageType' => $this->type()->getValue(),
+            'messageType' => $this->type(),
             'body' => $this->textMessage
         ];
     }

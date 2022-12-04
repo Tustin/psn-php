@@ -30,7 +30,7 @@ class ImageMessage extends AbstractMessage
 
     public function type(): MessageType
     {
-        return MessageType::image();
+        return MessageType::Image;
     }
 
     public function fetch(): object

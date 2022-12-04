@@ -7,16 +7,9 @@ use Tustin\PlayStation\Factory\GameListFactory;
 
 class GameTitle extends Model
 {
-    /**
-     * @var string
-     */
-    private $id;
-    
-    public function __construct(GameListFactory $gameListFactory, string $id)
+    public function __construct(GameListFactory $gameListFactory, private string $id)
     {
         parent::__construct($gameListFactory->getHttpClient());
-
-        $this->id = $id;
     }
 
     public static function fromObject(GameListFactory $gameListFactory, object $data): GameTitle

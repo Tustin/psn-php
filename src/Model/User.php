@@ -13,23 +13,14 @@ use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 class User extends Model
 {
     /**
-     * The user's account id.
-     *
-     * @var string
-     */
-    private string $accountId;
-
-    /**
      * Constructs a new user object.
      *
      * @param UsersFactory $usersFactory
      * @param string $accountId
      */
-    public function __construct(Client $client, string $accountId)
+    public function __construct(Client $client, private string $accountId)
     {
         parent::__construct($client);
-
-        $this->accountId = $accountId;
     }
 
     public static function fromObject(Client $client, object $data)

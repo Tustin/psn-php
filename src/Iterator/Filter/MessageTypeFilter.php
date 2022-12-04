@@ -7,10 +7,7 @@ use FilterIterator;
 
 class MessageTypeFilter extends FilterIterator
 {
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type;
 
     public function __construct(Iterator $iterator, string $type)
     {
@@ -18,7 +15,7 @@ class MessageTypeFilter extends FilterIterator
         $this->type = $type;
     }
 
-    public function accept()
+    public function accept(): bool
     {
         $a = $this->current();
         $b = $this->type;

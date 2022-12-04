@@ -2,10 +2,8 @@
 
 namespace Tustin\PlayStation\Enum;
 
-use MyCLabs\Enum\Enum;
-
-class UgcType extends Enum
+enum UgcType: int
 {
-    private const image = 1;
-    private const video = 2;
+    case Image = 1;
+    case Video = 2;
 }

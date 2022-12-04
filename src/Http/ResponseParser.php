@@ -15,9 +15,9 @@ class ResponseParser {
      * 3. Response - if the JSON failed and the response body was empty, the entire Response object will be returned.
      * 
      * @param Response $response
-     * @return
+     * @return mixed
      */
-    public static function parse(Response $response) 
+    public static function parse(Response $response): mixed
     {
         $contents = $response->getBody()->getContents();
         

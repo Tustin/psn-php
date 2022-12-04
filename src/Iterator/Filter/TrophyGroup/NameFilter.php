@@ -14,7 +14,7 @@ class NameFilter extends FilterIterator
         $this->groupName = $groupName;
     }
    
-    public function accept()
+    public function accept(): bool
     {
         return stripos($this->current()->name(), $this->groupName) !== false;
     }

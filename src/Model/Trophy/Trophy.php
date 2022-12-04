@@ -6,25 +6,9 @@ use Tustin\PlayStation\Enum\TrophyType;
 
 class Trophy extends Model
 {
-    /**
-     * The trophy group this trophy is in.
-     *
-     * @var TrophyGroup
-     */
-    private $trophyGroup;
-    
-    /**
-     * @var int
-     */
-    private $id;
-    
-    public function __construct(TrophyGroup $trophyGroup, int $id)
+    public function __construct(private TrophyGroup $trophyGroup, private int $id)
     {
         parent::__construct($trophyGroup->getHttpClient());
-
-        $this->trophyGroup = $trophyGroup;
-        
-        $this->id = $id;
     }
 
     public static function fromObject(TrophyGroup $trophyGroup, object $data): Trophy

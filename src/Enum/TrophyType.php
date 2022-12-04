@@ -1,12 +1,10 @@
 <?php
 namespace Tustin\PlayStation\Enum;
 
-use MyCLabs\Enum\Enum;
-
-class TrophyType extends Enum
+enum TrophyType: string
 {
-    private const platinum = 'platinum';
-    private const bronze = 'bronze';
-    private const silver = 'silver';
-    private const gold = 'gold';
+    case Platinum = 'platinum';
+    case Bronze = 'bronze';
+    case Silver = 'silver';
+    case Gold = 'gold';
 }

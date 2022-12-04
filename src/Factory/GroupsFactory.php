@@ -14,19 +14,13 @@ use Tustin\PlayStation\Iterator\Filter\GroupMembersFilter;
 
 class GroupsFactory extends Api implements IteratorAggregate
 {
-    private $with = [];
+    private array $with = [];
 
-    /**
-     * @var boolean
-     */
-    private $only = false;
+    private bool $only = false;
 
-    /**
-     * @var Carbon|null
-     */
-    private $since = null;
+    private ?Carbon $since = null;
 
-    public $favorited = false;
+    public bool $favorited = false;
 
     /**
      * Filters groups that only contain these onlineIds.

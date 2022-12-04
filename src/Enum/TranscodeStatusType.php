@@ -2,10 +2,8 @@
 
 namespace Tustin\PlayStation\Enum;
 
-use MyCLabs\Enum\Enum;
-
-class TranscodeStatusType extends Enum
+enum TranscodeStatusType: string
 {
-    private const complete = 'complete';
-    private const inProgress = 'in_progress';
+    case Complete = 'complete';
+    case InProgress = 'in_progress';
 }

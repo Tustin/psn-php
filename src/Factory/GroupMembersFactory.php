@@ -11,20 +11,12 @@ use Tustin\PlayStation\Model\Group;
 class GroupMembersFactory implements IteratorAggregate, Countable
 {
     /**
-     * @var Group
-     */
-    private $group;
-
-    /**
      * The name to filter with.
-     *
-     * @var string
      */
-    private $name;
+    private string $name;
 
-    public function __construct(Group $group)
+    public function __construct(private Group $group)
     {
-        $this->group = $group;
     }
 
     /**

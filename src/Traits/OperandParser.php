@@ -7,19 +7,14 @@ trait OperandParser
 {
     /**
      * The operator being used.
-     *
-     * @var string
      */
-    protected $operator;
+    protected string $operator;
+
     /**
      * Parses a custom operator value.
-     *
-     * @param mixed $lhs
-     * @param mixed $rhs
-     * @return bool
      * @throws RuntimeException
      */
-    protected function parse($lhs, $rhs): bool
+    protected function parse(mixed $lhs, mixed $rhs): bool
     {
         if (!$this->operator)
         {

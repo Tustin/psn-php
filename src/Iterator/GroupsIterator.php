@@ -23,7 +23,7 @@ class GroupsIterator extends AbstractApiIterator
         $this->access(0);
     }
 
-    public function access($cursor): void
+    public function access(mixed $cursor): void
     {
         $results = $this->get('gamingLoungeGroups/v1/members/me/groups', [
             'favoriteFilter' => $this->groupsFactory->favorited ? 'favorite' : 'notFavorite',
@@ -35,7 +35,7 @@ class GroupsIterator extends AbstractApiIterator
         $this->update($results->totalGroupCount, $results->groups);
     }
 
-    public function current()
+    public function current(): Group
     {
         return Group::fromObject(
             $this->groupsFactory,
