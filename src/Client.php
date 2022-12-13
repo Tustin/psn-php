@@ -132,11 +132,11 @@ class Client extends AbstractClient
     {
         // @TODO: Handle errors.
         $response = $this->post('authz/v3/oauth/token', [
-            'scope' => 'psn:mobile.v1 psn:clientapp',
+            'scope' => 'psn:mobile.v2.core psn:clientapp',
             'refresh_token' => $refreshToken,
             'grant_type' => 'refresh_token',
             'token_format' => 'jwt',
-        ], ['Authorization' => 'Basic YWM4ZDE2MWEtZDk2Ni00NzI4LWIwZWEtZmZlYzIyZjY5ZWRjOkRFaXhFcVhYQ2RYZHdqMHY=']);
+        ], ['Authorization' => 'Basic MDk1MTUxNTktNzIzNy00MzcwLTliNDAtMzgwNmU2N2MwODkxOnVjUGprYTV0bnRCMktxc1A=']);
 
         $this->finalizeLogin($response);
     }
