@@ -56,7 +56,7 @@ class Media extends Model
 
 	public function type(): UgcType
 	{
-		return new UgcType($this->pluck('ugcType'));
+		return UgcType::from($this->pluck('ugcType'));
 	}
 
 	public function title(): string
@@ -96,12 +96,12 @@ class Media extends Model
 
 	public function cloudStatus(): CloudStatusType
 	{
-		return new CloudStatusType($this->pluck('cloudStatus'));
+		return CloudStatusType::from($this->pluck('cloudStatus'));
 	}
 
 	public function transcodeStatus(): TranscodeStatusType
 	{
-		return new TranscodeStatusType($this->pluck('transcodeStatus'));
+		return TranscodeStatusType::from($this->pluck('transcodeStatus'));
 	}
 
 	/**

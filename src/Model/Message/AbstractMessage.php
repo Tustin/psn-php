@@ -94,7 +94,7 @@ abstract class AbstractMessage extends Model
      */
     public static function create(MessageThread $thread, object $messageData): AbstractMessage
     {
-        switch (new MessageType($messageData->messageType)) {
+        switch (MessageType::tryFrom($messageData->messageType)) {
             case MessageType::Audio:
                 return AudioMessage::fromObject($thread, $messageData);
             case MessageType::Image:

@@ -55,7 +55,7 @@ class Trophy extends Model
      */
     public function type(): TrophyType
     {
-        return new TrophyType($this->pluck('trophyType'));
+        return TrophyType::from($this->pluck('trophyType'));
     }
 
     /**

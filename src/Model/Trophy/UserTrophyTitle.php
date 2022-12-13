@@ -64,7 +64,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
 
         foreach (explode(",", $this->pluck('trophyTitlePlatform')) as $platform)
         {
-            $platforms[] = new ConsoleType($platform);
+            $platforms[] = ConsoleType::tryFrom($platform);
         }
         
         return $platforms;
