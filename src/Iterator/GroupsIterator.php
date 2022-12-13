@@ -11,7 +11,6 @@ class GroupsIterator extends AbstractApiIterator
     {
         parent::__construct($groupsFactory->getHttpClient());
 
-        $this->groupsFactory = $groupsFactory;
         $this->limit = 20;
 
         $this->access(0);

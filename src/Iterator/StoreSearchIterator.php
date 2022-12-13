@@ -2,7 +2,6 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use InvalidArgumentException;
 use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Model\Store\Concept;
 
@@ -15,13 +14,10 @@ class StoreSearchIterator extends AbstractApiIterator
         private string $countryCode = 'us'
     ) {
         if (empty($query)) {
-            throw new InvalidArgumentException('[query] must contain a value.');
+            throw new \InvalidArgumentException('[query] must contain a value.');
         }
 
         parent::__construct($storeFactory->getHttpClient());
-        $this->query = $query;
-        $this->languageCode = $languageCode;
-        $this->countryCode = $countryCode;
         $this->access('');
     }
 

@@ -6,14 +6,11 @@ use Tustin\PlayStation\Model\Trophy\Trophy;
 use Tustin\PlayStation\Model\Trophy\TrophyGroup;
 use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
 
-
 class TrophyIterator extends AbstractApiIterator
 {
     public function __construct(private TrophyGroup $trophyGroup)
     {
         parent::__construct($trophyGroup->title()->getHttpClient());
-
-        $this->trophyGroup = $trophyGroup;
 
         $this->access(0);
     }

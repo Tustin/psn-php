@@ -11,8 +11,6 @@ class CloudMediaGalleryIterator extends AbstractApiIterator
     {
         parent::__construct($cloudMediaGalleryFactory->getHttpClient());
 
-        $this->cloudMediaGalleryFactory = $cloudMediaGalleryFactory;
-
         $this->limit = 20;
 
         $this->access(0);

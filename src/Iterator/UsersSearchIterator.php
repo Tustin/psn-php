@@ -2,43 +2,18 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use InvalidArgumentException;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Factory\UsersFactory;
 
 class UsersSearchIterator extends AbstractApiIterator
 {
-    /**
-     * The search query.
-     */
-    protected string $query;
-
-    /**
-     * The language to search with.
-     */
-    protected string $languageCode;
-
-    /**
-     * The country code.
-     */
-    protected string $countryCode;
-
-    /**
-     * The users factory.
-     */
-    private UsersFactory $usersFactory;
-
-    public function __construct(UsersFactory $usersFactory, string $query, string $languageCode = 'en', string $countryCode = 'us')
+    public function __construct(private UsersFactory $usersFactory, private string $query, private string $languageCode = 'en', private string $countryCode = 'us')
     {
         if (empty($query)) {
-            throw new InvalidArgumentException('[query] must contain a value.');
+            throw new \InvalidArgumentException('[query] must contain a value.');
         }
 
         parent::__construct($usersFactory->getHttpClient());
-        $this->usersFactory = $usersFactory;
-        $this->query = $query;
-        $this->languageCode = $languageCode;
-        $this->countryCode = $countryCode;
         $this->limit = 50;
         $this->access('');
     }

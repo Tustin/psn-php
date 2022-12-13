@@ -1,18 +1,16 @@
 <?php
+
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Model\Trophy\TrophyGroup;
 use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
 use Tustin\PlayStation\Model\Trophy\AbstractTrophyTitle;
 
-
 class TrophyGroupsIterator extends AbstractApiIterator
 {
     public function __construct(private AbstractTrophyTitle $title)
     {
         parent::__construct($title->getHttpClient());
-
-        $this->title = $title;
 
         $this->access(0);
     }
@@ -22,17 +20,14 @@ class TrophyGroupsIterator extends AbstractApiIterator
      */
     public function access(mixed $cursor): void
     {
-        if ($this->title instanceof UserTrophyTitle)
-        {
+        if ($this->title instanceof UserTrophyTitle) {
             $results = $this->get(
                 'trophy/v1/users/' . $this->title->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->title->npCommunicationId() . '/trophyGroups',
                 [
                     'npServiceName' => $this->title->serviceName()
                 ]
             );
-        }
-        else
-        {
+        } else {
             $results = $this->get(
                 'trophy/v1/npCommunicationIds/' . $this->title->npCommunicationId() . '/trophyGroups',
                 [
@@ -49,17 +44,16 @@ class TrophyGroupsIterator extends AbstractApiIterator
      */
     public function current(): TrophyGroup
     {
-        if ($this->title instanceof UserTrophyTitle)
-        {
+        if ($this->title instanceof UserTrophyTitle) {
             return new TrophyGroup($this->title, $this->getFromOffset($this->currentOffset)->trophyGroupId);
-        }
-        else
-        {
-            return new TrophyGroup($this->title,
+        } else {
+            return new TrophyGroup(
+                $this->title,
                 $this->getFromOffset($this->currentOffset)->trophyGroupId,
                 $this->getFromOffset($this->currentOffset)->trophyGroupName,
                 $this->getFromOffset($this->currentOffset)->trophyGroupIconUrl,
-                $this->getFromOffset($this->currentOffset)->trophyGroupDetail ?? '');
+                $this->getFromOffset($this->currentOffset)->trophyGroupDetail ?? ''
+            );
         }
     }
 }

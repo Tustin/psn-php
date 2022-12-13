@@ -17,8 +17,6 @@ class MessagesIterator extends AbstractApiIterator
         }
 
         parent::__construct($thread->getHttpClient());
-        $this->thread = $thread;
-        $this->limit = $limit;
         $this->access(null);
     }
 

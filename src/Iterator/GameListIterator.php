@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Model\GameTitle;
@@ -10,10 +11,8 @@ class GameListIterator extends AbstractApiIterator
     {
         parent::__construct($gameListFactory->getHttpClient());
 
-        $this->gameListFactory = $gameListFactory;
-
         $this->limit = 100;
-        
+
         $this->access(0);
     }
 
@@ -27,7 +26,7 @@ class GameListIterator extends AbstractApiIterator
             'offset' => $cursor,
         ];
 
-        $results = $this->get('gamelist/v2/users/' . $this->gameListFactory->getUser()->accountId() .'/titles', $body);
+        $results = $this->get('gamelist/v2/users/' . $this->gameListFactory->getUser()->accountId() . '/titles', $body);
 
         $this->update($results->totalItemCount, $results->titles);
     }
