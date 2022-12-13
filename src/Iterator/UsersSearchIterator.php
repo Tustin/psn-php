@@ -2,7 +2,6 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation;
 use InvalidArgumentException;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Factory\UsersFactory;
@@ -44,6 +43,9 @@ class UsersSearchIterator extends AbstractApiIterator
         $this->access('');
     }
 
+    /**
+     * Accesses a new page of results.
+     */
     public function access(mixed $cursor): void
     {
         // @TODO: Since the search function seems to be streamlined now, we could probably throw this into the abstract api iterator??
@@ -68,6 +70,9 @@ class UsersSearchIterator extends AbstractApiIterator
         $this->update($domainResponse->totalResultCount, $domainResponse->results, $domainResponse->next ?? "");
     }
 
+    /**
+     * Gets the current user in the iterator.
+     */
     public function current(): User
     {
         $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;

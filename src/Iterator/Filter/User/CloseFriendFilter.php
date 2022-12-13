@@ -2,16 +2,16 @@
 
 namespace Tustin\PlayStation\Iterator\Filter\User;
 
-use Iterator;
-use FilterIterator;
-
-class CloseFriendFilter extends FilterIterator
+class CloseFriendFilter extends \FilterIterator
 {
-    public function __construct(Iterator $iterator)
+    public function __construct(\Iterator $iterator)
     {
         parent::__construct($iterator);
     }
 
+    /**
+     * Checks if the current element of the iterator is acceptable.
+     */
     public function accept(): bool
     {
         // Kind of a hack so we don't need to fetch the whole user's profile for each iteration.

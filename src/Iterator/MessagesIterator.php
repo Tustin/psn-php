@@ -3,25 +3,14 @@
 namespace Tustin\PlayStation\Iterator;
 
 use InvalidArgumentException;
-use Tustin\PlayStation\Model\Message;
 use Tustin\PlayStation\Model\MessageThread;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class MessagesIterator extends AbstractApiIterator
 {
-    /**
-     * @var MessageThread
-     */
-    protected $thread;
+    private int $totalCount = 0;
 
-    /**
-     * @var int
-     */
-    protected $limit;
-
-    private $totalCount = 0;
-
-    public function __construct(MessageThread $thread, int $limit = 20)
+    public function __construct(private MessageThread $thread, private int $limit = 20)
     {
         if ($limit <= 0) {
             throw new InvalidArgumentException('$limit must be greater than zero.');
@@ -33,6 +22,9 @@ class MessagesIterator extends AbstractApiIterator
         $this->access(null);
     }
 
+    /**
+     * Accesses the API to get the next set of messages.
+     */
     public function access(mixed $cursor): void
     {
         $params = [];
@@ -56,6 +48,9 @@ class MessagesIterator extends AbstractApiIterator
         $this->update($this->totalCount, $results->messages, $results->previous);
     }
 
+    /**
+     * Moves the iterator to the next message.
+     */
     public function next(): void
     {
         $this->currentOffset++;
@@ -66,6 +61,11 @@ class MessagesIterator extends AbstractApiIterator
         }
     }
 
+    /**
+     * Gets the current message in the iterator.
+     * 
+     * Will automatically convert the message to a specific type of message.
+     */
     public function current(): AbstractMessage
     {
         return AbstractMessage::create(

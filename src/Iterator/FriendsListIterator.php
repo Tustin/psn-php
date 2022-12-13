@@ -7,17 +7,21 @@ use Tustin\PlayStation\Model\User;
 
 class FriendsListIterator extends AbstractApiIterator
 {
-    private string $userAccountId;
+    /**
+     * Cache list of friends so that we don't need to fetch each individual profile.
+     */
     private array $cachedAccounts = [];
 
-    public function __construct(FriendsListFactory $friendsListFactory, string $userAccountId)
+    public function __construct(FriendsListFactory $friendsListFactory, private string $userAccountId)
     {
         parent::__construct($friendsListFactory->getHttpClient());
-        $this->userAccountId = $userAccountId;
         $this->limit = 100;
         $this->access(0);
     }
 
+    /**
+     * Accesses a new page of results.
+     */
     public function access(mixed $cursor): void
     {
         $results = $this->get('userProfile/v1/internal/users/' . $this->userAccountId . '/friends', [
@@ -36,6 +40,9 @@ class FriendsListIterator extends AbstractApiIterator
         $this->update($results->totalItemCount, $results->friends);
     }
 
+    /**
+     * Gets the current user in the iterator.
+     */
     public function current(): User
     {
         // Because there's no accountId prop in the batch profile responses, we need to manually add it.

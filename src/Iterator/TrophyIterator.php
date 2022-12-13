@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Model\Trophy\Trophy;
@@ -8,12 +9,7 @@ use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
 
 class TrophyIterator extends AbstractApiIterator
 {
-    /**
-     * Current trophy title.
-     */
-    private TrophyGroup $trophyGroup;
-    
-    public function __construct(TrophyGroup $trophyGroup)
+    public function __construct(private TrophyGroup $trophyGroup)
     {
         parent::__construct($trophyGroup->title()->getHttpClient());
 
@@ -22,19 +18,19 @@ class TrophyIterator extends AbstractApiIterator
         $this->access(0);
     }
 
+    /**
+     * Accesses a new page of results.
+     */
     public function access(mixed $cursor): void
     {
-        if ($this->trophyGroup->title() instanceof UserTrophyTitle)
-        {
+        if ($this->trophyGroup->title() instanceof UserTrophyTitle) {
             $results = $this->get(
-                'trophy/v1/users/' . $this->trophyGroup->title()->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId() .'/trophyGroups/' . $this->trophyGroup->id() . '/trophies',
+                'trophy/v1/users/' . $this->trophyGroup->title()->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId() . '/trophyGroups/' . $this->trophyGroup->id() . '/trophies',
                 [
                     'npServiceName' => $this->trophyGroup->title()->serviceName()
                 ]
             );
-        }
-        else
-        {
+        } else {
             $results = $this->get(
                 'trophy/v1/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId() . '/trophyGroups/' . $this->trophyGroup->id() . '/trophies',
                 [
@@ -43,10 +39,13 @@ class TrophyIterator extends AbstractApiIterator
                 ]
             );
         }
-        
+
         $this->update($results->totalItemCount, $results->trophies);
     }
 
+    /**
+     * Gets the current trophy in the iterator. 
+     */
     public function current(): Trophy
     {
         return Trophy::fromObject(

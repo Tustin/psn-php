@@ -1,19 +1,17 @@
 <?php
+
 namespace Tustin\PlayStation\Iterator\Filter\TrophyGroup;
 
-use Iterator;
-use FilterIterator;
-
-class NameFilter extends FilterIterator
+class NameFilter extends \FilterIterator
 {
-    private string $groupName;
-   
-    public function __construct(Iterator $iterator, string $groupName)
+    public function __construct(\Iterator $iterator, private string $groupName)
     {
         parent::__construct($iterator);
-        $this->groupName = $groupName;
     }
    
+    /**
+     * Checks if the current element of the iterator is acceptable.
+     */
     public function accept(): bool
     {
         return stripos($this->current()->name(), $this->groupName) !== false;

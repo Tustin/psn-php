@@ -2,19 +2,16 @@
 
 namespace Tustin\PlayStation\Iterator\Filter\TrophyTitle;
 
-use Iterator;
-use FilterIterator;
-
-class TrophyTitleNameFilter extends FilterIterator
+class TrophyTitleNameFilter extends \FilterIterator
 {
-    private string $titleName;
-
-    public function __construct(Iterator $iterator, string $titleName)
+    public function __construct(\Iterator $iterator, private string $titleName)
     {
         parent::__construct($iterator);
-        $this->titleName = $titleName;
     }
 
+    /**
+     * Checks if the current element of the iterator is acceptable.
+     */
     public function accept(): bool
     {
         return stripos($this->current()->name(), $this->titleName) !== false;

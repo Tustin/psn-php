@@ -2,13 +2,9 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Iterator;
-use Countable;
-use RuntimeException;
 use Tustin\PlayStation\Api;
-use InvalidArgumentException;
 
-abstract class AbstractApiIterator extends Api implements Iterator, Countable
+abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
 {
     protected int $currentOffset = 0;
 
@@ -129,11 +125,11 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
     public function getFromOffset(mixed $offset): object
     {
         if (is_null($offset)) {
-            throw new InvalidArgumentException("Offset cannot be null.");
+            throw new \InvalidArgumentException("Offset cannot be null.");
         }
 
         if (!$this->offsetExists($offset)) {
-            throw new InvalidArgumentException("Offset $offset does not exist.");
+            throw new \InvalidArgumentException("Offset $offset does not exist.");
         }
 
         if (!array_key_exists($offset, $this->cache)) {
@@ -150,7 +146,7 @@ abstract class AbstractApiIterator extends Api implements Iterator, Countable
     {
         try {
             return $offset >= 0 && $offset < $this->getTotalResults();
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             return !$this->lastBlock;
         }
     }

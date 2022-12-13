@@ -2,19 +2,16 @@
 
 namespace Tustin\PlayStation\Iterator\Filter\User;
 
-use Iterator;
-use FilterIterator;
-
-class OnlineIdFilter extends FilterIterator
+class OnlineIdFilter extends \FilterIterator
 {
-    private string $onlineId;
-
-    public function __construct(Iterator $iterator, string $onlineId)
+    public function __construct(\Iterator $iterator, private string $onlineId)
     {
         parent::__construct($iterator);
-        $this->onlineId = $onlineId;
     }
 
+    /**
+     * Checks if the current element of the iterator is acceptable.
+     */
     public function accept(): bool
     {
         return stripos($this->current()->onlineId(), $this->onlineId) !== false;

@@ -7,10 +7,8 @@ use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
 class TrophyTitlesIterator extends AbstractApiIterator
 {
     // private $platforms;
-
-    private TrophyTitlesFactory $trophyTitlesFactory;
     
-    public function __construct(TrophyTitlesFactory $trophyTitlesFactory)
+    public function __construct(private TrophyTitlesFactory $trophyTitlesFactory)
     {
         parent::__construct($trophyTitlesFactory->getHttpClient());
 
@@ -23,6 +21,9 @@ class TrophyTitlesIterator extends AbstractApiIterator
         $this->access(0);
     }
 
+    /**
+     * Accesses a new page of results.
+     */
     public function access(mixed $cursor): void
     {
         $body = [
@@ -35,6 +36,9 @@ class TrophyTitlesIterator extends AbstractApiIterator
         $this->update($results->totalItemCount, $results->trophyTitles);
     }
 
+    /**
+     * Gets the current user trophy title in the iterator. 
+     */
     public function current(): UserTrophyTitle
     {
 		$title = new UserTrophyTitle($this->trophyTitlesFactory->getHttpClient());

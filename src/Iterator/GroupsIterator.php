@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Model\Group;
@@ -6,14 +7,7 @@ use Tustin\PlayStation\Factory\GroupsFactory;
 
 class GroupsIterator extends AbstractApiIterator
 {
-    /**
-     * The message threads repository.
-     *
-     * @var GroupsFactory
-     */
-    private $groupsFactory;
-    
-    public function __construct(GroupsFactory $groupsFactory)
+    public function __construct(private GroupsFactory $groupsFactory)
     {
         parent::__construct($groupsFactory->getHttpClient());
 
@@ -23,6 +17,9 @@ class GroupsIterator extends AbstractApiIterator
         $this->access(0);
     }
 
+    /**
+     * Accesses a new page of results.
+     */
     public function access(mixed $cursor): void
     {
         $results = $this->get('gamingLoungeGroups/v1/members/me/groups', [
@@ -35,6 +32,9 @@ class GroupsIterator extends AbstractApiIterator
         $this->update($results->totalGroupCount, $results->groups);
     }
 
+    /**
+     * Gets the current group in the iterator.
+     */
     public function current(): Group
     {
         return Group::fromObject(

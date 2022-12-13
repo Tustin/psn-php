@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Model\Media;
@@ -6,9 +7,7 @@ use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
 
 class CloudMediaGalleryIterator extends AbstractApiIterator
 {
-    private CloudMediaGalleryFactory $cloudMediaGalleryFactory;
-
-    public function __construct(CloudMediaGalleryFactory $cloudMediaGalleryFactory)
+    public function __construct(private CloudMediaGalleryFactory $cloudMediaGalleryFactory)
     {
         parent::__construct($cloudMediaGalleryFactory->getHttpClient());
 
@@ -19,6 +18,9 @@ class CloudMediaGalleryIterator extends AbstractApiIterator
         $this->access(0);
     }
 
+    /**
+     * Accesses a new page of results.
+     */
     public function access($cursor): void
     {
         $body = [
@@ -32,7 +34,10 @@ class CloudMediaGalleryIterator extends AbstractApiIterator
         $this->update($this->limit, $results->ugcDocument, $results->nextCursorMark);
     }
 
-    public function current(): object
+    /**
+     * Gets the current media in the iterator.
+     */
+    public function current(): Media
     {
         return Media::fromObject(
             $this->cloudMediaGalleryFactory->getHttpClient(),

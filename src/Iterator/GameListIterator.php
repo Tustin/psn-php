@@ -6,9 +6,7 @@ use Tustin\PlayStation\Factory\GameListFactory;
 
 class GameListIterator extends AbstractApiIterator
 {
-    private $gameListFactory;
-    
-    public function __construct(GameListFactory $gameListFactory)
+    public function __construct(private GameListFactory $gameListFactory)
     {
         parent::__construct($gameListFactory->getHttpClient());
 
@@ -19,6 +17,9 @@ class GameListIterator extends AbstractApiIterator
         $this->access(0);
     }
 
+    /**
+     * Accesses a new page of results.
+     */
     public function access(mixed $cursor): void
     {
         $body = [
@@ -31,6 +32,9 @@ class GameListIterator extends AbstractApiIterator
         $this->update($results->totalItemCount, $results->titles);
     }
 
+    /**
+     * Gets the current game title in the iterator.
+     */
     public function current(): GameTitle
     {
         return GameTitle::fromObject(

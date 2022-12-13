@@ -8,12 +8,7 @@ use Tustin\PlayStation\Model\Trophy\AbstractTrophyTitle;
 
 class TrophyGroupsIterator extends AbstractApiIterator
 {
-    /**
-     * Current trophy title.
-     */
-    private AbstractTrophyTitle $title;
-
-    public function __construct(AbstractTrophyTitle $title)
+    public function __construct(private AbstractTrophyTitle $title)
     {
         parent::__construct($title->getHttpClient());
 
@@ -22,6 +17,9 @@ class TrophyGroupsIterator extends AbstractApiIterator
         $this->access(0);
     }
 
+    /**
+     * Accesses a new page of results.
+     */
     public function access(mixed $cursor): void
     {
         if ($this->title instanceof UserTrophyTitle)
@@ -46,6 +44,9 @@ class TrophyGroupsIterator extends AbstractApiIterator
         $this->update(count($results->trophyGroups), $results->trophyGroups);
     }
 
+    /**
+     * Gets the current trophy group in the iterator.
+     */
     public function current(): TrophyGroup
     {
         if ($this->title instanceof UserTrophyTitle)

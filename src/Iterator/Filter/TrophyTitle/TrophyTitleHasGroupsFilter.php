@@ -2,19 +2,16 @@
 
 namespace Tustin\PlayStation\Iterator\Filter\TrophyTitle;
 
-use Iterator;
-use FilterIterator;
-
-class TrophyTitleHasGroupsFilter extends FilterIterator
+class TrophyTitleHasGroupsFilter extends \FilterIterator
 {
-    private bool $value;
-
-    public function __construct(Iterator $iterator, bool $value)
+    public function __construct(\Iterator $iterator, private bool $value)
     {
         parent::__construct($iterator);
-        $this->value = $value;
     }
 
+    /**
+     * Checks if the current element of the iterator is acceptable.
+     */
     public function accept(): bool
     {
         return $this->current()->hasTrophyGroups() === $this->value;

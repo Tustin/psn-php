@@ -2,19 +2,16 @@
 
 namespace Tustin\PlayStation\Iterator\Filter;
 
-use Iterator;
-use FilterIterator;
-
-class MessageTypeFilter extends FilterIterator
+class MessageTypeFilter extends \FilterIterator
 {
-    private string $type;
-
-    public function __construct(Iterator $iterator, string $type)
+    public function __construct(\Iterator $iterator, private string $type)
     {
         parent::__construct($iterator);
-        $this->type = $type;
     }
 
+    /**
+     * Checks if the current element of the iterator is acceptable.
+     */
     public function accept(): bool
     {
         $a = $this->current();
