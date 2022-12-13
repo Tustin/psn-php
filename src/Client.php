@@ -47,7 +47,7 @@ class Client extends AbstractClient
             'app_context' => 'inapp_ios',
             'auth_ver' => 'v3',
             'cid' => '60351282-8C5F-4D5E-9033-E48FEA973E11',
-            'client_id' => 'ac8d161a-d966-4728-b0ea-ffec22f69edc',
+            'client_id' => '09515159-7237-4370-9b40-3806e67c0891',
             'darkmode' => 'true',
             'device_base_font_size' => 10,
             'device_profile' => 'mobile',
@@ -57,9 +57,9 @@ class Client extends AbstractClient
                 PlatformPrivacyWs1 = minimal;
             }',
             'no_captcha' => 'true',
-            'redirect_uri' => 'com.playstation.PlayStationApp://redirect',
+            'redirect_uri' => 'com.scee.psxandroid.scecompcall://redirect',
             'response_type' => 'code',
-            'scope' => 'psn:mobile.v1 psn:clientapp',
+            'scope' => 'psn:mobile.v2.core psn:clientapp',
             'service_entity' => 'urn:service-entity:psn',
             'service_logo' => 'ps',
             'smcid' => 'psapp:settings-entrance',
@@ -101,7 +101,7 @@ class Client extends AbstractClient
             'service_logo' => 'ps',
             'ui' => 'pr',
             'elements_visibility' => 'no_aclink',
-            'redirect_uri' => 'com.playstation.PlayStationApp://redirect',
+            'redirect_uri' => 'com.scee.psxandroid.scecompcall://redirect',
             'support_scheme' => 'sneiprls',
             'grant_type' => 'authorization_code',
             'darkmode' => 'true',
@@ -114,7 +114,7 @@ class Client extends AbstractClient
             'token_format' => 'jwt'
         ], [
             'Cookie' => 'npsso=' . $npsso,
-            'Authorization' => 'Basic YWM4ZDE2MWEtZDk2Ni00NzI4LWIwZWEtZmZlYzIyZjY5ZWRjOkRFaXhFcVhYQ2RYZHdqMHY=',
+            'Authorization' => 'Basic MDk1MTUxNTktNzIzNy00MzcwLTliNDAtMzgwNmU2N2MwODkxOnVjUGprYTV0bnRCMktxc1A=',
         ]);
 
         $this->finalizeLogin($response);
