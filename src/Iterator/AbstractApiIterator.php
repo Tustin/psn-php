@@ -10,42 +10,22 @@ use InvalidArgumentException;
 
 abstract class AbstractApiIterator extends Api implements Iterator, Countable
 {
-    /**
-     * @var integer
-     */
-    protected $currentOffset = 0;
+    protected int $currentOffset = 0;
 
-    /**
-     * @var integer|null
-     */
-    protected $limit = null;
+    protected ?int $limit = null;
 
-    /**
-     * @var integer
-     */
-    protected $totalResults = 0;
+    protected int $totalResults = 0;
 
-    /**
-     * @var bool
-     */
-    protected $lastBlock = false;
+    protected bool $lastBlock = false;
 
-    /**
-     * @var mixed
-     */
-    protected $customCursor = null;
+    protected mixed $customCursor = null;
 
-    /**
-     * @var bool|null
-     */
-    protected $force = null;
+    protected ?bool $force = null;
 
     /**
      * The cache of all items for a given iterator.
-     *
-     * @var array
      */
-    protected $cache = [];
+    protected array $cache = [];
 
     /**
      * Access a specific cursor in the API.

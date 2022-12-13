@@ -13,10 +13,12 @@ use Tustin\PlayStation\Factory\TrophyTitlesFactory;
 class User extends Model
 {
     /**
+     * The user's country.
+     */
+    private string $country;
+
+    /**
      * Constructs a new user object.
-     *
-     * @param UsersFactory $usersFactory
-     * @param string $accountId
      */
     public function __construct(Client $client, private string $accountId)
     {
@@ -29,6 +31,16 @@ class User extends Model
         $instance->setCache($data);
 
         return $instance;
+    }
+
+    /**
+     * Sets the country for this user.
+     */
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
     }
 
     /**
@@ -66,8 +78,6 @@ class User extends Model
      * 
      * Only works for PS4/PS5 titles.
      * Doesn't work with PPSA... title ids.
-     * 
-     * @return string
      */
     public function titleIdToCommunicationId($npTitleId): string
     {
@@ -86,8 +96,6 @@ class User extends Model
 
     /**
      * Gets the trophy summary for the user.
-     *
-     * @return TrophySummary
      */
     public function trophySummary(): TrophySummary
     {
@@ -96,8 +104,6 @@ class User extends Model
 
     /**
      * Gets online ID.
-     *
-     * @return string
      */
     public function onlineId(): string
     {
@@ -106,8 +112,6 @@ class User extends Model
 
     /**
      * Gets the about me.
-     *
-     * @return string
      */
     public function aboutMe(): string
     {
@@ -116,8 +120,6 @@ class User extends Model
 
     /**
      * Gets the user's account ID.
-     *
-     * @return string
      */
     public function accountId(): string
     {
@@ -125,27 +127,19 @@ class User extends Model
     }
 
     /**
-     * This property is only returned in some API responses (namely the user search response), which can make this value inconsistent.
-     * If this is needed, maybe we can have a setter method for setting this value? It would be a bit nicer than polluting the constructor.
-     * Tustin - Nov 11, 2021.
+     * Gets the user's country.
      * 
-     * @deprecated v3.0.1
-     * 
-     * @ignore
-     *
-     * @return string
+     * This property will only be available if the user was obtained via the user search endpoint.
      */
-    public function country(): string
+    public function country(): ?string
     {
-        return '';
+        return $this->country;
     }
 
     /**
      * Returns all the available avatar URL sizes.
      * 
      * Each array key is the size of the image.
-     *
-     * @return array
      */
     public function avatarUrls(): array
     {
@@ -162,8 +156,6 @@ class User extends Model
      * Gets the avatar URL.
      * 
      * This should return the largest size available.
-     *
-     * @return string
      */
     public function avatarUrl(): string
     {
@@ -181,8 +173,6 @@ class User extends Model
 
     /**
      * Check if client is blocking the user.
-     *
-     * @return boolean
      */
     public function isBlocking(): bool
     {
@@ -191,8 +181,6 @@ class User extends Model
 
     /**
      * Get the user's follower count.
-     *
-     * @return integer
      */
     public function followerCount(): int
     {
@@ -201,8 +189,6 @@ class User extends Model
 
     /**
      * Check if the client is following the user.
-     *
-     * @return boolean
      */
     public function isFollowing(): bool
     {
@@ -211,8 +197,6 @@ class User extends Model
 
     /**
      * Check if the user is verified.
-     *
-     * @return boolean
      */
     public function isVerified(): bool
     {
@@ -221,8 +205,6 @@ class User extends Model
 
     /**
      * Gets all the user's languages.
-     *
-     * @return array
      */
     public function languages(): array
     {
@@ -233,8 +215,6 @@ class User extends Model
      * Gets mutual friend count.
      * 
      * Returns -1 if current profile is the logged in user.
-     *
-     * @return integer
      */
     public function mutualFriendCount(): int
     {
@@ -243,8 +223,6 @@ class User extends Model
 
     /**
      * Checks if the client has any mutual friends with the user. 
-     *
-     * @return boolean
      */
     public function hasMutualFriends(): bool
     {
@@ -253,8 +231,6 @@ class User extends Model
 
     /**
      * Checks if the client is close friends with the user.
-     *
-     * @return boolean
      */
     public function isCloseFriend(): bool
     {
@@ -265,8 +241,6 @@ class User extends Model
      * Checks if the client has a pending friend request with the user.
      * 
      * @TODO: Check if this works both ways.
-     *
-     * @return boolean
      */
     public function hasFriendRequested(): bool
     {
@@ -275,8 +249,6 @@ class User extends Model
 
     /**
      * Checks if the user is currently online.
-     *
-     * @return boolean
      */
     public function isOnline(): bool
     {
@@ -285,8 +257,6 @@ class User extends Model
 
     /**
      * Checks if the user has PlayStation Plus.
-     *
-     * @return boolean
      */
     public function hasPlus(): bool
     {
@@ -295,8 +265,6 @@ class User extends Model
 
     /**
      * Fetches the user's profile information from the API.
-     *
-     * @return object
      */
     public function fetch(): object
     {

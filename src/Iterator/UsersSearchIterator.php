@@ -76,6 +76,6 @@ class UsersSearchIterator extends AbstractApiIterator
         return User::fromObject(
             $this->usersFactory->getHttpClient(),
             $socialMetadata
-        );
+        )->setCountry($socialMetadata->country);
     }
 }
