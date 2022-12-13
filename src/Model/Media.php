@@ -16,7 +16,10 @@ class Media extends Model
 		parent::__construct($client);
 	}
 
-	public static function fromObject(Client $client, object $data): Media
+	/**
+	 * Creates a new Media object from existing data.
+	 */
+	public static function fromObject(Client $client, object $data): self
     {
         $media = new static($client, $data->sourceUgcId);
         $media->setCache($data);

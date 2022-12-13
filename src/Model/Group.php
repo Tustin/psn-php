@@ -18,7 +18,10 @@ class Group extends Model
         parent::__construct($groupsFactory->getHttpClient());
     }
 
-    public static function fromObject(GroupsFactory $groupsFactory, object $data)
+    /**
+     * Creates a new group from existing data.
+     */
+    public static function fromObject(GroupsFactory $groupsFactory, object $data): self
     {
         $instance = new static($groupsFactory, $data->groupId);
         $instance->setCache($data);

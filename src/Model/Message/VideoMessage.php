@@ -10,14 +10,18 @@ class VideoMessage extends AbstractMessage
 {
     /**
      * Gets the video media.
-     *
-     * @return Media
      */
     public function video(): Media
     {
-        return new Media($this->messageThread()->getHttpClient(), $this->pluck('messageDetail.videoMessageDetail.ugcId'));
+        return new Media(
+            $this->messageThread()->getHttpClient(), 
+            $this->pluck('messageDetail.videoMessageDetail.ugcId')
+        );
     }
 
+    /**
+     * Gets the message type.
+     */
     public function type(): MessageType
     {
         return MessageType::Video;

@@ -4,7 +4,6 @@ namespace Tustin\PlayStation\Model;
 
 use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Factory\UsersFactory;
 use Tustin\PlayStation\Factory\GameListFactory;
 use Tustin\PlayStation\Factory\FriendsListFactory;
 use Tustin\PlayStation\Model\Trophy\TrophySummary;
@@ -25,7 +24,7 @@ class User extends Model
         parent::__construct($client);
     }
 
-    public static function fromObject(Client $client, object $data)
+    public static function fromObject(Client $client, object $data): self
     {
         $instance = new User($client, $data->accountId);
         $instance->setCache($data);

@@ -15,7 +15,10 @@ class MessageThread extends Model
         parent::__construct($group->getHttpClient());
     }
 
-    public static function fromObject(Group $group, object $data)
+    /**
+     * Creates a new message thread from existing data. 
+     */
+    public static function fromObject(Group $group, object $data): self
     {
         $instance = new static($group, $data->threadId);
         $instance->setCache($data);

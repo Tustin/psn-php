@@ -12,11 +12,19 @@ class TextMessage extends AbstractMessage implements Sendable
     {
     }
 
+    /**
+     * Gets the message type.
+     */
     public function type(): MessageType
     {
         return MessageType::Text;
     }
 
+    /**
+     * Builds the message.
+     * 
+     * @return array<string, mixed>
+     */
     public function build(): array
     {
         return [

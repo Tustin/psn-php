@@ -13,7 +13,10 @@ class Concept extends Model
 		parent::__construct($client);
 	}
 
-    public static function fromObject(Client $client, object $data)
+    /**
+     * Creates a new concept from existing data.
+     */
+    public static function fromObject(Client $client, object $data): self
     {
         $instance = new Concept($client, $data->conceptId);
         $instance->setCache($data);
@@ -21,30 +24,40 @@ class Concept extends Model
         return $instance;
     }
 
+    /**
+     * Gets the concept's product id.
+     */
     public function productId(): string
     {
         return $this->pluck('id');
     }
 
+    /**
+     * Gets the concept's name.
+     */
     public function name(): string
     {
         return $this->pluck('name');
     }
 
+    /**
+     * Gets the concept's id.
+     */
     public function conceptId(): string
     {
         return $this->conceptId;
     }
 
+    /**
+     * Gets the concept's publicher.
+     */
     public function publisher(): string
     {
         return ($this->pluck('publisherName') ?? $this->pluck('leadPublisherName'));
     }
 
     /**
-     * Gets the title's release date.
-     *
-     * @return \DateTime
+     * Gets the concept's release date.
      */
     public function releaseDate(): \DateTime
     {
@@ -52,9 +65,9 @@ class Concept extends Model
     }
 
     /**
-     * Gets a list of the title's genres.
+     * Gets a list of the concept's genres.
      *
-     * @return array
+     * @return array<string>
      */
     public function genres(): array
     {
@@ -69,9 +82,7 @@ class Concept extends Model
     }
 
     /**
-     * Gets the titles's long-form description.
-     * 
-     * @return string
+     * Gets the concept's long-form description.
      */
     public function longDescription(): string
     {
@@ -79,9 +90,7 @@ class Concept extends Model
     }
 
     /**
-     * Gets the titles's short-form description.
-     *
-     * @return string
+     * Gets the concept's short-form description.
      */
     public function shortDescription(): string
     {
@@ -90,9 +99,6 @@ class Concept extends Model
 
     /**
      * Gets a specific description by type.
-     *
-     * @param DescriptionType $type
-     * @return string
      */
     public function descriptionByType(DescriptionType $type): string
     {
@@ -107,6 +113,9 @@ class Concept extends Model
         return '';
     }
 
+    /**
+     * Fetches the concept's information from the API.
+     */
 	public function fetch(): object
     {
         return $this->graphql('metGetConceptById', [

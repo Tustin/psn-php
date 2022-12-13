@@ -15,7 +15,7 @@ abstract class AbstractMessage extends Model
      */
     private MessageThread $thread;
 
-    public static function fromObject(MessageThread $thread, object $messageData)
+    public static function fromObject(MessageThread $thread, object $messageData): self
     {
         $instance = new static($thread->getHttpClient());
         $instance->setCache($messageData);
@@ -27,15 +27,11 @@ abstract class AbstractMessage extends Model
 
     /**
      * Gets the message type.
-     *
-     * @return MessageType
      */
     public abstract function type(): MessageType;
 
     /**
      * Gets the message id.
-     *
-     * @return string
      */
     public function id(): string
     {
@@ -44,8 +40,6 @@ abstract class AbstractMessage extends Model
 
     /**
      * Gets the body of the message.
-     *
-     * @return string
      */
     public function body(): string
     {
@@ -54,18 +48,14 @@ abstract class AbstractMessage extends Model
 
     /**
      * Gets the date and time when the message was posted.
-     *
-     * @return Carbon
      */
-    public function date(): Carbon
+    public function date(): \DateTime
     {
         return Carbon::parse($this->pluck('createdTimestamp'))->setTimezone('UTC');
     }
 
     /**
      * Returns the message thread that this message is in.
-     *
-     * @return MessageThread
      */
     public function messageThread(): MessageThread
     {
@@ -74,8 +64,6 @@ abstract class AbstractMessage extends Model
 
     /**
      * Gets the message sender.
-     *
-     * @return User
      */
     public function sender(): User
     {
@@ -87,10 +75,6 @@ abstract class AbstractMessage extends Model
 
     /**
      * Creates a message based on the message type.
-     *
-     * @param MessageThread $thread
-     * @param object $messageData
-     * @return AbstractMessage
      */
     public static function create(MessageThread $thread, object $messageData): AbstractMessage
     {

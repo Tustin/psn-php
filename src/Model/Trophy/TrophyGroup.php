@@ -1,7 +1,7 @@
 <?php
+
 namespace Tustin\PlayStation\Model\Trophy;
 
-use InvalidArgumentException;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\TrophyType;
 use Tustin\PlayStation\Factory\TrophyFactory;
@@ -9,37 +9,36 @@ use Tustin\PlayStation\Factory\TrophyFactory;
 class TrophyGroup extends Model
 {
     public function __construct(
-        private AbstractTrophyTitle $trophyTitle, 
-        private string $groupId, 
+        private AbstractTrophyTitle $trophyTitle,
+        private string $groupId,
         private string $groupName = '',
-        private string $groupIconUrl = '', 
-        private string $groupDetail = '')
-    {
+        private string $groupIconUrl = '',
+        private string $groupDetail = ''
+    ) {
         parent::__construct($trophyTitle->getHttpClient());
     }
 
-    public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data): TrophyGroup
+    /**
+     * Creates a new trophy group from existing data.
+     */
+    public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data): self
     {
         $instance = new static($trophyTitle, $data->trophyGroupId, $data->trophyGroupName, $data->trophyGroupIconUrl, $data->trophyGroupDetail);
         $instance->setCache($data);
-        
+
         return $instance;
     }
 
     /**
      * Gets the trophy title for this trophy group.
-     *
-     * @return AbstractTrophyTitle
      */
     public function title(): AbstractTrophyTitle
     {
         return $this->trophyTitle;
     }
-    
+
     /**
      * Gets all the trophies in the trophy group.
-     *
-     * @return TrophyFactory
      */
     public function trophies(): TrophyFactory
     {
@@ -48,8 +47,6 @@ class TrophyGroup extends Model
 
     /**
      * Gets the trophy group name.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -58,8 +55,6 @@ class TrophyGroup extends Model
 
     /**
      * Gets the trophy group detail.
-     *
-     * @return string
      */
     public function detail(): string
     {
@@ -68,8 +63,6 @@ class TrophyGroup extends Model
 
     /**
      * Gets the trophy group ID.
-     *
-     * @return string
      */
     public function id(): string
     {
@@ -78,8 +71,6 @@ class TrophyGroup extends Model
 
     /**
      * Gets the trophy group icon URL.
-     *
-     * @return string
      */
     public function iconUrl(): string
     {
@@ -88,8 +79,6 @@ class TrophyGroup extends Model
 
     /**
      * Gets the defined trophies for this trophy group.
-     *
-     * @return array
      */
     public function definedTrophies(): array
     {
@@ -98,8 +87,6 @@ class TrophyGroup extends Model
 
     /**
      * Gets the bronze trophy count.
-     *
-     * @return integer
      */
     public function bronze(): int
     {
@@ -108,8 +95,6 @@ class TrophyGroup extends Model
 
     /**
      * Gets the silver trophy count.
-     *
-     * @return integer
      */
     public function silver(): int
     {
@@ -118,8 +103,6 @@ class TrophyGroup extends Model
 
     /**
      * Gets the gold trophy count.
-     *
-     * @return integer
      */
     public function gold(): int
     {
@@ -128,8 +111,6 @@ class TrophyGroup extends Model
 
     /**
      * Gets whether this trophy group has a platinum or not.
-     * 
-     * @return boolean
      */
     public function hasPlatinum(): bool
     {
@@ -138,14 +119,10 @@ class TrophyGroup extends Model
 
     /**
      * Gets the trophy count for a specificed trophy type.
-     *
-     * @param TrophyType $trophyType
-     * @return integer
      */
     public function trophyCount(TrophyType $trophyType): int
     {
-        switch ($trophyType)
-        {
+        switch ($trophyType) {
             case TrophyType::Bronze:
                 return $this->bronze();
             case TrophyType::Silver:
@@ -155,35 +132,33 @@ class TrophyGroup extends Model
             case TrophyType::Platinum:
                 return (int)$this->hasPlatinum();
             default:
-                throw new InvalidArgumentException("Trophy type [$trophyType] does not contain a count method.");
+                throw new \InvalidArgumentException("Trophy type [$trophyType] does not contain a count method.");
         }
     }
 
     /**
      * Gets the amount of trophies in the trophy group.
-     *
-     * @return integer
      */
     public function totalTrophyCount(): int
     {
         $count = $this->bronze() + $this->silver() + $this->gold();
 
-        return $this->hasPlatinum() ? ++$count: $count;
+        return $this->hasPlatinum() ? ++$count : $count;
     }
-    
+
+    /**
+     * Fetches the trophy group information from the API.
+     */
     public function fetch(): object
     {
-        if ($this->title() instanceof UserTrophyTitle)
-        {
+        if ($this->title() instanceof UserTrophyTitle) {
             return $this->get(
-                'trophy/v1/users/' . $this->title()->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->title()->npCommunicationId() .'/trophyGroups',
+                'trophy/v1/users/' . $this->title()->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->title()->npCommunicationId() . '/trophyGroups',
                 [
                     'npServiceName' => $this->title()->serviceName()
                 ]
             );
-        }
-        else
-        {
+        } else {
             return $this->get(
                 'trophy/v1/npCommunicationIds/' . $this->title()->npCommunicationId()  . '/trophyGroups',
                 [

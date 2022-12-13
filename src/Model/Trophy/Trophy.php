@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Model\Trophy;
 
 use Tustin\PlayStation\Model;
@@ -11,7 +12,10 @@ class Trophy extends Model
         parent::__construct($trophyGroup->getHttpClient());
     }
 
-    public static function fromObject(TrophyGroup $trophyGroup, object $data): Trophy
+    /**
+     * Creates a new trophy from existing data.
+     */
+    public static function fromObject(TrophyGroup $trophyGroup, object $data): self
     {
         $trophy = new static($trophyGroup, $data->trophyId);
         $trophy->setCache($data);
@@ -20,18 +24,14 @@ class Trophy extends Model
     }
     /**
      * Gets the trophy name.
-     *
-     * @return string
      */
     public function name(): string
     {
         return $this->pluck('trophyName');
     }
-    
+
     /**
      * Gets the trophy id.
-     *
-     * @return integer
      */
     public function id(): int
     {
@@ -40,8 +40,6 @@ class Trophy extends Model
 
     /**
      * Gets the trophy details.
-     *
-     * @return string
      */
     public function detail(): string
     {
@@ -50,8 +48,6 @@ class Trophy extends Model
 
     /**
      * Gets the trophy type. (platinum, bronze, silver, gold)
-     *
-     * @return TrophyType
      */
     public function type(): TrophyType
     {
@@ -60,8 +56,6 @@ class Trophy extends Model
 
     /**
      * Get the trophy earned rate.
-     *
-     * @return float
      */
     public function earnedRate(): float
     {
@@ -70,18 +64,14 @@ class Trophy extends Model
 
     /**
      * Check if the trophy is hidden.
-     *
-     * @return boolean
      */
     public function hidden(): bool
     {
         return $this->pluck('trophyHidden');
     }
-    
+
     /**
      * Gets the trophy icon URL.
-     *
-     * @return string
      */
     public function iconUrl(): string
     {
@@ -90,19 +80,15 @@ class Trophy extends Model
 
     /**
      * Gets the trophy progress target value, if any.
-     *
-     * @return string
      */
     public function progressTargetValue(): string
     {
         return $this->pluck('trophyProgressTargetValue') ?? '';
     }
-    
+
     /**
      * Gets the trophy reward name, if any.
      * Examples: "Emote", "Profile Avatar", "Profile Banner"
-     * 
-     * @return string
      */
     public function rewardName(): string
     {
@@ -111,8 +97,6 @@ class Trophy extends Model
 
     /**
      * Gets the trophy reward image url, if any.
-     * 
-     * @return string
      */
     public function rewardImageUrl(): string
     {
@@ -121,8 +105,6 @@ class Trophy extends Model
 
     /**
      * Check if the user have earned this trophy.
-     *
-     * @return boolean
      */
     public function earned(): bool
     {
@@ -131,8 +113,6 @@ class Trophy extends Model
 
     /**
      * Get the date and time the user earned this trophy, if any.
-     *
-     * @return string
      */
     public function earnedDateTime(): string
     {
@@ -141,8 +121,6 @@ class Trophy extends Model
 
     /**
      * Get the progress count for the user on this trophy, if any.
-     *
-     * @return string
      */
     public function progress(): string
     {
@@ -151,8 +129,6 @@ class Trophy extends Model
 
     /**
      * Get the progress percentage for the user on this trophy, if any.
-     *
-     * @return string
      */
     public function progressRate(): string
     {
@@ -161,18 +137,14 @@ class Trophy extends Model
 
     /**
      * Get the date and time when a progress was made for the user on this trophy, if any.
-     *
-     * @return string
      */
     public function progressedDateTime(): string
     {
         return $this->pluck('progressedDateTime') ?? '';
     }
-    
+
     /**
      * Fetches the trophy data from the API.
-     *
-     * @return object
      */
     public function fetch(): object
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace Tustin\PlayStation\Model;
 
 use Tustin\PlayStation\Model;
@@ -12,7 +13,10 @@ class GameTitle extends Model
         parent::__construct($gameListFactory->getHttpClient());
     }
 
-    public static function fromObject(GameListFactory $gameListFactory, object $data): GameTitle
+    /**
+     * Creates a new game title from existing data.
+     */
+    public static function fromObject(GameListFactory $gameListFactory, object $data): self
     {
         $game = new static($gameListFactory, $data->titleId);
         $game->setCache($data);
@@ -22,8 +26,6 @@ class GameTitle extends Model
 
     /**
      * Gets the store concept for the game.
-     *
-     * @return Concept
      */
     public function concept(): Concept
     {
@@ -33,19 +35,15 @@ class GameTitle extends Model
     /**
      * Gets the play duration.
      * Example: "PT1192H44M48S"
-     *
-     * @return string
      */
     public function playDuration(): string
     {
         return $this->pluck('playDuration');
     }
-    
+
     /**
      * Gets the first played date.
      * Example: "2015-11-13T13:05:52Z"
-     *
-     * @return string
      */
     public function firstPlayedDateTime(): string
     {
@@ -55,8 +53,6 @@ class GameTitle extends Model
     /**
      * Gets the last played date.
      * Example: "2021-02-16T21:39:53.890Z"
-     *
-     * @return string
      */
     public function lastPlayedDateTime(): string
     {
@@ -65,8 +61,6 @@ class GameTitle extends Model
 
     /**
      * Gets the last play count.
-     *
-     * @return int
      */
     public function playCount(): int
     {
@@ -76,8 +70,6 @@ class GameTitle extends Model
     /**
      * Gets the category.
      * Example: "ps4_game", "ps4_nongame_mini_app", "ps5_native_game", "unknown"
-     *
-     * @return string
      */
     public function category(): string
     {
@@ -86,8 +78,6 @@ class GameTitle extends Model
 
     /**
      * Gets the localized image url.
-     *
-     * @return string
      */
     public function localizedImageUrl(): string
     {
@@ -96,8 +86,6 @@ class GameTitle extends Model
 
     /**
      * Gets the image url.
-     *
-     * @return string
      */
     public function imageUrl(): string
     {
@@ -106,8 +94,6 @@ class GameTitle extends Model
 
     /**
      * Gets the localized name.
-     *
-     * @return string
      */
     public function localizedName(): string
     {
@@ -116,8 +102,6 @@ class GameTitle extends Model
 
     /**
      * Gets the name.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -127,8 +111,6 @@ class GameTitle extends Model
     /**
      * Gets the id.
      * Example: "CUSA02818_00"
-     *
-     * @return string
      */
     public function id(): string
     {
@@ -138,8 +120,6 @@ class GameTitle extends Model
     /**
      * Gets the service.
      * Example: "none(purchased)", "none_purchased", "other"
-     *
-     * @return string
      */
     public function service(): string
     {
@@ -148,8 +128,6 @@ class GameTitle extends Model
 
     /**
      * Gets the stats.
-     *
-     * @return object
      */
     public function stats(): object
     {
@@ -158,14 +136,15 @@ class GameTitle extends Model
 
     /**
      * Gets the media.
-     *
-     * @return object
      */
     public function media(): object
     {
         return $this->pluck('media');
     }
-    
+
+    /**
+     * Gets the game title data.
+     */
     public function fetch(): object
     {
         return $this->get('gamelist/v2/users/' . $this->getFactory()->getUser()->accountId() . '/titles/' . $this->id());

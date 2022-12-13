@@ -16,8 +16,6 @@ class TrophySummary extends Model
 
     /**
      * Gets the trophy level progress for the current level.
-     *
-     * @return integer
      */
     public function progress(): int
     {
@@ -28,8 +26,6 @@ class TrophySummary extends Model
      * Gets the trophy level tier.
      * 
      * @TODO: Maybe map out each tier and use an enum here?
-     *
-     * @return integer
      */
     public function tier(): int
     {
@@ -38,8 +34,6 @@ class TrophySummary extends Model
 
     /**
      * Gets the trophy level.
-     *
-     * @return integer
      */
     public function level(): int
     {
@@ -48,8 +42,6 @@ class TrophySummary extends Model
 
     /**
      * Gets the amount of bronze trophies.
-     *
-     * @return integer
      */
     public function bronze(): int
     {
@@ -58,8 +50,6 @@ class TrophySummary extends Model
 
     /**
      * Gets the amount of silver trophies.
-     *
-     * @return integer
      */
     public function silver(): int
     {
@@ -68,19 +58,15 @@ class TrophySummary extends Model
 
     /**
      * Gets the amount of gold trophies.
-     *
-     * @return integer
      */
     public function gold(): int
     {
         return $this->pluck('earnedTrophies.gold');
     }
 
-    
+
     /**
      * Gets the amount of platinum trophies.
-     *
-     * @return integer
      */
     public function platinum(): int
     {
@@ -89,8 +75,6 @@ class TrophySummary extends Model
 
     /**
      * Fetches the trophy summary from the API.
-     *
-     * @return object
      */
     public function fetch(): object
     {

@@ -10,8 +10,6 @@ class ImageMessage extends AbstractMessage
 {
     /**
      * Gets the image media.
-     *
-     * @return Media
      */
     public function image(): Media
     {
@@ -20,14 +18,15 @@ class ImageMessage extends AbstractMessage
 
     /**
      * Gets the resource id.
-
-     * @return string
      */
     public function resourceId(): string
     {
         return $this->pluck('messageDetail.imageMessageDetail.resourceId');
     }
 
+    /**
+     * Gets the message type.
+     */
     public function type(): MessageType
     {
         return MessageType::Image;
