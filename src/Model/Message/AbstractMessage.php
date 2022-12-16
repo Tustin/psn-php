@@ -3,6 +3,7 @@
 namespace Tustin\PlayStation\Model\Message;
 
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Enum\MessageType;
@@ -10,19 +11,14 @@ use Tustin\PlayStation\Model\MessageThread;
 
 abstract class AbstractMessage extends Model
 {
-    /**
-     * The message thread this message is in.
-     */
-    private MessageThread $thread;
-
-    public static function fromObject(MessageThread $thread, object $messageData): self
+    public function __construct(protected Client $httpClient, private MessageThread $thread)
     {
-        $instance = new static($thread->getHttpClient());
-        $instance->setCache($messageData);
+        parent::__construct($thread->getHttpClient());
+    }
 
-        $instance->thread = $thread;
-
-        return $instance;
+    public static function fromObject(MessageThread $thread, object $data): self
+    {
+        return (new static($thread->getHttpClient(), $thread))->withCache($data);
     }
 
     /**
@@ -68,7 +64,7 @@ abstract class AbstractMessage extends Model
     public function sender(): User
     {
         return new User(
-            $this->messageThread()->getHttpClient(),
+            $this->getHttpClient(),
             $this->pluck('sender.accountId')
         );
     }

@@ -26,10 +26,7 @@ class User extends Model
 
     public static function fromObject(Client $client, object $data): self
     {
-        $instance = new User($client, $data->accountId);
-        $instance->setCache($data);
-
-        return $instance;
+        return (new User($client, $data->accountId))->withCache($data);
     }
 
     /**

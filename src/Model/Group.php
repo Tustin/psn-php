@@ -23,10 +23,7 @@ class Group extends Model
      */
     public static function fromObject(GroupsFactory $groupsFactory, object $data): self
     {
-        $instance = new static($groupsFactory, $data->groupId);
-        $instance->setCache($data);
-
-        return $instance;
+        return (new static($groupsFactory, $data->groupId))->withCache($data);
     }
 
     /**

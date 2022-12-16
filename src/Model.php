@@ -28,16 +28,6 @@ abstract class Model extends Api
      */
     abstract public function fetch(): object;
 
-    /**
-     * Performs the fetch method while flagging the model as being fetched.
-     */
-    private function performFetch(): object
-    {
-        $this->hasFetched = true;
-
-        return $this->fetch();
-    }
-
     public function __construct(Client $client)
     {
         parent::__construct($client);
@@ -95,9 +85,29 @@ abstract class Model extends Api
     }
 
     /**
+     * Performs the fetch method while flagging the model as being fetched.
+     */
+    private function performFetch(): object
+    {
+        $this->hasFetched = true;
+
+        return $this->fetch();
+    }
+
+    /**
+     * Sets the cache property and allows for chaining.
+     */
+    public function withCache(object $data): self
+    {
+        $this->setCache($data);
+
+        return $this;
+    }
+
+    /**
      * Sets the cache property.
      */
-    public function setCache(object $data): void
+    private function setCache(object $data): void
     {
         // So this is bad and probably slow, but it's less annoying than some recursive method.
         $this->cache = json_decode(json_encode($data, JSON_FORCE_OBJECT), true);

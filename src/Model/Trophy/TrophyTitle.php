@@ -16,10 +16,7 @@ class TrophyTitle extends AbstractTrophyTitle
 
     public static function fromObject(Client $client, object $data): self
     {
-        $title = new static($client, $data->npCommunicationId, $data->npServiceName);
-        $title->setCache($data);
-
-        return $title;
+        return (new static($client, $data->npCommunicationId, $data->npServiceName))->withCache($data);
     }
 
     /**

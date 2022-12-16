@@ -20,10 +20,7 @@ class MessageThread extends Model
      */
     public static function fromObject(Group $group, object $data): self
     {
-        $instance = new static($group, $data->threadId);
-        $instance->setCache($data);
-
-        return $instance;
+        return (new static($group, $data->threadId))->withCache($data);
     }
 
     /**

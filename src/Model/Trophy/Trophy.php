@@ -17,10 +17,7 @@ class Trophy extends Model
      */
     public static function fromObject(TrophyGroup $trophyGroup, object $data): self
     {
-        $trophy = new static($trophyGroup, $data->trophyId);
-        $trophy->setCache($data);
-
-        return $trophy;
+        return (new static($trophyGroup, $data->trophyId))->withCache($data);
     }
     /**
      * Gets the trophy name.

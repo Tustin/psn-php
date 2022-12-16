@@ -18,10 +18,7 @@ class GameTitle extends Model
      */
     public static function fromObject(GameListFactory $gameListFactory, object $data): self
     {
-        $game = new static($gameListFactory, $data->titleId);
-        $game->setCache($data);
-
-        return $game;
+        return (new static($gameListFactory, $data->titleId))->withCache($data);
     }
 
     /**

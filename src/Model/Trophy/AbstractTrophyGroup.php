@@ -19,10 +19,7 @@ abstract class AbstractTrophyGroup extends Model
      */
     public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data): self
     {
-        $instance = new static($trophyTitle, $data->trophyGroupId);
-        $instance->setCache($data);
-
-        return $instance;
+        return (new static($trophyTitle, $data->trophyGroupId))->withCache($data);
     }
 
     /**
