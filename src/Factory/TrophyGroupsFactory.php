@@ -5,13 +5,13 @@ use Iterator;
 use IteratorAggregate;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Enum\TrophyType;
-use Tustin\PlayStation\Model\Trophy\TrophyGroup;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\TrophyGroupsIterator;
 use Tustin\PlayStation\Model\Trophy\AbstractTrophyTitle;
 use Tustin\PlayStation\Iterator\Filter\TrophyGroup\NameFilter;
 use Tustin\PlayStation\Iterator\Filter\TrophyGroup\DetailFilter;
 use Tustin\PlayStation\Iterator\Filter\TrophyGroup\TrophyTypeFilter;
+use Tustin\PlayStation\Model\Trophy\AbstractTrophyGroup;
 
 class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInterface
 {
@@ -81,11 +81,9 @@ class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInter
     }
 
     /**
-     * Gets the first trophy title in the collection.
-     *
-     * @return TrophyGroup
+     * Gets the first trophy group.
      */
-    public function first(): TrophyGroup
+    public function first(): AbstractTrophyGroup
     {
         return $this->getIterator()->current();
     }

@@ -3,39 +3,104 @@
 namespace Tustin\PlayStation\Model\Trophy;
 
 use GuzzleHttp\Client;
+use Tustin\PlayStation\Enum\ConsoleType;
 
 class TrophyTitle extends AbstractTrophyTitle
 {
     public function __construct(Client $client, string $npCommunicationId, string $serviceName = 'trophy')
     {
-        parent::__construct($client);
+        parent::__construct($client, $npCommunicationId);
 
-        $this->setnpCommunicationId($npCommunicationId);
         $this->setServiceName($serviceName);
     }
-    /**
-     * Gets the NP communication ID (NPWR_) for this trophy title.
-     *
-     * @return string
-     */
-    public function npCommunicationId(): string
+
+    public static function fromObject(Client $client, object $data): self
     {
-        return $this->npCommunicationId;
+        $title = new static($client, $data->npCommunicationId, $data->npServiceName);
+        $title->setCache($data);
+
+        return $title;
     }
 
     /**
-     * Gets the trophy service name.
-     *
-     * @return string
+     * Get the trophy set version for this trophy title.
      */
-    public function serviceName(): string
+    public function version(): string
     {
-        return $this->serviceName;
+        return $this->pluck('version');
     }
 
-    // @TODO: Implement
+    /**
+     * Gets the trophy title detail.
+     */
+    public function detail(): string
+    {
+        return $this->pluck('trophyTitleDetail');
+    }
+
+    /**
+     * Gets the trophy title icon URL.
+     */
+    public function iconUrl(): string
+    {
+        return $this->pluck('trophyTitleIconUrl');
+    }
+
+    /**
+     * Gets the trophy title name.
+     */
+    public function name(): string
+    {
+        return $this->pluck('trophyTitleName');
+    }
+
+    /**
+     * Gets the trophy title platform.
+     */
+    public function platform(): ConsoleType
+    {
+        return ConsoleType::from($this->pluck('platform'));
+    }
+
+    /**
+     * Gets the amount of bronze trophies.
+     */
+    public function bronzeTrophyCount(): int
+    {
+        return $this->pluck('definedTrophies.bronze');
+    }
+
+    /**
+     * Gets the amount of silver trophies.
+     */
+    public function silverTrophyCount(): int
+    {
+        return $this->pluck('definedTrophies.silver');
+    }
+
+    /**
+     * Gets the amount of gold trophies.
+     */
+    public function goldTrophyCount(): int
+    {
+        return $this->pluck('definedTrophies.gold');
+    }
+
+    public function definedTrophies()
+    {
+        return $this->pluck('definedTrophies');
+    }
+
+    /**
+     * Gets the trophy title information from the API.
+     */
     public function fetch(): object
     {
-        throw new \BadMethodCallException();
+        return $this->get(
+            'trophy/v1/npCommunicationIds/' . $this->npCommunicationId  . '/trophyGroups',
+            [
+                'npServiceName' => $this->serviceName()
+            ]
+        );
     }
 }

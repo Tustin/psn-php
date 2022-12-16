@@ -2,19 +2,15 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Factory\TrophyTitlesFactory;
-use Tustin\PlayStation\Model\Trophy\TrophyTitle;
+use Tustin\PlayStation\Iterator\AbstractApiIterator;
 use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
+use Tustin\PlayStation\Factory\UserTrophyTitlesFactory;
 
-class TrophyTitlesIterator extends AbstractApiIterator
+class UserTrophyTitlesIterator extends AbstractApiIterator
 {
-    // private $platforms;
-
-    public function __construct(private TrophyTitlesFactory $trophyTitlesFactory)
+    public function __construct(private UserTrophyTitlesFactory $trophyTitlesFactory)
     {
         parent::__construct($trophyTitlesFactory->getHttpClient());
-
-        // $this->platforms = implode(',', $trophyTitlesFactory->getPlatforms());
 
         $this->limit = 100;
 
@@ -31,7 +27,7 @@ class TrophyTitlesIterator extends AbstractApiIterator
             'offset' => $cursor,
         ];
 
-        $results = $this->get('trophy/v1/users/' . $this->trophyTitlesFactory->getUser()->accountId() . '/trophyTitles', $body);
+        $results = $this->get('trophy/v1/users/' . $this->trophyTitlesFactory->user()->accountId() . '/trophyTitles', $body);
 
         $this->update($results->totalItemCount, $results->trophyTitles);
     }
@@ -39,11 +35,13 @@ class TrophyTitlesIterator extends AbstractApiIterator
     /**
      * Gets the current user trophy title in the iterator. 
      */
-    public function current(): TrophyTitle
+    public function current(): UserTrophyTitle
     {
-        return TrophyTitle::fromObject(
-            $this->trophyTitlesFactory->getHttpClient(),
+        $title = UserTrophyTitle::fromObject(
+            $this->getHttpClient(),
             $this->getFromOffset($this->currentOffset)
         );
+
+        return $title->withUser($this->trophyTitlesFactory->user());
     }
 }

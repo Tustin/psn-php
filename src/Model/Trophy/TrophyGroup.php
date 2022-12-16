@@ -2,55 +2,16 @@
 
 namespace Tustin\PlayStation\Model\Trophy;
 
-use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\TrophyType;
-use Tustin\PlayStation\Factory\TrophyFactory;
 
-class TrophyGroup extends Model
+class TrophyGroup extends AbstractTrophyGroup
 {
-    public function __construct(
-        private AbstractTrophyTitle $trophyTitle,
-        private string $groupId,
-        private string $groupName = '',
-        private string $groupIconUrl = '',
-        private string $groupDetail = ''
-    ) {
-        parent::__construct($trophyTitle->getHttpClient());
-    }
-
-    /**
-     * Creates a new trophy group from existing data.
-     */
-    public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data): self
-    {
-        $instance = new static($trophyTitle, $data->trophyGroupId, $data->trophyGroupName, $data->trophyGroupIconUrl, $data->trophyGroupDetail);
-        $instance->setCache($data);
-
-        return $instance;
-    }
-
-    /**
-     * Gets the trophy title for this trophy group.
-     */
-    public function title(): AbstractTrophyTitle
-    {
-        return $this->trophyTitle;
-    }
-
-    /**
-     * Gets all the trophies in the trophy group.
-     */
-    public function trophies(): TrophyFactory
-    {
-        return new TrophyFactory($this);
-    }
-
     /**
      * Gets the trophy group name.
      */
     public function name(): string
     {
-        return $this->groupName;
+        return $this->pluck('trophyGroupName');
     }
 
     /**
@@ -58,15 +19,7 @@ class TrophyGroup extends Model
      */
     public function detail(): string
     {
-        return $this->groupDetail ?? '';
-    }
-
-    /**
-     * Gets the trophy group ID.
-     */
-    public function id(): string
-    {
-        return $this->groupId;
+        return $this->pluck('trophyGroupDetail') ?? '';
     }
 
     /**
@@ -74,7 +27,7 @@ class TrophyGroup extends Model
      */
     public function iconUrl(): string
     {
-        return $this->groupIconUrl;
+        return $this->pluck('trophyGroupIconUrl');
     }
 
     /**
@@ -151,20 +104,11 @@ class TrophyGroup extends Model
      */
     public function fetch(): object
     {
-        if ($this->title() instanceof UserTrophyTitle) {
-            return $this->get(
-                'trophy/v1/users/' . $this->title()->getFactory()->getUser()->accountId() . '/npCommunicationIds/' . $this->title()->npCommunicationId() . '/trophyGroups',
-                [
-                    'npServiceName' => $this->title()->serviceName()
-                ]
-            );
-        } else {
-            return $this->get(
-                'trophy/v1/npCommunicationIds/' . $this->title()->npCommunicationId()  . '/trophyGroups',
-                [
-                    'npServiceName' => $this->title()->serviceName()
-                ]
-            );
-        }
+        return $this->get(
+            'trophy/v1/npCommunicationIds/' . $this->title()->npCommunicationId()  . '/trophyGroups',
+            [
+                'npServiceName' => $this->title()->serviceName()
+            ]
+        );
     }
 }

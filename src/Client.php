@@ -202,14 +202,20 @@ class Client extends AbstractClient
 
     /**
      * Gets a trophy title from the API using a communication id (NPWRxxxxx_00).
-     *
-     * @param string $npCommunicationId
-     * @param string $serviceName
-     * @return TrophyTitle
+     */
+    public function trophyTitle(string $npCommunicationId, string $serviceName = 'trophy'): TrophyTitle
+    {
+        return new TrophyTitle($this->getHttpClient(), $npCommunicationId, $serviceName);
+    }
+
+    /**
+     * Gets a trophy title from the API using a communication id (NPWRxxxxx_00).
+     * 
+     * @deprecated Use trophyTitle() instead.
      */
     public function trophies(string $npCommunicationId, string $serviceName = 'trophy'): TrophyTitle
     {
-        return new TrophyTitle($this->getHttpClient(), $npCommunicationId, $serviceName);
+        return $this->trophyTitle($npCommunicationId, $serviceName);
     }
 
     /**

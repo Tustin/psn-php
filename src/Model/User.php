@@ -7,7 +7,7 @@ use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Factory\GameListFactory;
 use Tustin\PlayStation\Factory\FriendsListFactory;
 use Tustin\PlayStation\Model\Trophy\TrophySummary;
-use Tustin\PlayStation\Factory\TrophyTitlesFactory;
+use Tustin\PlayStation\Factory\UserTrophyTitlesFactory;
 
 class User extends Model
 {
@@ -44,12 +44,12 @@ class User extends Model
 
     /**
      * Get the trophy titles associated with this user's account.
-     * 
-     * @return TrophyTitlesFactory
      */
-    public function trophyTitles(): TrophyTitlesFactory
+    public function trophyTitles(): UserTrophyTitlesFactory
     {
-        return new TrophyTitlesFactory($this);
+        return (new UserTrophyTitlesFactory(
+            $this->getHttpClient())
+        )->withUser($this);
     }
 
     /**

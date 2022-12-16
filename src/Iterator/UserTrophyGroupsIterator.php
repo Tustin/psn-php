@@ -2,13 +2,12 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Model\Trophy\TrophyGroup;
 use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
-use Tustin\PlayStation\Model\Trophy\TrophyTitle;
+use Tustin\PlayStation\Model\Trophy\UserTrophyGroup;
 
-class TrophyGroupsIterator extends AbstractApiIterator
+class UserTrophyGroupsIterator extends AbstractApiIterator
 {
-    public function __construct(private TrophyTitle $title)
+    public function __construct(private UserTrophyTitle $title)
     {
         parent::__construct($title->getHttpClient());
 
@@ -21,7 +20,7 @@ class TrophyGroupsIterator extends AbstractApiIterator
     public function access(mixed $cursor): void
     {
         $results = $this->get(
-            'trophy/v1/npCommunicationIds/' . $this->title->npCommunicationId() . '/trophyGroups',
+            'trophy/v1/users/' . $this->title->user()->accountId() . '/npCommunicationIds/' . $this->title->npCommunicationId() . '/trophyGroups',
             [
                 'npServiceName' => $this->title->serviceName()
             ]
@@ -33,8 +32,13 @@ class TrophyGroupsIterator extends AbstractApiIterator
     /**
      * Gets the current trophy group in the iterator.
      */
-    public function current(): TrophyGroup
+    public function current(): UserTrophyGroup
     {
-        return TrophyGroup::fromObject($this->title, $this->getFromOffset($this->currentOffset));
+        $group = new UserTrophyGroup(
+            $this->title,
+            $this->getFromOffset($this->currentOffset)->trophyGroupId,
+        );
+
+        return $group->withUser($this->title->user());
     }
 }

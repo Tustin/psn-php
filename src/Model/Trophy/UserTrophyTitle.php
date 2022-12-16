@@ -2,135 +2,19 @@
 
 namespace Tustin\PlayStation\Model\Trophy;
 
-use Tustin\PlayStation\Enum\ConsoleType;
+use GuzzleHttp\Client;
+use Tustin\PlayStation\Traits\HasUser;
 
-class UserTrophyTitle extends AbstractTrophyTitle
+class UserTrophyTitle extends TrophyTitle
 {
-    /**
-     * Checks if this title has trophy groups.
-     * 
-     * These groups are typically DLC trophies.
-     */
-    public function hasTrophyGroups(): bool
+    use HasUser;
+
+    public static function fromObject(Client $client, object $data): self
     {
-        return $this->pluck('hasTrophyGroups');
-    }
+        $title = new static($client, $data->npCommunicationId, $data->npServiceName);
+        $title->setCache($data);
 
-    /**
-     * Gets the name of the title.
-     */
-    public function name(): string
-    {
-        return $this->pluck('trophyTitleName');
-    }
-
-    /**
-     * Gets the detail of the title.
-     */
-    public function detail(): string
-    {
-        // PS5 titles don't seem to have the detail data.
-        if ($this->serviceName() == 'trophy2') {
-            return '';
-        }
-
-        return $this->pluck('trophyTitleDetail');
-    }
-
-    /**
-     * Gets the icon URL for the title.
-     */
-    public function iconUrl(): string
-    {
-        return $this->pluck('trophyTitleIconUrl');
-    }
-
-    /**
-     * Gets the platform(s) this title is for.
-     *
-     * @return array<ConsoleType>
-     */
-    public function platform(): array
-    {
-        $platforms = [];
-
-        foreach (explode(",", $this->pluck('trophyTitlePlatform')) as $platform) {
-            $platforms[] = ConsoleType::tryFrom($platform);
-        }
-
-        return $platforms;
-    }
-
-    /**
-     * Checks if this title has trophies.
-     */
-    public function hasTrophies(): bool
-    {
-        $value = $this->pluck('definedTrophies');
-
-        return isset($value) && !empty($value);
-    }
-
-    /**
-     * Checks if this title has a platinum trophy.
-     */
-    public function hasPlatinum(): bool
-    {
-        return $this->pluck('definedTrophies.platinum') ?? false;
-    }
-
-    /**
-     * Gets the total trophy count for this title.
-     */
-    public function trophyCount(): int
-    {
-        $count = ($this->bronzeTrophyCount() + $this->silverTrophyCount() + $this->goldTrophyCount());
-
-        if ($this->hasPlatinum()) {
-            $count++;
-        }
-
-        return $count;
-    }
-
-    /**
-     * Gets the amount of bronze trophies.
-     */
-    public function bronzeTrophyCount(): int
-    {
-        return $this->pluck('definedTrophies.bronze');
-    }
-
-    /**
-     * Gets the amount of silver trophies.
-     */
-    public function silverTrophyCount(): int
-    {
-        return $this->pluck('definedTrophies.silver');
-    }
-
-    /**
-     * Gets the amount of gold trophies.
-     */
-    public function goldTrophyCount(): int
-    {
-        return $this->pluck('definedTrophies.gold');
-    }
-
-    /**
-     * Gets the NP communication ID (NPWR_) for this trophy title.
-     */
-    public function npCommunicationId(): string
-    {
-        return $this->pluck('npCommunicationId');
-    }
-
-    /**
-     * Gets the trophy list version number for this trophy title.
-     */
-    public function trophySetVersion(): string
-    {
-        return $this->pluck('trophySetVersion');
+        return $title;
     }
 
     /**
@@ -144,7 +28,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
     /**
      * Gets the amount of earned bronze trophies for this user.
      */
-    public function earnedTrophiesBronzeCount(): int
+    public function earnedBronzeTrophiesCount(): int
     {
         return $this->pluck('earnedTrophies.bronze');
     }
@@ -152,7 +36,7 @@ class UserTrophyTitle extends AbstractTrophyTitle
     /**
      * Gets the amount of earned silver trophies for this user.
      */
-    public function earnedTrophiesSilverCount(): int
+    public function earnedSilverTrophiesCount(): int
     {
         return $this->pluck('earnedTrophies.silver');
     }
@@ -160,17 +44,17 @@ class UserTrophyTitle extends AbstractTrophyTitle
     /**
      * Gets the amount of earned gold trophies for this user.
      */
-    public function earnedTrophiesGoldCount(): int
+    public function earnedGoldTrophiesCount(): int
     {
         return $this->pluck('earnedTrophies.gold');
     }
 
     /**
-     * Gets the amount of earned platinum trophies for this user.
+     * Checks if user has earned the platinum trophy for this title.
      */
-    public function earnedTrophiesPlatinumCount(): int
+    public function earnedPlatinumTrophy(): bool
     {
-        return $this->pluck('earnedTrophies.platinum');
+        return $this->pluck('earnedTrophies.platinum') == 1;
     }
 
     /**
@@ -182,16 +66,23 @@ class UserTrophyTitle extends AbstractTrophyTitle
     }
 
     /**
-     * Gets the trophy service name for this trophy.
+     * Gets the trophy title hidden status for this user.
      */
-    public function serviceName(): string
+    public function hidden(): bool
     {
-        return $this->serviceName ??= $this->pluck('npServiceName');
+        return $this->pluck('hiddenFlag');
     }
 
-    // @TODO: Implement
+    /**
+     * Gets the user trophy title information from the API.
+     */
     public function fetch(): object
     {
-        throw new \BadMethodCallException();
+        return $this->get(
+            'trophy/v1/users/' . $this->user()->accountId() . '/npCommunicationIds/' . $this->npCommunicationId() . '/trophyGroups',
+            [
+                'npServiceName' => $this->serviceName()
+            ]
+        );
     }
 }
