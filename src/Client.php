@@ -42,7 +42,7 @@ class Client extends AbstractClient
     /**
      * Login with an NPSSO token.
      * 
-     * @see https://tusticles.com/psn-php/first_login.html
+     * @see https://tustin.dev/psn-php/#/authorization?id=first-login
      */
     public function loginWithNpsso(string $npsso): void
     {
@@ -129,7 +129,7 @@ class Client extends AbstractClient
     /**
      * Login with an existing refresh token.
      * 
-     * @see https://tusticles.com/psn-php/future_logins.html
+     * @see https://tustin.dev/psn-php/#/authorization?id=future-logins
      */
     public function loginWithRefreshToken(string $refreshToken): void
     {
