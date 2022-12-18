@@ -11,10 +11,6 @@ class UsersFactory extends Api implements FactoryInterface
 {
     /**
      * Searches for a user.
-     *
-     * @param string $query
-     * @param array $searchFields
-     * @return UsersSearchIterator
      */
     public function search(string $query): UsersSearchIterator
     {
@@ -23,9 +19,6 @@ class UsersFactory extends Api implements FactoryInterface
 
     /**
      * Find a specific user's profile by their accountId.
-     *
-     * @param string $accountId
-     * @return User
      */
     public function find(string $accountId): User
     {
@@ -34,8 +27,6 @@ class UsersFactory extends Api implements FactoryInterface
 
     /**
      * Get the logged in user's profile.
-     *
-     * @return User
      */
     public function me(): User
     {

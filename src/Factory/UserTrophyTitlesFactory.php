@@ -103,8 +103,6 @@ class UserTrophyTitlesFactory extends Api implements \IteratorAggregate, Factory
      */
     public function first(): UserTrophyTitle
     {
-        $this->getIterator()->rewind();
-
         return $this->getIterator()->current();
     }
 }

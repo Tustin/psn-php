@@ -52,8 +52,6 @@ class UserTrophyGroupsFactory extends Api implements \IteratorAggregate, Factory
      */
     public function first(): UserTrophyGroup
     {
-        $this->getIterator()->rewind();
-
         return $this->getIterator()->current();
     }
 }
