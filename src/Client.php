@@ -11,6 +11,7 @@ use Tustin\PlayStation\Factory\GroupsFactory;
 use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
 use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
+use Tustin\PlayStation\Model\Store\Concept;
 
 class Client extends AbstractClient
 {
@@ -198,6 +199,14 @@ class Client extends AbstractClient
     public function users(): UsersFactory
     {
         return new UsersFactory($this->getHttpClient());
+    }
+
+    /**
+     * Gets a store concept from the API using a concept id.
+     */
+    public function concept(int $conceptId): Concept
+    {
+        return new Concept($this->getHttpClient(), $conceptId);
     }
 
     /**
