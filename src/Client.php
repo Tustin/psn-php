@@ -12,14 +12,22 @@ use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
 use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
 use Tustin\PlayStation\Model\Store\Concept;
+use Tustin\PlayStation\Model\User;
 
 class Client extends AbstractClient
 {
     const AUTH_URL = 'https://ca.account.sony.com/api/';
     const BASE_URL = 'https://m.np.playstation.com/api/';
 
-    private $accessToken;
-    private $refreshToken;
+    /**
+     * The current access token.
+     */
+    private OAuthToken $accessToken;
+
+    /**
+     * The current refresh token.
+     */
+    private OAuthToken $refreshToken;
 
     public function __construct(array $guzzleOptions = [])
     {
@@ -35,11 +43,8 @@ class Client extends AbstractClient
      * Login with an NPSSO token.
      * 
      * @see https://tusticles.com/psn-php/first_login.html
-     *
-     * @param string $npsso
-     * @return void
      */
-    public function loginWithNpsso(string $npsso)
+    public function loginWithNpsso(string $npsso): void
     {
         // With the PS App revamp, we now need a JWT token.
         // @TODO: Clean up these params.
@@ -125,11 +130,8 @@ class Client extends AbstractClient
      * Login with an existing refresh token.
      * 
      * @see https://tusticles.com/psn-php/future_logins.html
-     *
-     * @param string $refreshToken
-     * @return void
      */
-    public function loginWithRefreshToken(string $refreshToken)
+    public function loginWithRefreshToken(string $refreshToken): void
     {
         // @TODO: Handle errors.
         $response = $this->post('authz/v3/oauth/token', [
@@ -144,11 +146,8 @@ class Client extends AbstractClient
 
     /**
      * Finishes the login flow and sets up future request middleware.
-     *
-     * @param object $response
-     * @return void
      */
-    private function finalizeLogin(object $response)
+    private function finalizeLogin(object $response): void
     {
         $this->accessToken = new OAuthToken($response->access_token, $response->expires_in);
         $this->refreshToken = new OAuthToken($response->refresh_token, $response->refresh_token_expires_in);
@@ -159,12 +158,9 @@ class Client extends AbstractClient
     }
 
     /**
-     * Access the PlayStation API using an existing access token.
-     *
-     * @param string $accessToken
-     * @return void
+     * Sets the access token.
      */
-    public function setAccessToken(string $accessToken)
+    public function setAccessToken(string $accessToken): void
     {
         $this->pushAuthenticationMiddleware(new AuthenticationMiddleware([
             'Authorization' => 'Bearer ' . $accessToken
@@ -173,8 +169,6 @@ class Client extends AbstractClient
 
     /**
      * Gets the access token.
-     *
-     * @return OAuthToken
      */
     public function getAccessToken(): OAuthToken
     {
@@ -183,8 +177,6 @@ class Client extends AbstractClient
 
     /**
      * Gets the refresh token.
-     *
-     * @return OAuthToken
      */
     public function getRefreshToken(): OAuthToken
     {
@@ -193,12 +185,20 @@ class Client extends AbstractClient
 
     /**
      * Creates a UsersFactory to query user information.
-     *
-     * @return UsersFactory
      */
     public function users(): UsersFactory
     {
         return new UsersFactory($this->getHttpClient());
+    }
+
+    /**
+     * Gets a user from the API using an account id.
+     * 
+     * Account ids can be found by searching for a user using the `users` method.
+     */
+    public function user(string $accountId): User
+    {
+        return new User($this->getHttpClient(), $accountId);
     }
 
     /**
@@ -211,6 +211,8 @@ class Client extends AbstractClient
 
     /**
      * Gets a trophy title from the API using a communication id (NPWRxxxxx_00).
+     * 
+     * Service name is usually 'trophy' but can be 'trophy2' for some titles.
      */
     public function trophyTitle(string $npCommunicationId, string $serviceName = 'trophy'): TrophyTitle
     {
@@ -229,8 +231,6 @@ class Client extends AbstractClient
 
     /**
      * Creates a store factory to navigate the PlayStation Store.
-     *
-     * @return StoreFactory
      */
     public function store(): StoreFactory
     {
@@ -239,8 +239,6 @@ class Client extends AbstractClient
 
     /**
      * Creates a group factory to query your chat groups (parties and text message groups).
-     *
-     * @return GroupsFactory
      */
     public function groups(): GroupsFactory
     {
@@ -249,9 +247,6 @@ class Client extends AbstractClient
 
     /**
      * Get a media object from the API.
-     *
-     * @param string $ugcId
-     * @return Media
      */
     public function media(string $ugcId): Media
     {
@@ -260,8 +255,6 @@ class Client extends AbstractClient
 
     /**
      * Gets the cloud media gallery for the user.
-     *
-     * @return CloudMediaGalleryFactory
      */
     public function cloudMediaGallery(): CloudMediaGalleryFactory
     {
