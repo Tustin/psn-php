@@ -4,7 +4,7 @@ namespace Tustin\PlayStation\Model;
 
 use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Factory\GameListFactory;
+use Tustin\PlayStation\Factory\UserGameListFactory;
 use Tustin\PlayStation\Factory\FriendsListFactory;
 use Tustin\PlayStation\Model\Trophy\TrophySummary;
 use Tustin\PlayStation\Factory\UserTrophyTitlesFactory;
@@ -51,18 +51,16 @@ class User extends Model
 
     /**
      * Get the game list for this user's account.
-     *
-     * @return GameListFactory
      */
-    public function gameList(): GameListFactory
+    public function gameList(): UserGameListFactory
     {
-        return new GameListFactory($this);
+        return (new UserGameListFactory(
+                $this->getHttpClient())
+            )->withUser($this);
     }
 
     /**
      * Gets the user's friends list.
-     *
-     * @return FriendsListFactory
      */
     public function friends(): FriendsListFactory
     {

@@ -2,23 +2,27 @@
 
 namespace Tustin\PlayStation\Model;
 
+use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\Store\Concept;
-use Tustin\PlayStation\Factory\GameListFactory;
+use Tustin\PlayStation\Traits\HasUser;
 
-class GameTitle extends Model
+class UserGameTitle extends Model
 {
-    public function __construct(GameListFactory $gameListFactory, private string $id)
+    use HasUser;
+
+    public function __construct(User $user, private string $titleId)
     {
-        parent::__construct($gameListFactory->getHttpClient());
+        parent::__construct($user->getHttpClient());
+        $this->withUser($user);
     }
 
     /**
      * Creates a new game title from existing data.
      */
-    public static function fromObject(GameListFactory $gameListFactory, object $data): self
+    public static function fromObject(User $user, object $data): self
     {
-        return (new static($gameListFactory, $data->titleId))->withCache($data);
+        return (new static($user, $data->titleId))->withCache($data);
     }
 
     /**
@@ -140,10 +144,10 @@ class GameTitle extends Model
     }
 
     /**
-     * Gets the game title data.
+     * Gets the game title data from the API.
      */
     public function fetch(): object
     {
-        return $this->get('gamelist/v2/users/' . $this->getFactory()->getUser()->accountId() . '/titles/' . $this->id());
+        return $this->get('gamelist/v2/users/' . $this->user()->accountId() . '/titles/' . $this->id());
     }
 }

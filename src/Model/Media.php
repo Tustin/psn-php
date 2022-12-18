@@ -34,9 +34,9 @@ class Media extends Model
 		return new TrophyTitle($this->getHttpClient(), $this->npCommunicationId());
 	}
 
-	public function game(): GameTitle
+	public function game(): UserGameTitle
 	{
-		return new GameTitle($this->getHttpClient(), $this->titleId());
+		return new UserGameTitle($this->getHttpClient(), $this->titleId());
 	}
 
 	public function id(): string
