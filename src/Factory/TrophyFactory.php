@@ -1,13 +1,11 @@
 <?php
 namespace Tustin\PlayStation\Factory;
 
-use Iterator;
-use IteratorAggregate;
 use Tustin\PlayStation\Model\Trophy\Trophy;
 use Tustin\PlayStation\Iterator\TrophyIterator;
 use Tustin\PlayStation\Model\Trophy\TrophyGroup;
 
-class TrophyFactory implements IteratorAggregate
+class TrophyFactory implements \IteratorAggregate
 {
     private array $platforms = [];
 
@@ -20,10 +18,8 @@ class TrophyFactory implements IteratorAggregate
 
     /**
      * Gets the iterator and applies any filters.
-     *
-     * @return Iterator
      */
-    public function getIterator(): Iterator
+    public function getIterator(): \Iterator
     {
         $iterator = new TrophyIterator($this->group);
 
@@ -32,8 +28,6 @@ class TrophyFactory implements IteratorAggregate
 
     /**
      * Gets the first trophy title in the collection.
-     *
-     * @return Trophy
      */
     public function first(): Trophy
     {

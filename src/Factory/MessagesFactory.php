@@ -2,16 +2,13 @@
 
 namespace Tustin\PlayStation\Factory;
 
-use Iterator;
-use IteratorAggregate;
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Model\Message;
 use Tustin\PlayStation\Model\MessageThread;
 use Tustin\PlayStation\Iterator\MessagesIterator;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 use Tustin\PlayStation\Iterator\Filter\MessageTypeFilter;
 
-class MessagesFactory extends Api implements IteratorAggregate
+class MessagesFactory extends Api implements \IteratorAggregate
 {
     private string $typeFilter;
 
@@ -33,7 +30,7 @@ class MessagesFactory extends Api implements IteratorAggregate
     /**
      * Gets the iterator and applies any filters.
      */
-    public function getIterator(): Iterator
+    public function getIterator(): \Iterator
     {
         $iterator = new MessagesIterator($this->thread);
 

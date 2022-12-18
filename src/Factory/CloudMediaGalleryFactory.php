@@ -1,8 +1,6 @@
 <?php
 namespace Tustin\PlayStation\Factory;
 
-use Iterator;
-use IteratorAggregate;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Model\Media;
 use Tustin\PlayStation\Enum\TranscodeStatusType;
@@ -11,7 +9,7 @@ use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\CloudMediaGalleryIterator;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TitleIdFilter;
 
-class CloudMediaGalleryFactory extends Api implements IteratorAggregate, FactoryInterface
+class CloudMediaGalleryFactory extends Api implements \IteratorAggregate, FactoryInterface
 {
     private $title;
 
@@ -22,12 +20,8 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
 
     /**
      * Filters media based on title id.
-     *
-     * @param string $titleId PPSAxxxxx_00
-     * @return CloudMediaGalleryFactory
-     * @throws FilterException
      */
-    public function withTitleId(string $titleId): CloudMediaGalleryFactory
+    public function withTitleId(string $titleId): self
     {
         if ($this->npCommId) {
             throw new FilterException('Cannot filter by title id when a communication id filter is already set.');
@@ -42,12 +36,8 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
      * Filters media based on NP communication id (trophy id).
      * 
      * Cannot be paired with withTitleId.
-     *
-     * @param string $npCommId NPWRxxxxx_00
-     * @return CloudMediaGalleryFactory
-     * @throws FilterException
      */
-    public function withCommunicationId(string $npCommId): CloudMediaGalleryFactory
+    public function withCommunicationId(string $npCommId): self
     {
         if ($this->title) {
             throw new FilterException('Cannot filter by communcation id when a title id filter is already set.');
@@ -62,11 +52,8 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
      * Filters media based on it's transcoding status.
      * 
      * Useful for filtering out any non-completed media.
-     *
-     * @param TranscodeStatusType $status
-     * @return CloudMediaGalleryFactory
      */
-    public function withStatus(TranscodeStatusType $status): CloudMediaGalleryFactory
+    public function withStatus(TranscodeStatusType $status): self
     {
         $this->transcodeStatus = $status;
 
@@ -75,10 +62,8 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
 
     /**
      * Gets the iterator and applies any filters.
-     *
-     * @return Iterator
      */
-    public function getIterator(): Iterator
+    public function getIterator(): \Iterator
     {
         $iterator = new CloudMediaGalleryIterator($this);
 
@@ -93,8 +78,6 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
 
     /**
      * Gets the first media asset in the collection.
-     *
-     * @return Media
      */
     public function first(): Media
     {

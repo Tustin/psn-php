@@ -1,8 +1,6 @@
 <?php
 namespace Tustin\PlayStation\Factory;
 
-use Iterator;
-use IteratorAggregate;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
@@ -11,7 +9,7 @@ use Tustin\PlayStation\Iterator\Filter\User\OnlineIdFilter;
 use Tustin\PlayStation\Iterator\Filter\User\CloseFriendFilter;
 use Tustin\PlayStation\Iterator\Filter\User\VerifiedUserFilter;
 
-class FriendsListFactory extends Api implements IteratorAggregate, FactoryInterface
+class FriendsListFactory extends Api implements \IteratorAggregate, FactoryInterface
 {
     private string $onlineId = '';
     private bool $useCloseFriends = false;
@@ -24,10 +22,8 @@ class FriendsListFactory extends Api implements IteratorAggregate, FactoryInterf
 
     /**
      * Applies the filter for only querying close friends.
-     *
-     * @return FriendsListFactory
      */
-    public function closeFriends(): FriendsListFactory
+    public function closeFriends(): self
     {
         $this->useCloseFriends = true;
 
@@ -36,11 +32,8 @@ class FriendsListFactory extends Api implements IteratorAggregate, FactoryInterf
 
     /**
      * Applies a filter for only querying users containing this online id.
-     *
-     * @param string $onlineId
-     * @return FriendsListFactory
      */
-    public function onlineIdContains(string $onlineId): FriendsListFactory
+    public function onlineIdContains(string $onlineId): self
     {
         $this->onlineId = $onlineId;
 
@@ -49,10 +42,8 @@ class FriendsListFactory extends Api implements IteratorAggregate, FactoryInterf
 
     /**
      * Applies a filter for only querying verified friends.
-     *
-     * @return FriendsListFactory
      */
-    public function verified(): FriendsListFactory
+    public function verified(): self
     {
         $this->verified = true;
 
@@ -61,10 +52,8 @@ class FriendsListFactory extends Api implements IteratorAggregate, FactoryInterf
 
     /**
      * Gets the iterator and applies any filters.
-     *
-     * @return Iterator
      */
-    public function getIterator(): Iterator
+    public function getIterator(): \Iterator
     {
         $iterator = new FriendsListIterator($this, $this->user->accountId());
 
@@ -88,8 +77,6 @@ class FriendsListFactory extends Api implements IteratorAggregate, FactoryInterf
 
     /**
      * Gets the first friend.
-     *
-     * @return User
      */
     public function first(): User
     {

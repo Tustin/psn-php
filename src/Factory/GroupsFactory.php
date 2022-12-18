@@ -2,9 +2,7 @@
 
 namespace Tustin\PlayStation\Factory;
 
-use Iterator;
 use Carbon\Carbon;
-use IteratorAggregate;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Model\Group;
@@ -12,7 +10,7 @@ use Tustin\PlayStation\Model\MessageThread;
 use Tustin\PlayStation\Iterator\GroupsIterator;
 use Tustin\PlayStation\Iterator\Filter\GroupMembersFilter;
 
-class GroupsFactory extends Api implements IteratorAggregate
+class GroupsFactory extends Api implements \IteratorAggregate
 {
     private array $with = [];
 
@@ -26,9 +24,6 @@ class GroupsFactory extends Api implements IteratorAggregate
      * Filters groups that only contain these onlineIds.
      * 
      * Chain this with GroupsFactory::only to ensure you only get threads with these exact users.
-     *
-     * @param string ...$onlineIds
-     * @return GroupsFactory
      */
     public function with(string ...$onlineIds): GroupsFactory
     {
@@ -41,8 +36,6 @@ class GroupsFactory extends Api implements IteratorAggregate
      * Should be used with the GroupsFactory::with method.
      * 
      * Will return groups that contain ONLY the users passed to GroupsFactory::with.
-     *
-     * @return GroupsFactory
      */
     public function only(): GroupsFactory
     {
@@ -53,11 +46,8 @@ class GroupsFactory extends Api implements IteratorAggregate
 
     /**
      * Filters groups that have only been active since the given date.
-     *
-     * @param Carbon $date
-     * @return GroupsFactory
      */
-    public function since(Carbon $date): GroupsFactory
+    public function since(\DateTime $date): GroupsFactory
     {
         $this->since = $date;
 
@@ -78,10 +68,8 @@ class GroupsFactory extends Api implements IteratorAggregate
 
     /**
      * Gets the iterator and applies any filters.
-     *
-     * @return Iterator
      */
-    public function getIterator(): Iterator
+    public function getIterator(): \Iterator
     {
         $iterator = new GroupsIterator($this);
 
@@ -94,8 +82,6 @@ class GroupsFactory extends Api implements IteratorAggregate
 
     /**
      * Gets the first group in the collection.
-     *
-     * @return Group
      */
     public function first(): Group
     {
@@ -106,10 +92,8 @@ class GroupsFactory extends Api implements IteratorAggregate
      * The date to get messages since then.
      * 
      * Returns unix epoch if not set prior.
-     *
-     * @return Carbon
      */
-    public function getSinceDate(): Carbon
+    public function getSinceDate(): \DateTime
     {
         return $this->since ?? Carbon::createFromTimestamp(0);
     }
@@ -118,9 +102,6 @@ class GroupsFactory extends Api implements IteratorAggregate
      * Creates a new message thread.
      * 
      * Will return an existing message thread if a thread already exists containing the same users you pass to this method.
-     *
-     * @param User ...$users
-     * @return MessageThread
      */
     public function create(User ...$users): MessageThread
     {

@@ -1,16 +1,14 @@
 <?php
 namespace Tustin\PlayStation\Factory;
 
-use Iterator;
 use GuzzleHttp\Client;
-use IteratorAggregate;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Traits\HasUser;
 use Tustin\PlayStation\Model\UserGameTitle;
 use Tustin\PlayStation\Iterator\UserGameListIterator;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 
-class UserGameListFactory extends Api implements IteratorAggregate, FactoryInterface
+class UserGameListFactory extends Api implements \IteratorAggregate, FactoryInterface
 {
     use HasUser;
 
@@ -22,7 +20,7 @@ class UserGameListFactory extends Api implements IteratorAggregate, FactoryInter
     /**
      * Gets the iterator and applies any filters.
      */
-    public function getIterator(): Iterator
+    public function getIterator(): \Iterator
     {
         $iterator = new UserGameListIterator($this);
 

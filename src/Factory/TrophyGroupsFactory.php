@@ -1,8 +1,6 @@
 <?php
 namespace Tustin\PlayStation\Factory;
 
-use Iterator;
-use IteratorAggregate;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Enum\TrophyType;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
@@ -13,7 +11,7 @@ use Tustin\PlayStation\Iterator\Filter\TrophyGroup\DetailFilter;
 use Tustin\PlayStation\Iterator\Filter\TrophyGroup\TrophyTypeFilter;
 use Tustin\PlayStation\Model\Trophy\AbstractTrophyGroup;
 
-class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInterface
+class TrophyGroupsFactory extends Api implements \IteratorAggregate, FactoryInterface
 {
     private string $withName = '';
     private string $withDetail = '';
@@ -52,10 +50,8 @@ class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInter
 
     /**
      * Gets the iterator and applies any filters.
-     *
-     * @return Iterator
      */
-    public function getIterator(): Iterator
+    public function getIterator(): \Iterator
     {
         $iterator = new TrophyGroupsIterator($this->title);
 
