@@ -3,13 +3,17 @@
 namespace Tustin\PlayStation\Model\Trophy;
 
 use GuzzleHttp\Client;
+use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\ConsoleType;
+use Tustin\PlayStation\Factory\TrophyGroupsFactory;
 
-class TrophyTitle extends AbstractTrophyTitle
+class TrophyTitle extends Model
 {
-    public function __construct(Client $client, string $npCommunicationId, string $serviceName = 'trophy')
+	protected string $serviceName;
+
+    public function __construct(Client $client, protected string $npCommunicationId, string $serviceName = 'trophy')
     {
-        parent::__construct($client, $npCommunicationId);
+        parent::__construct($client);
 
         $this->setServiceName($serviceName);
     }
@@ -18,6 +22,26 @@ class TrophyTitle extends AbstractTrophyTitle
     {
         return (new static($client, $data->npCommunicationId, $data->npServiceName))->withCache($data);
     }
+
+    protected function setServiceName(string $serviceName)
+	{
+		$this->serviceName = $serviceName;
+	}
+
+    public function trophyGroups(): TrophyGroupsFactory
+	{
+		return new TrophyGroupsFactory($this);
+	}
+
+    public function npCommunicationId(): string
+	{
+		return $this->npCommunicationId ??= $this->pluck('npCommunicationId');
+	}
+
+    public function serviceName(): string
+	{
+		return $this->serviceName ??= $this->pluck('npServiceName');
+	}
 
     /**
      * Get the trophy set version for this trophy title.

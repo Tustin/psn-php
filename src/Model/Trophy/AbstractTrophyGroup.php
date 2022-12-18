@@ -8,7 +8,7 @@ use Tustin\PlayStation\Factory\TrophyFactory;
 abstract class AbstractTrophyGroup extends Model
 {
     public function __construct(
-        private AbstractTrophyTitle $trophyTitle,
+        private TrophyTitle $trophyTitle,
         private string $groupId,
     ) {
         parent::__construct($trophyTitle->getHttpClient());
@@ -17,7 +17,7 @@ abstract class AbstractTrophyGroup extends Model
     /**
      * Creates a new trophy group from existing data.
      */
-    public static function fromObject(AbstractTrophyTitle $trophyTitle, object $data): self
+    public static function fromObject(TrophyTitle $trophyTitle, object $data): self
     {
         return (new static($trophyTitle, $data->trophyGroupId))->withCache($data);
     }
@@ -33,7 +33,7 @@ abstract class AbstractTrophyGroup extends Model
     /**
      * Gets the trophy title for this trophy group.
      */
-    public function title(): AbstractTrophyTitle
+    public function title(): TrophyTitle
     {
         return $this->trophyTitle;
     }

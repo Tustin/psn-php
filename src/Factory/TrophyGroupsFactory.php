@@ -5,11 +5,11 @@ use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Enum\TrophyType;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\TrophyGroupsIterator;
-use Tustin\PlayStation\Model\Trophy\AbstractTrophyTitle;
 use Tustin\PlayStation\Iterator\Filter\TrophyGroup\NameFilter;
 use Tustin\PlayStation\Iterator\Filter\TrophyGroup\DetailFilter;
 use Tustin\PlayStation\Iterator\Filter\TrophyGroup\TrophyTypeFilter;
 use Tustin\PlayStation\Model\Trophy\AbstractTrophyGroup;
+use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 
 class TrophyGroupsFactory extends Api implements \IteratorAggregate, FactoryInterface
 {
@@ -18,7 +18,7 @@ class TrophyGroupsFactory extends Api implements \IteratorAggregate, FactoryInte
 
     private array $certainTrophyTypeFilter = [];
 
-    public function __construct(private AbstractTrophyTitle $title)
+    public function __construct(private TrophyTitle $title)
     {
     }
 
