@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Factory\UserGameListFactory;
 use Tustin\PlayStation\Factory\FriendsListFactory;
-use Tustin\PlayStation\Model\Trophy\TrophySummary;
+use Tustin\PlayStation\Model\Trophy\UserTrophySummary;
 use Tustin\PlayStation\Factory\UserTrophyTitlesFactory;
 
 class User extends Model
@@ -91,9 +91,9 @@ class User extends Model
     /**
      * Gets the trophy summary for the user.
      */
-    public function trophySummary(): TrophySummary
+    public function trophySummary(): UserTrophySummary
     {
-        return new TrophySummary($this);
+        return new UserTrophySummary($this);
     }
 
     /**

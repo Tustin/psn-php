@@ -2,15 +2,14 @@
 
 namespace Tustin\PlayStation\Model\Trophy;
 
+use Tustin\PlayStation\Enum\TrophyLevelType;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\User;
 
-class TrophySummary extends Model
+class UserTrophySummary extends Model
 {
     public function __construct(private User $user)
     {
-        $this->user = $user;
-
         parent::__construct($user->getHttpClient());
     }
 
@@ -41,7 +40,22 @@ class TrophySummary extends Model
     }
 
     /**
-     * Gets the amount of bronze trophies.
+     * Gets the trophy level type.
+     */
+    public function trophyLevelType(): TrophyLevelType
+    {
+        $level = $this->level();
+
+        return match(true) {
+            $level <= 299 => TrophyLevelType::Bronze,
+            $level <= 599 => TrophyLevelType::Silver,
+            $level <= 998 => TrophyLevelType::Gold,
+            $level >= 999 => TrophyLevelType::Platinum,
+        };
+    }
+
+    /**
+     * Gets the amount of earned bronze trophies.
      */
     public function bronze(): int
     {
@@ -49,7 +63,7 @@ class TrophySummary extends Model
     }
 
     /**
-     * Gets the amount of silver trophies.
+     * Gets the amount of earned silver trophies.
      */
     public function silver(): int
     {
@@ -57,16 +71,15 @@ class TrophySummary extends Model
     }
 
     /**
-     * Gets the amount of gold trophies.
+     * Gets the amount of earned gold trophies.
      */
     public function gold(): int
     {
         return $this->pluck('earnedTrophies.gold');
     }
 
-
     /**
-     * Gets the amount of platinum trophies.
+     * Gets the amount of earned platinum trophies.
      */
     public function platinum(): int
     {
@@ -74,7 +87,7 @@ class TrophySummary extends Model
     }
 
     /**
-     * Fetches the trophy summary from the API.
+     * Fetches the user's trophy summary from the API.
      */
     public function fetch(): object
     {

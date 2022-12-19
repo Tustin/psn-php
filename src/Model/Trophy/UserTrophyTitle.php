@@ -2,17 +2,11 @@
 
 namespace Tustin\PlayStation\Model\Trophy;
 
-use GuzzleHttp\Client;
 use Tustin\PlayStation\Traits\HasUser;
 
 class UserTrophyTitle extends TrophyTitle
 {
     use HasUser;
-
-    public static function fromObject(Client $client, object $data): self
-    {
-        return (new static($client, $data->npCommunicationId, $data->npServiceName))->withCache($data);
-    }
 
     /**
      * Gets the last updated date and time for the trophy title for this user.

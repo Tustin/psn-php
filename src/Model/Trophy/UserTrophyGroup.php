@@ -3,26 +3,20 @@
 namespace Tustin\PlayStation\Model\Trophy;
 
 use Carbon\Carbon;
-use Tustin\PlayStation\Enum\TrophyType;
-use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Traits\HasUser;
+use Tustin\PlayStation\Enum\TrophyType;
+use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
 
-class UserTrophyGroup extends AbstractTrophyGroup
+class UserTrophyGroup extends TrophyGroup
 {
     use HasUser;
 
     /**
-     * Gets additional trophy group information for this user's trophy group.
-     * 
-     * This is a separate request from the user's trophy group. This is because Sony doesn't include
-     * all of this information in the user's trophy group response.
+     * Gets the user's trophy title for this trophy group.
      */
-    public function info(): TrophyGroup
+    public function title(): UserTrophyTitle
     {
-        return new TrophyGroup(
-            $this->title(),
-            $this->id()
-        );
+        return $this->trophyTitle;
     }
 
     /**
