@@ -97,7 +97,7 @@ abstract class Model extends Api
     /**
      * Sets the cache property and allows for chaining.
      */
-    public function withCache(object $data): self
+    public function hydrate(object $data): self
     {
         $this->setCache($data);
 

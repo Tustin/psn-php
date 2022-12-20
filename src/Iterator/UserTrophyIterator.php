@@ -34,9 +34,10 @@ class UserTrophyIterator extends AbstractApiIterator
      */
     public function current(): UserTrophy
     {
-        return UserTrophy::fromObject(
-            $this->trophyGroup,
-            $this->getFromOffset($this->currentOffset),
-        );
+        $cache = $this->getFromOffset($this->currentOffset);
+
+        $trophy = new UserTrophy($this->trophyGroup, $cache->trophyId);
+
+        return $trophy->hydrate($cache);
     }
 }

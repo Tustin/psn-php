@@ -2,11 +2,20 @@
 
 namespace Tustin\PlayStation\Model\Trophy;
 
+use GuzzleHttp\Client;
+use Tustin\PlayStation\Interfaces\TrophyTitleInterface;
+use Tustin\PlayStation\Iterator\UserTrophyGroupsIterator;
+use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Traits\HasUser;
 
-class UserTrophyTitle extends TrophyTitle
+class UserTrophyTitle extends TrophyTitle implements TrophyTitleInterface
 {
     use HasUser;
+
+    public function __construct(Client $client, private User $user, protected string $npCommunicationId, protected string $serviceName = 'trophy')
+    {
+        parent::__construct($client, $npCommunicationId, $serviceName);
+    }
 
     /**
      * Gets the last updated date and time for the trophy title for this user.
@@ -62,6 +71,14 @@ class UserTrophyTitle extends TrophyTitle
     public function hidden(): bool
     {
         return $this->pluck('hiddenFlag');
+    }
+
+    /**
+     * Gets the trophy groups for this trophy title.
+     */
+    public function trophyGroups(): \Iterator
+    {
+        return new UserTrophyGroupsIterator($this, $this->user());
     }
 
     /**

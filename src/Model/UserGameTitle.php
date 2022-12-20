@@ -22,7 +22,7 @@ class UserGameTitle extends Model
      */
     public static function fromObject(User $user, object $data): self
     {
-        return (new static($user, $data->titleId))->withCache($data);
+        return (new static($user, $data->titleId))->hydrate($data);
     }
 
     /**

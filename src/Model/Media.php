@@ -21,7 +21,7 @@ class Media extends Model
 	 */
 	public static function fromObject(Client $client, object $data): self
     {
-        return ( new static($client, $data->sourceUgcId))->withCache($data);
+        return ( new static($client, $data->sourceUgcId))->hydrate($data);
     }
 
 	public function creator(): User

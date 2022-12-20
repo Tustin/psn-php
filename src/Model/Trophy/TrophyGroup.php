@@ -2,23 +2,16 @@
 
 namespace Tustin\PlayStation\Model\Trophy;
 
-use Tustin\PlayStation\Enum\TrophyType;
-use Tustin\PlayStation\Factory\TrophyFactory;
 use Tustin\PlayStation\Model;
+use Tustin\PlayStation\Enum\TrophyType;
+use Tustin\PlayStation\Interfaces\TrophyGroupInterface;
+use Tustin\PlayStation\Iterator\TrophyIterator;
 
-class TrophyGroup extends Model
+class TrophyGroup extends Model implements TrophyGroupInterface
 {
     public function __construct(private TrophyTitle $trophyTitle, private string $groupId)
     {
         parent::__construct($trophyTitle->getHttpClient());
-    }
-
-    /**
-     * Creates a new trophy group from existing data.
-     */
-    public static function fromObject(TrophyTitle $trophyTitle, object $data): self
-    {
-        return (new static($trophyTitle, $data->trophyGroupId))->withCache($data);
     }
     
     /**
@@ -40,9 +33,9 @@ class TrophyGroup extends Model
     /**
      * Gets all the trophies in the trophy group.
      */
-    public function trophies(): TrophyFactory
+    public function trophies(): \Iterator
     {
-        return new TrophyFactory($this);
+        return new TrophyIterator($this);
     }
 
     /**

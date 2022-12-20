@@ -8,6 +8,7 @@ use Tustin\PlayStation\Factory\UserGameListFactory;
 use Tustin\PlayStation\Factory\FriendsListFactory;
 use Tustin\PlayStation\Model\Trophy\UserTrophySummary;
 use Tustin\PlayStation\Factory\UserTrophyTitlesFactory;
+use Tustin\PlayStation\Iterator\UserTrophyTitlesIterator;
 
 class User extends Model
 {
@@ -26,7 +27,7 @@ class User extends Model
 
     public static function fromObject(Client $client, object $data): self
     {
-        return (new User($client, $data->accountId))->withCache($data);
+        return (new User($client, $data->accountId))->hydrate($data);
     }
 
     /**
@@ -42,11 +43,12 @@ class User extends Model
     /**
      * Get the trophy titles associated with this user's account.
      */
-    public function trophyTitles(): UserTrophyTitlesFactory
+    public function trophyTitles(): UserTrophyTitlesIterator
     {
-        return (new UserTrophyTitlesFactory(
-            $this->getHttpClient())
-        )->withUser($this);
+        return new UserTrophyTitlesIterator($this->getHttpClient(), $this);
+        // return (new UserTrophyTitlesFactory(
+        //     $this->getHttpClient())
+        // )->withUser($this);
     }
 
     /**
@@ -73,7 +75,7 @@ class User extends Model
      * Only works for PS4/PS5 titles.
      * Doesn't work with PPSA... title ids.
      */
-    public function titleIdToCommunicationId($npTitleId): string
+    public function titleIdToCommunicationId(string $npTitleId): string
     {
         $body = [
             'npTitleIds' => $npTitleId

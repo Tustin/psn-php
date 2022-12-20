@@ -4,8 +4,9 @@ namespace Tustin\PlayStation\Model\Trophy;
 
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\TrophyType;
+use Tustin\PlayStation\Interfaces\TrophyInterface;
 
-class Trophy extends Model
+class Trophy extends Model implements TrophyInterface
 {
     public function __construct(private TrophyGroup $trophyGroup, private int $id)
     {
@@ -13,11 +14,19 @@ class Trophy extends Model
     }
 
     /**
-     * Creates a new trophy from existing data.
+     * Gets the trophy title for this trophy.
      */
-    public static function fromObject(TrophyGroup $trophyGroup, object $data): self
+    public function title(): TrophyTitle
     {
-        return (new static($trophyGroup, $data->trophyId))->withCache($data);
+        return $this->trophyTitle;
+    }
+
+    /**
+     * Gets the trophy group for this trophy.
+     */
+    public function group(): TrophyGroup
+    {
+        return $this->trophyGroup;
     }
 
     /**

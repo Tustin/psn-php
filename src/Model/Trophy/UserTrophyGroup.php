@@ -3,13 +3,21 @@
 namespace Tustin\PlayStation\Model\Trophy;
 
 use Carbon\Carbon;
+use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Traits\HasUser;
 use Tustin\PlayStation\Enum\TrophyType;
 use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
+use Tustin\PlayStation\Interfaces\TrophyGroupInterface;
+use Tustin\PlayStation\Iterator\UserTrophyIterator;
 
-class UserTrophyGroup extends TrophyGroup
+class UserTrophyGroup extends TrophyGroup implements TrophyGroupInterface
 {
     use HasUser;
+
+    public function __construct(private UserTrophyTitle $trophyTitle, private User $user, private string $groupId)
+    {
+        parent::__construct($trophyTitle, $groupId);
+    }
 
     /**
      * Gets the user's trophy title for this trophy group.
@@ -17,6 +25,14 @@ class UserTrophyGroup extends TrophyGroup
     public function title(): UserTrophyTitle
     {
         return $this->trophyTitle;
+    }
+
+    /**
+     * Gets all the trophies in the user's trophy group.
+     */
+    public function trophies(): \Iterator
+    {
+        return new UserTrophyIterator($this);
     }
 
     /**

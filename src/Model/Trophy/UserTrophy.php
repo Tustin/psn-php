@@ -4,9 +4,25 @@ namespace Tustin\PlayStation\Model\Trophy;
 
 use Carbon\Carbon;
 use Tustin\PlayStation\Model\Trophy\Trophy;
+use Tustin\PlayStation\Interfaces\TrophyInterface;
 
-class UserTrophy extends Trophy
-{ 
+class UserTrophy extends Trophy implements TrophyInterface
+{
+    public function __construct(private UserTrophyGroup $trophyGroup, private int $id)
+    {
+        parent::__construct($trophyGroup, $id);
+    }
+
+    public function title(): UserTrophyTitle
+    {
+        return $this->trophyTitle;
+    }
+
+    public function group(): UserTrophyGroup
+    {
+        return $this->trophyGroup;
+    }
+
     /**
      * Get the trophy earned rate.
      */
@@ -58,7 +74,7 @@ class UserTrophy extends Trophy
             return null;
         }
 
-        return Carbon::parse($this->pluck('earnedDateTime')) ?? '';
+        return Carbon::parse($this->pluck('earnedDateTime'));
     }
 
     /**
@@ -90,7 +106,7 @@ class UserTrophy extends Trophy
      */
     public function fetch(): object
     {
-        return $this->get('trophy/v1/users/' . $this->trophyGroup->user()->accountId() . 'npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophies/' . $this->id(), [
+        return $this->get('trophy/v1/users/' . $this->trophyGroup->user()->accountId() . '/npCommunicationIds/' . $this->trophyGroup->title()->npCommunicationId()  . '/trophies/' . $this->id(), [
             'npServiceName' => $this->trophyGroup->title()->serviceName()
         ]);
     }

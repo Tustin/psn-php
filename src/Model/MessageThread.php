@@ -20,7 +20,7 @@ class MessageThread extends Model
      */
     public static function fromObject(Group $group, object $data): self
     {
-        return (new static($group, $data->threadId))->withCache($data);
+        return (new static($group, $data->threadId))->hydrate($data);
     }
 
     /**

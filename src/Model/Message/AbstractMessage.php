@@ -18,7 +18,7 @@ abstract class AbstractMessage extends Model
 
     public static function fromObject(MessageThread $thread, object $data): self
     {
-        return (new static($thread->getHttpClient(), $thread))->withCache($data);
+        return (new static($thread->getHttpClient(), $thread))->hydrate($data);
     }
 
     /**

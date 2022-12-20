@@ -17,41 +17,8 @@ class UserTrophyGroupsFactory extends Api implements \IteratorAggregate, Factory
     {
     }
 
-    public function withTrophyCount(TrophyType $trophy, string $operand, int $count)
-    {
-        $this->certainTrophyTypeFilter[] = [$trophy, $operand, $count];
 
-        return $this;
-    }
 
-    public function withTotalTrophyCount(string $operand, int $count)
-    {
-        // 
-    }
 
-    /**
-     * Gets the iterator and applies any filters.
-     */
-    public function getIterator(): \Iterator
-    {
-        $iterator = new UserTrophyGroupsIterator($this->title);
 
-        if ($this->certainTrophyTypeFilter)
-        {
-            foreach ($this->certainTrophyTypeFilter as $filter)
-            {
-                $iterator = new TrophyTypeFilter($iterator, ...$filter);
-            }
-        }
-
-        return $iterator;
-    }
-
-    /**
-     * Gets the first trophy group.
-     */
-    public function first(): UserTrophyGroup
-    {
-        return $this->getIterator()->current();
-    }
 }

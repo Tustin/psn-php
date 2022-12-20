@@ -5,8 +5,11 @@ use Tustin\PlayStation\Model\User;
 
 trait HasUser
 {
-    protected User $user;
+    private User $user;
 
+    /**
+     * Sets the user for this object.
+     */
     public function withUser(User $user): self
     {
         $this->user = $user;
@@ -14,6 +17,9 @@ trait HasUser
         return $this;
     }
 
+    /**
+     * Gets the user for this object.
+     */
     public function user(): User
     {
         return $this->user;

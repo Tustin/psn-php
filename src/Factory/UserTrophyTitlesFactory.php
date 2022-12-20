@@ -90,8 +90,6 @@ class UserTrophyTitlesFactory extends Api implements \IteratorAggregate, Factory
      * Gets the current language passed to this instance.
      * 
      * If the language has not been set prior, this will return LanguageType::English.
-     *
-     * @return LanguageType
      */
     public function getLanguage(): LanguageType
     {

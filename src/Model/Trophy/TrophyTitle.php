@@ -5,43 +5,55 @@ namespace Tustin\PlayStation\Model\Trophy;
 use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enum\ConsoleType;
-use Tustin\PlayStation\Factory\TrophyGroupsFactory;
+use Tustin\PlayStation\Iterator\TrophyGroupsIterator;
+use Tustin\PlayStation\Interfaces\TrophyTitleInterface;
 
-class TrophyTitle extends Model
+class TrophyTitle extends Model implements TrophyTitleInterface
 {
-	protected string $serviceName;
-
-    public function __construct(Client $client, protected string $npCommunicationId, string $serviceName = 'trophy')
+    public function __construct(Client $client, protected string $npCommunicationId, protected string $serviceName = 'trophy')
     {
         parent::__construct($client);
-
-        $this->setServiceName($serviceName);
     }
 
+    /**
+     * Creates a new trophy title from an object.
+     */
     public static function fromObject(Client $client, object $data): self
     {
-        return (new static($client, $data->npCommunicationId, $data->npServiceName))->withCache($data);
+        return (new static($client, $data->npCommunicationId, $data->npServiceName))->hydrate($data);
     }
 
-    protected function setServiceName(string $serviceName)
-	{
-		$this->serviceName = $serviceName;
-	}
+    /**
+     * Sets the service name for this trophy title.
+     */
+    protected function setServiceName(string $serviceName): void
+    {
+        $this->serviceName = $serviceName;
+    }
 
-    public function trophyGroups(): TrophyGroupsFactory
-	{
-		return new TrophyGroupsFactory($this);
-	}
+    /**
+     * Gets the trophy groups for this trophy title.
+     */
+    public function trophyGroups(): \Iterator
+    {
+        return new TrophyGroupsIterator($this);
+    }
 
+    /**
+     * Gets the trophy title ID.
+     */
     public function npCommunicationId(): string
-	{
-		return $this->npCommunicationId ??= $this->pluck('npCommunicationId');
-	}
+    {
+        return $this->npCommunicationId ??= $this->pluck('npCommunicationId');
+    }
 
+    /**
+     * Gets the service name for this trophy title.
+     */
     public function serviceName(): string
-	{
-		return $this->serviceName ??= $this->pluck('npServiceName');
-	}
+    {
+        return $this->serviceName ??= $this->pluck('npServiceName');
+    }
 
     /**
      * Get the trophy set version for this trophy title.

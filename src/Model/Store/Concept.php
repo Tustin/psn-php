@@ -18,7 +18,7 @@ class Concept extends Model
      */
     public static function fromObject(Client $client, object $data): self
     {
-        return (new Concept($client, $data->conceptId))->withCache($data);
+        return (new Concept($client, $data->conceptId))->hydrate($data);
     }
 
     /**
