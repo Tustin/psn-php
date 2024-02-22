@@ -2,9 +2,7 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Api;
-
-abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
+abstract class AbstractApiIterator implements \Iterator, \Countable
 {
     protected int $currentOffset = 0;
 
@@ -15,6 +13,8 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
     protected bool $lastBlock = false;
 
     protected mixed $customCursor = null;
+
+    protected bool $useCustomCursor = false;
 
     protected ?bool $force = null;
 
@@ -85,6 +85,8 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
 
         $this->cache = array_merge($this->cache, $items);
 
+        $this->limit = count($items);
+
         $this->customCursor = $customCursor;
     }
 
@@ -94,6 +96,14 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
     public function force(bool $value): void
     {
         $this->force = $value;
+    }
+
+    /**
+     * Set whether to use a custom cursor or not.
+     */
+    public function useCustomCursor(bool $value = true): void
+    {
+        $this->useCustomCursor = $value;
     }
 
     /**
@@ -110,7 +120,11 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
         }
 
         if ($this->currentOffset % $this->limit === 0 && $this->currentOffset < $this->getTotalResults()) {
-            if ($this->customCursor) {
+            if ($this->useCustomCursor) {
+                if ($this->customCursor === null) {
+                    return;
+                }
+
                 $this->access($this->customCursor);
             } else {
                 $this->access($this->currentOffset);
@@ -122,20 +136,8 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
     /**
      * Gets an item from cache, or from the API resource if necessary, by an offset.
      */
-    public function getFromOffset(mixed $offset): object
+    public function getFromOffset(mixed $offset): array
     {
-        if (is_null($offset)) {
-            throw new \InvalidArgumentException("Offset cannot be null.");
-        }
-
-        if (!$this->offsetExists($offset)) {
-            throw new \InvalidArgumentException("Offset $offset does not exist.");
-        }
-
-        if (!array_key_exists($offset, $this->cache)) {
-            $this->access($offset);
-        }
-
         return $this->cache[$offset];
     }
 
@@ -144,11 +146,7 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
      */
     public function offsetExists(mixed $offset): bool
     {
-        try {
-            return $offset >= 0 && $offset < $this->getTotalResults();
-        } catch (\RuntimeException $e) {
-            return !$this->lastBlock;
-        }
+        return $offset >= 0 && $offset < $this->getTotalResults();
     }
 
     /**

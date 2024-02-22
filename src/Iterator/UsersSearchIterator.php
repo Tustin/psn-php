@@ -2,20 +2,20 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Model\User;
-use Tustin\PlayStation\Factory\UsersFactory;
+use Iterator;
+use Tustin\PlayStation\User;
+use Tustin\PlayStation\Client;
+use Tustin\PlayStation\ApiRequest;
+use Tustin\PlayStation\OAuthToken;
+use Tustin\PlayStation\Search\UserSearchRequest;
 
 class UsersSearchIterator extends AbstractApiIterator
 {
-    public function __construct(private UsersFactory $usersFactory, private string $query, private string $languageCode = 'en', private string $countryCode = 'us')
+    public function __construct(private UserSearchRequest $request)
     {
-        if (empty($query)) {
-            throw new \InvalidArgumentException('[query] must contain a value.');
-        }
+        $this->useCustomCursor();
 
-        parent::__construct($usersFactory->getHttpClient());
-        $this->limit = 50;
-        $this->access('');
+        $this->access($this->request->offset);
     }
 
     /**
@@ -23,26 +23,24 @@ class UsersSearchIterator extends AbstractApiIterator
      */
     public function access(mixed $cursor): void
     {
-        // @TODO: Since the search function seems to be streamlined now, we could probably throw this into the abstract api iterator??
-        $results = $this->postJson('search/v1/universalSearch', [
-            'age' => '69',
-            'countryCode' => $this->countryCode,
-            'domainRequests' => [
-                [
-                    'domain' => 'SocialAllAccounts',
-                    'pagination' => [
-                        'cursor' => $cursor,
-                        'pageSize' => '50' // 50 is max.
-                    ]
-                ]
-            ],
-            'languageCode' => $this->languageCode,
-            'searchTerm' => $this->query
-        ]);
+        $request = new ApiRequest(
+            accessToken: OAuthToken::accessToken(),
+            apiBaseUrl: Client::$apiBaseUrl,
+        );
 
-        $domainResponse = $results->domainResponses[0];
+        $this->request->setOffset($cursor);
 
-        $this->update($domainResponse->totalResultCount, $domainResponse->results, $domainResponse->next ?? "");
+        $response = $request->post(
+            $this->request::getSearchUri(),
+            $this->request->toArray()
+        );
+
+        $domainResponses = $response->json('domainResponses');
+
+        // Always get the first domain response
+        $domainResponse = $domainResponses[0];
+
+        $this->update($domainResponse['totalResultCount'], $domainResponse['results'], empty($domainResponse['next']) ? null : $domainResponse['next']);
     }
 
     /**
@@ -50,12 +48,14 @@ class UsersSearchIterator extends AbstractApiIterator
      */
     public function current(): User
     {
-        $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;
-        //$token = $this->getFromOffset($this->currentOffset)->id; // Do we need this??
+        $socialMetadata = $this->getFromOffset($this->currentOffset);
 
-        return User::fromObject(
-            $this->usersFactory->getHttpClient(),
-            $socialMetadata
-        )->setCountry($socialMetadata->country);
+        if (!array_key_exists('socialMetadata', $socialMetadata)) {
+            throw new \RuntimeException('Social metadata not found in search results');
+        }
+
+        return new User(
+            $socialMetadata['socialMetadata']
+        );
     }
 }
