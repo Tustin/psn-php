@@ -4,7 +4,6 @@ namespace Tustin\PlayStation;
 
 use Iterator;
 use Tustin\PlayStation\Interfaces\Searchable;
-use Tustin\PlayStation\Search\UserSearchResult;
 use Tustin\PlayStation\Interfaces\SearchRequest;
 use Tustin\PlayStation\Search\UserSearchRequest;
 use Tustin\PlayStation\Iterator\UsersSearchIterator;
@@ -31,11 +30,17 @@ class User extends Api implements Searchable
         return Client::$apiBaseUrl . '/search/v1/universalSearch';
     }
 
+    /**
+     * Performs a search for users based on the query.
+     */
     public static function search(string $query): UsersSearchIterator
     {
         return static::performSearch(new UserSearchRequest($query));
     }
 
+    /**
+     * Performs a search for users based on the search request.
+     */
     public static function performSearch(SearchRequest $searchRequest): Iterator
     {
         return new UsersSearchIterator(

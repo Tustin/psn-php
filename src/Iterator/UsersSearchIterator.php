@@ -13,7 +13,7 @@ class UsersSearchIterator extends AbstractApiIterator
 {
     public function __construct(private UserSearchRequest $request)
     {
-        $this->useCustomCursor();
+        $this->usesCustomCursor();
 
         $this->access($this->request->offset);
     }
@@ -54,7 +54,7 @@ class UsersSearchIterator extends AbstractApiIterator
             throw new \RuntimeException('Social metadata not found in search results');
         }
 
-        return new User(
+        return User::constructFrom(
             $socialMetadata['socialMetadata']
         );
     }

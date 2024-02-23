@@ -14,7 +14,7 @@ abstract class AbstractApiIterator implements \Iterator, \Countable
 
     protected mixed $customCursor = null;
 
-    protected bool $useCustomCursor = false;
+    protected bool $usesCustomCursor = false;
 
     protected ?bool $force = null;
 
@@ -101,9 +101,9 @@ abstract class AbstractApiIterator implements \Iterator, \Countable
     /**
      * Set whether to use a custom cursor or not.
      */
-    public function useCustomCursor(bool $value = true): void
+    public function usesCustomCursor(bool $value = true): void
     {
-        $this->useCustomCursor = $value;
+        $this->usesCustomCursor = $value;
     }
 
     /**
@@ -120,7 +120,7 @@ abstract class AbstractApiIterator implements \Iterator, \Countable
         }
 
         if ($this->currentOffset % $this->limit === 0 && $this->currentOffset < $this->getTotalResults()) {
-            if ($this->useCustomCursor) {
+            if ($this->usesCustomCursor) {
                 if ($this->customCursor === null) {
                     return;
                 }

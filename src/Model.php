@@ -13,9 +13,30 @@ class Model
      */
     private array $cache = [];
 
-    public function __construct(array $data = [])
+    public function __construct(public ?string $id = null)
     {
-        $this->setCache($data);
+    }
+
+    /**
+     * Constructs a new model from an array of data.
+     */
+    public static function constructFrom(array $data = []): static
+    {
+        $object = new static($data['id'] ?? null);
+
+        $object->setCache($data);
+
+        return $object;
+    }
+
+    public function __isset($name)
+    {
+        return isset($this->cache[$name]);
+    }
+
+    public function __unset($name)
+    {
+        unset($this->cache[$name]);
     }
 
     public function &__get(string $key): mixed
