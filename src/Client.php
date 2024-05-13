@@ -136,7 +136,10 @@ class Client extends AbstractClient
             'refresh_token' => $refreshToken,
             'grant_type' => 'refresh_token',
             'token_format' => 'jwt',
-        ], ['Authorization' => 'Basic MDk1MTUxNTktNzIzNy00MzcwLTliNDAtMzgwNmU2N2MwODkxOnVjUGprYTV0bnRCMktxc1A=']);
+        ], [
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Authorization' => 'Basic MDk1MTUxNTktNzIzNy00MzcwLTliNDAtMzgwNmU2N2MwODkxOnVjUGprYTV0bnRCMktxc1A='
+        ]);
 
         $this->finalizeLogin($response);
     }
