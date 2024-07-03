@@ -8,4 +8,5 @@ enum ConsoleType: string
     case PS3 = 'PS3';
     case PS4 = 'PS4';
     case PS5 = 'PS5';
+    case PC = 'PSPC';
 }
