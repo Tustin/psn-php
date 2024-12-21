@@ -2,15 +2,13 @@
 
 namespace Tustin\PlayStation\Model\Message;
 
-use Tustin\PlayStation\Enum\MessageType;
+use Tustin\PlayStation\Enums\MessageType;
 use Tustin\PlayStation\Model\Message\Sendable;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class TextMessage extends AbstractMessage implements Sendable
 {
-    public function __construct(private string $textMessage)
-    {
-    }
+    public function __construct(private string $textMessage) {}
 
     /**
      * Gets the message type.

@@ -2,7 +2,7 @@
 
 namespace Tustin\PlayStation\Iterator\Filter\TrophyGroup;
 
-use Tustin\PlayStation\Enum\TrophyType;
+use Tustin\PlayStation\Enums\TrophyType;
 use Tustin\PlayStation\Traits\OperandParser;
 
 class TrophyTypeFilter extends \FilterIterator

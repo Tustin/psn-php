@@ -2,8 +2,8 @@
 
 namespace Tustin\PlayStation\Model;
 
-use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
+use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Factory\GameListFactory;
 use Tustin\PlayStation\Factory\FriendsListFactory;
 use Tustin\PlayStation\Model\Trophy\TrophySummary;
@@ -16,20 +16,15 @@ class User extends Model
      */
     private string $country;
 
-    /**
-     * Constructs a new user object.
-     */
-    public function __construct(Client $client, private string $accountId)
-    {
-        parent::__construct($client);
-    }
+    public function __construct(private string $accountId) {}
 
+    /**
+     * Creates a new user instance from an object.
+     */
     public static function fromObject(Client $client, object $data): self
     {
-        $instance = new User($client, $data->accountId);
-        $instance->setCache($data);
-
-        return $instance;
+        return (new User($data->accountId))
+            ->setCache($data);
     }
 
     /**
@@ -44,8 +39,6 @@ class User extends Model
 
     /**
      * Get the trophy titles associated with this user's account.
-     * 
-     * @return TrophyTitlesFactory
      */
     public function trophyTitles(): TrophyTitlesFactory
     {
@@ -54,8 +47,6 @@ class User extends Model
 
     /**
      * Get the game list for this user's account.
-     *
-     * @return GameListFactory
      */
     public function gameList(): GameListFactory
     {
@@ -64,8 +55,6 @@ class User extends Model
 
     /**
      * Gets the user's friends list.
-     *
-     * @return FriendsListFactory
      */
     public function friends(): FriendsListFactory
     {

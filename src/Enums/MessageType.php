@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Enum;
+namespace Tustin\PlayStation\Enums;
 
 enum MessageType: int
 {
@@ -13,6 +13,6 @@ enum MessageType: int
     case ChangedGroupImage = 2004;
     case StartedVoiceChat = 2020;
 
-    // @TODO: Need to map out all of these events.
+        // @TODO: Need to map out all of these events.
     case Unknown = -1;
 }

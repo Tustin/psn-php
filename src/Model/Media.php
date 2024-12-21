@@ -1,25 +1,26 @@
 <?php
+
 namespace Tustin\PlayStation\Model;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Enum\UgcType;
+use Tustin\PlayStation\Enums\UgcType;
 use Tustin\PlayStation\Model\Trophy\TrophyTitle;
-use Tustin\PlayStation\Enum\CloudStatusType;
-use Tustin\PlayStation\Enum\TranscodeStatusType;
+use Tustin\PlayStation\Enums\CloudStatusType;
+use Tustin\PlayStation\Enums\TranscodeStatusType;
 
 class Media extends Model
 {
-	public function __construct(Client $client, private string $ugcId)
-	{
-		parent::__construct($client);
-	}
+    public function __construct(Client $client, private string $ugcId)
+    {
+        parent::__construct($client);
+    }
 
-	/**
-	 * Creates a new Media object from existing data.
-	 */
-	public static function fromObject(Client $client, object $data): self
+    /**
+     * Creates a new Media object from existing data.
+     */
+    public static function fromObject(Client $client, object $data): self
     {
         $media = new static($client, $data->sourceUgcId);
         $media->setCache($data);
@@ -27,133 +28,132 @@ class Media extends Model
         return $media;
     }
 
-	public function creator(): User
-	{
-		return new User($this->getHttpClient(), $this->pluck('sceUserAccountId'));
-	}
-	
-	public function trophyTitle(): TrophyTitle
-	{
-		return new TrophyTitle($this->getHttpClient(), $this->npCommunicationId());
-	}
+    public function creator(): User
+    {
+        return new User($this->getHttpClient(), $this->pluck('sceUserAccountId'));
+    }
 
-	public function game(): GameTitle
-	{
-		return new GameTitle($this->getHttpClient(), $this->titleId());
-	}
+    public function trophyTitle(): TrophyTitle
+    {
+        return new TrophyTitle($this->getHttpClient(), $this->npCommunicationId());
+    }
 
-	public function id(): string
-	{
-		return $this->pluck('id');
-	}
+    public function game(): GameTitle
+    {
+        return new GameTitle($this->getHttpClient(), $this->titleId());
+    }
 
-	public function spoiler(): bool
-	{
-		return $this->pluck('isSpoiler');
-	}
+    public function id(): string
+    {
+        return $this->pluck('id');
+    }
 
-	public function language(): string
-	{
-		return $this->pluck('language');
-	}
+    public function spoiler(): bool
+    {
+        return $this->pluck('isSpoiler');
+    }
 
-	public function type(): UgcType
-	{
-		return UgcType::from($this->pluck('ugcType'));
-	}
+    public function language(): string
+    {
+        return $this->pluck('language');
+    }
 
-	public function title(): string
-	{
-		return $this->pluck('title');
-	}
+    public function type(): UgcType
+    {
+        return UgcType::from($this->pluck('ugcType'));
+    }
 
-	public function uploadDate(): Carbon
-	{
-		return Carbon::parse($this->pluck('uploadDate'));
-	}
+    public function title(): string
+    {
+        return $this->pluck('title');
+    }
 
-	public function npCommunicationId(): string
-	{
-		return $this->pluck('npCommId');
-	}
+    public function uploadDate(): Carbon
+    {
+        return Carbon::parse($this->pluck('uploadDate'));
+    }
 
-	public function titleName(): string
-	{
-		return $this->pluck('sceTitleName');
-	}
+    public function npCommunicationId(): string
+    {
+        return $this->pluck('npCommId');
+    }
 
-	public function titleId(): string
-	{
-		return $this->pluck('sceTitleId');
-	}
+    public function titleName(): string
+    {
+        return $this->pluck('sceTitleName');
+    }
 
-	public function fileSize(): int
-	{
-		return $this->pluck('fileSize');
-	}
+    public function titleId(): string
+    {
+        return $this->pluck('sceTitleId');
+    }
 
-	public function fileType(): string
-	{
-		return $this->pluck('fileType');
-	}
+    public function fileSize(): int
+    {
+        return $this->pluck('fileSize');
+    }
 
-	public function cloudStatus(): CloudStatusType
-	{
-		return CloudStatusType::from($this->pluck('cloudStatus'));
-	}
+    public function fileType(): string
+    {
+        return $this->pluck('fileType');
+    }
 
-	public function transcodeStatus(): TranscodeStatusType
-	{
-		return TranscodeStatusType::from($this->pluck('transcodeStatus'));
-	}
+    public function cloudStatus(): CloudStatusType
+    {
+        return CloudStatusType::from($this->pluck('cloudStatus'));
+    }
 
-	/**
-	 * Generates a URL with the required parameters to access the asset. 
+    public function transcodeStatus(): TranscodeStatusType
+    {
+        return TranscodeStatusType::from($this->pluck('transcodeStatus'));
+    }
 
-	 * @return string
-	 */
-	public function url(): string
-	{
-		switch ($this->type())
-		{
-			case UgcType::Video:
-				return $this->generateUrls()->downloadUrl;
-			break;
+    /**
+     * Generates a URL with the required parameters to access the asset. 
 
-			case UgcType::Image:
-				return $this->generateUrls()->screenshotUrl;
-			break;
-		}
-	}
+     * @return string
+     */
+    public function url(): string
+    {
+        switch ($this->type()) {
+            case UgcType::Video:
+                return $this->generateUrls()->downloadUrl;
+                break;
 
-	/**
-	 * Generates parameterized URLs for the media asset.
-	 *
-	 * @return object
-	 */
-	private function generateUrls(): object
-	{
-		return $this->get('gameMediaService/v2/c2s/ugc/' . $this->id() . '/url');
-	}
+            case UgcType::Image:
+                return $this->generateUrls()->screenshotUrl;
+                break;
+        }
+    }
 
-	public function fetch(): object
-	{
-		return $this->get('gameMediaService/v2/c2s/content', [
-			'fields' => implode(',', [
-				'title',
-				'description',
-				'broadcastDate',
-				'sceTitleName',
-				'countOfViewers',
-				'sceUserOnlineId',
-				'streamingPreviewImage',
-				'serviceType',
-				'channelId',
-				'sceTitleId',
-				'isSpoiler',
-				'transcodeStatus'
-			]),
-			'ugcIds' => $this->ugcId
-		]);
-	}
+    /**
+     * Generates parameterized URLs for the media asset.
+     *
+     * @return object
+     */
+    private function generateUrls(): object
+    {
+        return $this->get('gameMediaService/v2/c2s/ugc/' . $this->id() . '/url');
+    }
+
+    public function fetch(): object
+    {
+        return $this->get('gameMediaService/v2/c2s/content', [
+            'fields' => implode(',', [
+                'title',
+                'description',
+                'broadcastDate',
+                'sceTitleName',
+                'countOfViewers',
+                'sceUserOnlineId',
+                'streamingPreviewImage',
+                'serviceType',
+                'channelId',
+                'sceTitleId',
+                'isSpoiler',
+                'transcodeStatus'
+            ]),
+            'ugcIds' => $this->ugcId
+        ]);
+    }
 }

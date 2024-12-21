@@ -1,10 +1,11 @@
 <?php
+
 namespace Tustin\PlayStation\Factory;
 
 use Iterator;
 use IteratorAggregate;
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Enum\TrophyType;
+use Tustin\PlayStation\Enums\TrophyType;
 use Tustin\PlayStation\Model\Trophy\TrophyGroup;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\TrophyGroupsIterator;
@@ -20,9 +21,7 @@ class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInter
 
     private array $certainTrophyTypeFilter = [];
 
-    public function __construct(private AbstractTrophyTitle $title)
-    {
-    }
+    public function __construct(private AbstractTrophyTitle $title) {}
 
     public function withName(string $name)
     {
@@ -34,7 +33,7 @@ class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInter
     public function withDetail(string $detail)
     {
         $this->withDetail = $detail;
-        
+
         return $this;
     }
 
@@ -52,27 +51,21 @@ class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInter
 
     /**
      * Gets the iterator and applies any filters.
-     *
-     * @return Iterator
      */
     public function getIterator(): Iterator
     {
         $iterator = new TrophyGroupsIterator($this->title);
 
-        if ($this->withName)
-        {
+        if ($this->withName) {
             $iterator = new NameFilter($iterator, $this->withName);
         }
 
-        if ($this->withDetail)
-        {
+        if ($this->withDetail) {
             $iterator = new DetailFilter($iterator, $this->withDetail);
         }
 
-        if ($this->certainTrophyTypeFilter)
-        {
-            foreach ($this->certainTrophyTypeFilter as $filter)
-            {
+        if ($this->certainTrophyTypeFilter) {
+            foreach ($this->certainTrophyTypeFilter as $filter) {
                 $iterator = new TrophyTypeFilter($iterator, ...$filter);
             }
         }
@@ -82,8 +75,6 @@ class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInter
 
     /**
      * Gets the first trophy title in the collection.
-     *
-     * @return TrophyGroup
      */
     public function first(): TrophyGroup
     {

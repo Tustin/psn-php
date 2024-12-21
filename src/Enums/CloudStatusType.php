@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Enum;
+namespace Tustin\PlayStation\Enums;
 
 enum CloudStatusType: string
 {

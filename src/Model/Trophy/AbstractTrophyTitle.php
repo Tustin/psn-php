@@ -3,6 +3,7 @@
 namespace Tustin\PlayStation\Model\Trophy;
 
 use Tustin\PlayStation\Model;
+use Tustin\PlayStation\Enums\TrophyServiceName;
 use Tustin\PlayStation\Factory\TrophyGroupsFactory;
 
 /**
@@ -19,12 +20,12 @@ abstract class AbstractTrophyTitle extends Model
 {
 	protected string $npCommunicationId;
 
-	protected string $serviceName;
+	protected TrophyServiceName $serviceName;
 
 	/**
 	 * Sets the NP communication ID (NPWR_) for this trophy title.
 	 */
-	protected function setnpCommunicationId(string $npCommunicationId)
+	protected function setnpCommunicationId(string $npCommunicationId): void
 	{
 		$this->npCommunicationId = $npCommunicationId;
 	}
@@ -32,7 +33,7 @@ abstract class AbstractTrophyTitle extends Model
 	/**
 	 * Sets the service name for this trophy title.
 	 */
-	protected function setServiceName(string $serviceName)
+	protected function setServiceName(TrophyServiceName $serviceName): void
 	{
 		$this->serviceName = $serviceName;
 	}
@@ -52,8 +53,6 @@ abstract class AbstractTrophyTitle extends Model
 
 	/**
 	 * Gets the service name for this trophy title.
-	 * 
-	 * PS5 has a different service name than PS4 so this needs to be set correctly to avoid errors.
 	 */
-	public abstract function serviceName(): string;
+	public abstract function serviceName(): TrophyServiceName;
 }

@@ -1,12 +1,13 @@
 <?php
+
 namespace Tustin\PlayStation\Factory;
 
 use Iterator;
 use IteratorAggregate;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Model\Media;
-use Tustin\PlayStation\Enum\TranscodeStatusType;
-use Tustin\PlayStation\Exception\FilterException;
+use Tustin\PlayStation\Enums\TranscodeStatusType;
+use Tustin\PlayStation\Exceptions\FilterException;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\CloudMediaGalleryIterator;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TitleIdFilter;
@@ -54,7 +55,7 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
         }
 
         $this->npCommId = $npCommId;
-        
+
         return $this;
     }
 

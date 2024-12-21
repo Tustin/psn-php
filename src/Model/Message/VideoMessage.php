@@ -3,7 +3,7 @@
 namespace Tustin\PlayStation\Model\Message;
 
 use Tustin\PlayStation\Model\Media;
-use Tustin\PlayStation\Enum\MessageType;
+use Tustin\PlayStation\Enums\MessageType;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class VideoMessage extends AbstractMessage
@@ -14,7 +14,7 @@ class VideoMessage extends AbstractMessage
     public function video(): Media
     {
         return new Media(
-            $this->messageThread()->getHttpClient(), 
+            $this->messageThread()->getHttpClient(),
             $this->pluck('messageDetail.videoMessageDetail.ugcId')
         );
     }

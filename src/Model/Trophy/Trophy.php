@@ -3,7 +3,7 @@
 namespace Tustin\PlayStation\Model\Trophy;
 
 use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Enum\TrophyType;
+use Tustin\PlayStation\Enums\TrophyType;
 
 class Trophy extends Model
 {

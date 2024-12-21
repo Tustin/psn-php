@@ -1,17 +1,18 @@
 <?php
+
 namespace Tustin\PlayStation\Model\Store;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Enum\DescriptionType;
+use Tustin\PlayStation\Enums\DescriptionType;
 
 class Concept extends Model
 {
-	public function __construct(Client $client, private string $conceptId)
-	{
-		parent::__construct($client);
-	}
+    public function __construct(Client $client, private string $conceptId)
+    {
+        parent::__construct($client);
+    }
 
     /**
      * Creates a new concept from existing data.
@@ -73,8 +74,7 @@ class Concept extends Model
     {
         $genres = [];
 
-        foreach ($this->pluck('combinedLocalizedGenres') ?? [] as $genre)
-        {
+        foreach ($this->pluck('combinedLocalizedGenres') ?? [] as $genre) {
             $genres[] = $genre['value'];
         }
 
@@ -102,10 +102,8 @@ class Concept extends Model
      */
     public function descriptionByType(DescriptionType $type): string
     {
-        foreach ($this->pluck('descriptions') as $description)
-        {
-            if ($description['type'] === $type->value)
-            {
+        foreach ($this->pluck('descriptions') as $description) {
+            if ($description['type'] === $type->value) {
                 return $description['value'];
             }
         }
@@ -116,7 +114,7 @@ class Concept extends Model
     /**
      * Fetches the concept's information from the API.
      */
-	public function fetch(): object
+    public function fetch(): object
     {
         return $this->graphql('metGetConceptById', [
             'conceptId' => $this->conceptId(),

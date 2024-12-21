@@ -7,7 +7,7 @@ use GuzzleHttp\Psr7\Response;
 use Tustin\Haste\Http\JsonStream;
 use Tustin\PlayStation\Api;
 use PHPUnit\Framework\TestCase;
-use Tustin\PlayStation\Exception\UnmappedGraphQLOperationException;
+use Tustin\PlayStation\Exceptions\UnmappedGraphQLOperationException;
 
 class ApiTest extends TestCase
 {
@@ -81,6 +81,4 @@ class ApiTest extends TestCase
             'metGetExperience' => '054e61ee68bbeadc21435caebcc4f2bba0919a99b06629d141b0b82dc55f10c4',
         ];
     }
-
-
 }

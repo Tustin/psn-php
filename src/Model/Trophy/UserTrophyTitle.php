@@ -2,7 +2,7 @@
 
 namespace Tustin\PlayStation\Model\Trophy;
 
-use Tustin\PlayStation\Enum\ConsoleType;
+use Tustin\PlayStation\Enums\ConsoleType;
 
 class UserTrophyTitle extends AbstractTrophyTitle
 {

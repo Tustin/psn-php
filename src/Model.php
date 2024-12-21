@@ -2,7 +2,6 @@
 
 namespace Tustin\PlayStation;
 
-use GuzzleHttp\Client;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 
@@ -14,9 +13,9 @@ abstract class Model extends Api
     private array $cache = [];
 
     /**
-     * The factory the model was instantiated by.
+     * The factory the model was instantiated by (if any).
      */
-    private FactoryInterface $factory;
+    private ?FactoryInterface $factory = null;
 
     /**
      * Has data been fetched from the API?
@@ -29,18 +28,13 @@ abstract class Model extends Api
     abstract public function fetch(): object;
 
     /**
-     * Performs the fetch method while flagging the model as being fetched.
+     * Performs an API fetch, while flagging the model as being fetched.
      */
     private function performFetch(): object
     {
         $this->hasFetched = true;
 
         return $this->fetch();
-    }
-
-    public function __construct(Client $client)
-    {
-        parent::__construct($client);
     }
 
     /**
@@ -54,15 +48,11 @@ abstract class Model extends Api
 
         $exists = array_key_exists($root, $this->cache);
 
-        if (!$exists)
-        {
-            if (!$this->hasFetched() || $ignoreCache)
-            {
+        if (!$exists) {
+            if (!$this->hasFetched() || $ignoreCache) {
                 $this->setCache($this->performFetch());
                 return $this->pluck($property);
-            }
-            else
-            {
+            } else {
                 return null;
             }
         }
@@ -97,10 +87,12 @@ abstract class Model extends Api
     /**
      * Sets the cache property.
      */
-    public function setCache(object $data): void
+    public function setCache(object $data): self
     {
         // So this is bad and probably slow, but it's less annoying than some recursive method.
         $this->cache = json_decode(json_encode($data, JSON_FORCE_OBJECT), true);
+
+        return $this;
     }
 
     /**
@@ -112,9 +104,9 @@ abstract class Model extends Api
     }
 
     /**
-     * Gets the factory for this model.
+     * Gets the factory for this model (if any).
      */
-    public function getFactory(): FactoryInterface
+    public function getFactory(): ?FactoryInterface
     {
         return $this->factory;
     }

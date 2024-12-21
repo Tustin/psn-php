@@ -2,23 +2,27 @@
 
 namespace Tustin\PlayStation;
 
-use Tustin\Haste\AbstractClient;
 use Tustin\PlayStation\OAuthToken;
 use Tustin\PlayStation\Model\Media;
+use Tustin\PlayStation\AbstractClient;
 use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Factory\UsersFactory;
 use Tustin\PlayStation\Factory\GroupsFactory;
+use Tustin\PlayStation\Enums\TrophyServiceName;
 use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
-use Tustin\Haste\Http\Middleware\AuthenticationMiddleware;
+use Tustin\PlayStation\Http\Middleware\AuthenticationMiddleware;
 
 class Client extends AbstractClient
 {
     const AUTH_URL = 'https://ca.account.sony.com/api/';
     const BASE_URL = 'https://m.np.playstation.com/api/';
 
-    private $accessToken;
-    private $refreshToken;
+    private ?OAuthToken $accessToken = null;
+
+    private ?OAuthToken $refreshToken = null;
+
+    private static $instance = null;
 
     public function __construct(array $guzzleOptions = [])
     {
@@ -28,17 +32,26 @@ class Client extends AbstractClient
         $guzzleOptions['base_uri'] = self::BASE_URL;
 
         parent::__construct($guzzleOptions);
+
+        self::$instance = $this;
+    }
+
+    public static function create(array $guzzleOptions = []): static
+    {
+        return static::$instance ?? new static($guzzleOptions);
+    }
+
+    public static function getInstance(): static
+    {
+        return static::$instance ?? new static();
     }
 
     /**
      * Login with an NPSSO token.
      * 
-     * @see https://tusticles.com/psn-php/first_login.html
-     *
-     * @param string $npsso
-     * @return void
+     * @see https://tustin.dev/psn-php/#/authorization?id=first-login
      */
-    public function loginWithNpsso(string $npsso)
+    public function loginWithNpsso(string $npsso): OAuthToken
     {
         // With the PS App revamp, we now need a JWT token.
         // @TODO: Clean up these params.
@@ -117,18 +130,15 @@ class Client extends AbstractClient
             'Authorization' => 'Basic MDk1MTUxNTktNzIzNy00MzcwLTliNDAtMzgwNmU2N2MwODkxOnVjUGprYTV0bnRCMktxc1A=',
         ]);
 
-        $this->finalizeLogin($response);
+        return $this->finalizeLogin($response);
     }
 
     /**
      * Login with an existing refresh token.
      * 
-     * @see https://tusticles.com/psn-php/future_logins.html
-     *
-     * @param string $refreshToken
-     * @return void
+     * @see https://tustin.dev/psn-php/#/authorization?id=future-logins
      */
-    public function loginWithRefreshToken(string $refreshToken)
+    public function loginWithRefreshToken(string $refreshToken): OAuthToken
     {
         // @TODO: Handle errors.
         $response = $this->post('authz/v3/oauth/token', [
@@ -138,16 +148,13 @@ class Client extends AbstractClient
             'token_format' => 'jwt',
         ], ['Authorization' => 'Basic MDk1MTUxNTktNzIzNy00MzcwLTliNDAtMzgwNmU2N2MwODkxOnVjUGprYTV0bnRCMktxc1A=']);
 
-        $this->finalizeLogin($response);
+        return $this->finalizeLogin($response);
     }
 
     /**
-     * Finishes the login flow and sets up future request middleware.
-     *
-     * @param object $response
-     * @return void
+     * Finalizes the login flow and sets up future request middleware.
      */
-    private function finalizeLogin(object $response)
+    private function finalizeLogin(object $response): OAuthToken
     {
         $this->accessToken = new OAuthToken($response->access_token, $response->expires_in);
         $this->refreshToken = new OAuthToken($response->refresh_token, $response->refresh_token_expires_in);
@@ -155,6 +162,8 @@ class Client extends AbstractClient
         $this->pushAuthenticationMiddleware(new AuthenticationMiddleware([
             'Authorization' => 'Bearer ' . $this->getAccessToken()->getToken(),
         ]));
+
+        return $this->accessToken;
     }
 
     /**
@@ -171,72 +180,55 @@ class Client extends AbstractClient
     }
 
     /**
-     * Gets the access token.
-     *
-     * @return OAuthToken
+     * Gets the current access token information.
      */
-    public function getAccessToken(): OAuthToken
+    public function getAccessToken(): ?OAuthToken
     {
         return $this->accessToken;
     }
 
     /**
-     * Gets the refresh token.
-     *
-     * @return OAuthToken
+     * Gets the current refresh token information.
      */
-    public function getRefreshToken(): OAuthToken
+    public function getRefreshToken(): ?OAuthToken
     {
         return $this->refreshToken;
     }
 
     /**
      * Creates a UsersFactory to query user information.
-     *
-     * @return UsersFactory
      */
     public function users(): UsersFactory
     {
-        return new UsersFactory($this->getHttpClient());
+        return new UsersFactory;
     }
 
     /**
-     * Gets a trophy title from the API using a communication id (NPWRxxxxx_00).
-     *
-     * @param string $npCommunicationId
-     * @param string $serviceName
-     * @return TrophyTitle
+     * Get trophy title information using an NP Communation ID(NPWRxxxxx_00).
      */
-    public function trophies(string $npCommunicationId, string $serviceName = 'trophy'): TrophyTitle
+    public function trophies(string $npCommunicationId, TrophyServiceName $serviceName = TrophyServiceName::Trophy): TrophyTitle
     {
-        return new TrophyTitle($this->getHttpClient(), $npCommunicationId, $serviceName);
+        return new TrophyTitle($this, $npCommunicationId, $serviceName);
     }
 
     /**
      * Creates a store factory to navigate the PlayStation Store.
-     *
-     * @return StoreFactory
      */
     public function store(): StoreFactory
     {
-        return new StoreFactory($this->getHttpClient());
+        return new StoreFactory($this);
     }
 
     /**
      * Creates a group factory to query your chat groups (parties and text message groups).
-     *
-     * @return GroupsFactory
      */
     public function groups(): GroupsFactory
     {
-        return new GroupsFactory($this->getHttpClient());
+        return new GroupsFactory($this);
     }
 
     /**
      * Get a media object from the API.
-     *
-     * @param string $ugcId
-     * @return Media
      */
     public function media(string $ugcId): Media
     {
@@ -245,11 +237,9 @@ class Client extends AbstractClient
 
     /**
      * Gets the cloud media gallery for the user.
-     *
-     * @return CloudMediaGalleryFactory
      */
     public function cloudMediaGallery(): CloudMediaGalleryFactory
     {
-        return new CloudMediaGalleryFactory($this->getHttpClient());
+        return new CloudMediaGalleryFactory($this);
     }
 }

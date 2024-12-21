@@ -5,7 +5,7 @@ namespace Tustin\PlayStation\Model\Message;
 use Carbon\Carbon;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\User;
-use Tustin\PlayStation\Enum\MessageType;
+use Tustin\PlayStation\Enums\MessageType;
 use Tustin\PlayStation\Model\MessageThread;
 
 abstract class AbstractMessage extends Model
