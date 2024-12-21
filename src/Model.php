@@ -22,6 +22,11 @@ abstract class Model extends Api
      */
     private bool $hasFetched = false;
 
+    public function __construct()
+    {
+        parent::__construct(Client::getInstance()->getHttpClient());
+    }
+
     /**
      * Fetches the model data from the API.
      */

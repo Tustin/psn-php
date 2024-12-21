@@ -2,9 +2,11 @@
 
 namespace Tustin\PlayStation;
 
+use GuzzleHttp\Middleware;
+use Tustin\PlayStation\Api;
+use GuzzleHttp\HandlerStack;
 use Tustin\PlayStation\OAuthToken;
 use Tustin\PlayStation\Model\Media;
-use Tustin\PlayStation\AbstractClient;
 use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Factory\UsersFactory;
 use Tustin\PlayStation\Factory\GroupsFactory;
@@ -12,8 +14,9 @@ use Tustin\PlayStation\Enums\TrophyServiceName;
 use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
 use Tustin\PlayStation\Http\Middleware\AuthenticationMiddleware;
+use Tustin\PlayStation\Http\Middleware\ResponseHandlerMiddleware;
 
-class Client extends AbstractClient
+class Client extends Api
 {
     const AUTH_URL = 'https://ca.account.sony.com/api/';
     const BASE_URL = 'https://m.np.playstation.com/api/';
@@ -31,9 +34,29 @@ class Client extends AbstractClient
         $guzzleOptions['headers']['Accept-Language'] = 'en-US';
         $guzzleOptions['base_uri'] = self::BASE_URL;
 
-        parent::__construct($guzzleOptions);
+        $handlerStack = HandlerStack::create();
 
-        self::$instance = $this;
+        // Push a response handler for handling HTTP errors.
+        $handlerStack->push(
+            Middleware::mapResponse(
+                new ResponseHandlerMiddleware
+            )
+        );
+
+        // Push a reqeust middleware to inject an Authorization header with the current access token if it exists.
+        $handlerStack->push(
+            Middleware::mapRequest(
+                new AuthenticationMiddleware($this)
+            )
+        );
+
+        $guzzleOptions['handler'] = $handlerStack;
+
+        parent::__construct(new \GuzzleHttp\Client(
+            $guzzleOptions
+        ));
+
+        static::$instance = $this;
     }
 
     public static function create(array $guzzleOptions = []): static
@@ -159,10 +182,6 @@ class Client extends AbstractClient
         $this->accessToken = new OAuthToken($response->access_token, $response->expires_in);
         $this->refreshToken = new OAuthToken($response->refresh_token, $response->refresh_token_expires_in);
 
-        $this->pushAuthenticationMiddleware(new AuthenticationMiddleware([
-            'Authorization' => 'Bearer ' . $this->getAccessToken()->getToken(),
-        ]));
-
         return $this->accessToken;
     }
 
@@ -174,9 +193,7 @@ class Client extends AbstractClient
      */
     public function setAccessToken(string $accessToken)
     {
-        $this->pushAuthenticationMiddleware(new AuthenticationMiddleware([
-            'Authorization' => 'Bearer ' . $accessToken
-        ]));
+        $this->accessToken = new OAuthToken($accessToken);
     }
 
     /**

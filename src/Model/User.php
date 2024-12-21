@@ -16,7 +16,10 @@ class User extends Model
      */
     private string $country;
 
-    public function __construct(private string $accountId) {}
+    public function __construct(private string $accountId)
+    {
+        parent::__construct();
+    }
 
     /**
      * Creates a new user instance from an object.

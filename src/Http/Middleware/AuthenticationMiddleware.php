@@ -3,25 +3,23 @@
 namespace Tustin\PlayStation\Http\Middleware;
 
 use GuzzleHttp\Psr7\Request;
+use Tustin\PlayStation\Client;
 
 final class AuthenticationMiddleware
 {
-    private array $authenticationItems = [];
-
-    public function __construct(array $authenticationItems)
-    {
-        $this->authenticationItems = $authenticationItems;
-    }
+    public function __construct(public Client $client) {}
 
     /**
-     * Intercepts all requests to inject any authentication headers.
+     * Intercepts all requests and inject an Authorization header with the current access token if it exists.
      */
     public function __invoke(Request $request, array $options = []): Request
     {
-        foreach ($this->authenticationItems as $key => $value) {
-            $request = $request->withHeader($key, $value);
+        $accessToken = $this->client->getAccessToken();
+
+        if (!$accessToken) {
+            return $request;
         }
 
-        return $request;
+        return $request->withHeader('Authorization', 'Bearer ' . $accessToken->getToken());
     }
 }

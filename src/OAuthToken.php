@@ -6,11 +6,11 @@ class OAuthToken
 {
     private string $token;
 
-    private \DateTime $expiration;
+    private ?\DateTime $expiration;
 
-    private int $seconds;
+    private ?int $seconds;
 
-    public function __construct(string $token, int $expiresIn)
+    public function __construct(string $token, ?int $expiresIn = null)
     {
         $this->token = $token;
         $this->seconds = $expiresIn;
@@ -28,7 +28,7 @@ class OAuthToken
     /**
      * Gets the OAuth token's expiration date and time.
      */
-    public function getExpiration(): \DateTime
+    public function getExpiration(): ?\DateTime
     {
         return $this->expiration;
     }
@@ -36,7 +36,7 @@ class OAuthToken
     /**
      * Gets the OAuth token's expiration in seconds.
      */
-    public function getExpirationSeconds(): int
+    public function getExpirationSeconds(): ?int
     {
         return $this->seconds;
     }
