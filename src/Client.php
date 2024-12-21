@@ -217,7 +217,7 @@ class Client extends Api
      */
     public function users(): UsersFactory
     {
-        return new UsersFactory;
+        return new UsersFactory($this);
     }
 
     /**

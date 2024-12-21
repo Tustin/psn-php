@@ -24,7 +24,7 @@ class User extends Model
     /**
      * Creates a new user instance from an object.
      */
-    public static function fromObject(Client $client, object $data): self
+    public static function fromObject(object $data): self
     {
         return (new User($data->accountId))
             ->setCache($data);

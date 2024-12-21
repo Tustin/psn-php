@@ -7,14 +7,14 @@ use Tustin\PlayStation\Factory\UsersFactory;
 
 class UsersSearchIterator extends AbstractApiIterator
 {
-    public function __construct(private UsersFactory $usersFactory, private string $query, private string $languageCode = 'en', private string $countryCode = 'us')
+    public function __construct(private UsersFactory $usersFactory, private string $query, int $limit = 50, private string $languageCode = 'en', private string $countryCode = 'us')
     {
         if (empty($query)) {
             throw new \InvalidArgumentException('[query] must contain a value.');
         }
 
         parent::__construct($usersFactory->getHttpClient());
-        $this->limit = 50;
+        $this->limit = $limit;
         $this->access('');
     }
 
@@ -32,7 +32,7 @@ class UsersSearchIterator extends AbstractApiIterator
                     'domain' => 'SocialAllAccounts',
                     'pagination' => [
                         'cursor' => $cursor,
-                        'pageSize' => '50' // 50 is max.
+                        'pageSize' => $this->limit
                     ]
                 ]
             ],
@@ -54,7 +54,6 @@ class UsersSearchIterator extends AbstractApiIterator
         //$token = $this->getFromOffset($this->currentOffset)->id; // Do we need this??
 
         return User::fromObject(
-            $this->usersFactory->getHttpClient(),
             $socialMetadata
         )->setCountry($socialMetadata->country);
     }
