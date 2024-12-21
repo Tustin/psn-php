@@ -225,7 +225,7 @@ class Client extends Api
      */
     public function trophies(string $npCommunicationId, TrophyServiceName $serviceName = TrophyServiceName::Trophy): TrophyTitle
     {
-        return new TrophyTitle($this, $npCommunicationId, $serviceName);
+        return new TrophyTitle($npCommunicationId, $serviceName);
     }
 
     /**

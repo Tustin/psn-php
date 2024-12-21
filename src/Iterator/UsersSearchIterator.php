@@ -23,7 +23,6 @@ class UsersSearchIterator extends AbstractApiIterator
      */
     public function access(mixed $cursor): void
     {
-        // @TODO: Since the search function seems to be streamlined now, we could probably throw this into the abstract api iterator??
         $results = $this->postJson('search/v1/universalSearch', [
             'age' => '69',
             'countryCode' => $this->countryCode,
@@ -48,10 +47,13 @@ class UsersSearchIterator extends AbstractApiIterator
     /**
      * Gets the current user in the iterator.
      */
-    public function current(): User
+    public function current(): ?User
     {
-        $socialMetadata = $this->getFromOffset($this->currentOffset)->socialMetadata;
-        //$token = $this->getFromOffset($this->currentOffset)->id; // Do we need this??
+        $socialMetadata = $this->getFromOffset($this->currentOffset)?->socialMetadata;
+
+        if (!$socialMetadata) {
+            return null;
+        }
 
         return User::fromObject(
             $socialMetadata

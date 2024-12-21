@@ -122,7 +122,7 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
     /**
      * Gets an item from cache, or from the API resource if necessary, by an offset.
      */
-    public function getFromOffset(mixed $offset): object
+    public function getFromOffset(mixed $offset): ?object
     {
         if (is_null($offset)) {
             throw new \InvalidArgumentException("Offset cannot be null.");

@@ -4,15 +4,18 @@ namespace Tustin\PlayStation\Model\Trophy;
 
 use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Enums\TrophyServiceName;
+use Tustin\PlayStation\Exceptions\NotFoundException;
+use Tustin\PlayStation\Exceptions\NotFoundHttpException;
+use Tustin\PlayStation\Exceptions\TrophyTitle\TrophyTitleNotFound;
 
 class TrophyTitle extends AbstractTrophyTitle
 {
-    public function __construct(Client $client, string $npCommunicationId, TrophyServiceName $serviceName)
+    public function __construct(string $npCommunicationId, TrophyServiceName $serviceName = TrophyServiceName::Trophy)
     {
-        parent::__construct($client);
-
         $this->setnpCommunicationId($npCommunicationId);
         $this->setServiceName($serviceName);
+
+        parent::__construct();
     }
     /**
      * Gets the NP communication ID (NPWR_) for this trophy title.
@@ -35,11 +38,17 @@ class TrophyTitle extends AbstractTrophyTitle
      */
     public function fetch(): object
     {
-        return $this->get(
-            'trophy/v1/npCommunicationIds/' . $this->npCommunicationId()  . '/trophyGroups/all/trophies',
-            [
-                'npServiceName' => $this->serviceName()
-            ]
-        );
+        try {
+            return $this->get(
+                'trophy/v1/npCommunicationIds/' . $this->npCommunicationId()  . '/trophyGroups/all/trophies',
+                [
+                    'npServiceName' => $this->serviceName()
+                ]
+            );
+        } catch (NotFoundHttpException) {
+            throw new TrophyTitleNotFound(
+                'Unable to find trophy title with NP communication ID: ' . $this->npCommunicationId() . '. If this is a PS5 title, make sure you set the correct trophy service name.'
+            );
+        }
     }
 }

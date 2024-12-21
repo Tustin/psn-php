@@ -18,41 +18,41 @@ use Tustin\PlayStation\Factory\TrophyGroupsFactory;
  */
 abstract class AbstractTrophyTitle extends Model
 {
-	protected string $npCommunicationId;
+    protected string $npCommunicationId;
 
-	protected TrophyServiceName $serviceName;
+    protected TrophyServiceName $serviceName;
 
-	/**
-	 * Sets the NP communication ID (NPWR_) for this trophy title.
-	 */
-	protected function setnpCommunicationId(string $npCommunicationId): void
-	{
-		$this->npCommunicationId = $npCommunicationId;
-	}
+    /**
+     * Sets the NP communication ID (NPWR_) for this trophy title.
+     */
+    protected function setnpCommunicationId(string $npCommunicationId): void
+    {
+        $this->npCommunicationId = $npCommunicationId;
+    }
 
-	/**
-	 * Sets the service name for this trophy title.
-	 */
-	protected function setServiceName(TrophyServiceName $serviceName): void
-	{
-		$this->serviceName = $serviceName;
-	}
+    /**
+     * Sets the service name for this trophy title.
+     */
+    protected function setServiceName(TrophyServiceName $serviceName): void
+    {
+        $this->serviceName = $serviceName;
+    }
 
-	/**
-	 * Gets all the trophy groups for the trophy title.
-	 */
-	public function trophyGroups(): TrophyGroupsFactory
-	{
-		return new TrophyGroupsFactory($this);
-	}
+    /**
+     * Gets all the trophy groups for the trophy title.
+     */
+    public function trophyGroups(): TrophyGroupsFactory
+    {
+        return new TrophyGroupsFactory($this);
+    }
 
-	/**
-	 * Gets the NP communication ID (NPWR_) for this trophy title.
-	 */
-	public abstract function npCommunicationId(): string;
+    /**
+     * Gets the NP communication ID (NPWR_) for this trophy title.
+     */
+    public abstract function npCommunicationId(): string;
 
-	/**
-	 * Gets the service name for this trophy title.
-	 */
-	public abstract function serviceName(): TrophyServiceName;
+    /**
+     * Gets the service name for this trophy title.
+     */
+    public abstract function serviceName(): TrophyServiceName;
 }
