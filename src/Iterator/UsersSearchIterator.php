@@ -3,17 +3,17 @@
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Model\User;
-use Tustin\PlayStation\Factory\UsersFactory;
+use Tustin\PlayStation\Factory\Users;
 
 class UsersSearchIterator extends AbstractApiIterator
 {
-    public function __construct(private UsersFactory $usersFactory, private string $query, int $limit = 50, private string $languageCode = 'en', private string $countryCode = 'us')
+    public function __construct(private string $query, int $limit = 50, private string $languageCode = 'en', private string $countryCode = 'us')
     {
         if (empty($query)) {
             throw new \InvalidArgumentException('[query] must contain a value.');
         }
 
-        parent::__construct($usersFactory->getHttpClient());
+        parent::__construct();
         $this->limit = $limit;
         $this->access('');
     }

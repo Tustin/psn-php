@@ -7,8 +7,8 @@ use Tustin\PlayStation\Api;
 use GuzzleHttp\HandlerStack;
 use Tustin\PlayStation\OAuthToken;
 use Tustin\PlayStation\Model\Media;
+use Tustin\PlayStation\Factory\Users;
 use Tustin\PlayStation\Factory\StoreFactory;
-use Tustin\PlayStation\Factory\UsersFactory;
 use Tustin\PlayStation\Factory\GroupsFactory;
 use Tustin\PlayStation\Enums\TrophyServiceName;
 use Tustin\PlayStation\Model\Trophy\TrophyTitle;
@@ -213,11 +213,11 @@ class Client extends Api
     }
 
     /**
-     * Creates a UsersFactory to query user information.
+     * Get a user from the API.
      */
-    public function users(): UsersFactory
+    public function users(): Users
     {
-        return new UsersFactory($this);
+        return new Users;
     }
 
     /**

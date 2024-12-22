@@ -3,6 +3,7 @@
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Api;
+use Tustin\PlayStation\Client;
 
 abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
 {
@@ -27,6 +28,11 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
      * Access a specific cursor in the API.
      */
     public abstract function access(mixed $cursor): void;
+
+    public function __construct()
+    {
+        parent::__construct(Client::getInstance()->getHttpClient());
+    }
 
     /**
      * Currents the current offset.

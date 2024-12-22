@@ -2,8 +2,10 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Factory\FriendsListFactory;
+use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Model\User;
+use Tustin\PlayStation\Factory\UserFriendsList;
+use Tustin\PlayStation\Factory\FriendsListFactory;
 
 class FriendsListIterator extends AbstractApiIterator
 {
@@ -12,10 +14,14 @@ class FriendsListIterator extends AbstractApiIterator
      */
     private array $cachedAccounts = [];
 
-    public function __construct(FriendsListFactory $friendsListFactory, private string $userAccountId)
+    public function __construct(private string $userAccountId, int $limit = 100)
     {
-        parent::__construct($friendsListFactory->getHttpClient());
-        $this->limit = 100;
+        parent::__construct(
+            Client::getInstance()->getHttpClient(),
+        );
+
+        $this->limit = $limit;
+
         $this->access(0);
     }
 
@@ -50,7 +56,6 @@ class FriendsListIterator extends AbstractApiIterator
         $this->cachedAccounts[$this->currentOffset]->accountId = $this->cache[$this->currentOffset];
 
         return User::fromObject(
-            $this->getHttpClient(),
             $this->cachedAccounts[$this->currentOffset]
         );
     }

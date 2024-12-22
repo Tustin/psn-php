@@ -3,14 +3,19 @@
 namespace Tustin\PlayStation\Exceptions;
 
 use Psr\Http\Message\StreamInterface;
+use Tustin\PlayStation\Http\JsonStream;
 
 class ApiException extends \Exception
 {
-    /**
-     * @param StreamInterface $stream
-     */
-    public function __construct($stream)
+    public function __construct(JsonStream $stream)
     {
-        // @TODO
+        $serialized = $stream->jsonSerialize();
+
+        if ($serialized) {
+            parent::__construct(
+                $serialized?->error?->message ?? 'Unknown error',
+                $serialized?->error?->code ?? 0
+            );
+        }
     }
 }

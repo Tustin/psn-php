@@ -2,6 +2,7 @@
 
 namespace Tustin\PlayStation\Model\Trophy;
 
+use ParentIterator;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\User;
 
@@ -9,9 +10,7 @@ class TrophySummary extends Model
 {
     public function __construct(private User $user)
     {
-        $this->user = $user;
-
-        parent::__construct($user->getHttpClient());
+        parent::__construct();
     }
 
     /**

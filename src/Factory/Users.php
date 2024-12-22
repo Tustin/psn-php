@@ -8,11 +8,17 @@ use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\UsersSearchIterator;
 
-class UsersFactory extends Api implements FactoryInterface
+class Users extends Api implements FactoryInterface
 {
-    public function __construct(Client $client)
+    public function __construct()
     {
-        parent::__construct($client->getHttpClient());
+        parent::__construct(Client::getInstance()->getHttpClient());
+    }
+
+    public static function where(string $psn, int $limit = 50): UsersSearchIterator
+    {
+        return (new static)
+            ->search($psn, $limit);
     }
 
     /**
@@ -20,7 +26,7 @@ class UsersFactory extends Api implements FactoryInterface
      */
     public function search(string $query, int $limit = 50): UsersSearchIterator
     {
-        return new UsersSearchIterator($this, query: $query, limit: $limit);
+        return new UsersSearchIterator($query, limit: $limit);
     }
 
     /**
