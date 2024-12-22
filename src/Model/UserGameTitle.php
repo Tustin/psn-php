@@ -6,22 +6,17 @@ use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\Store\Concept;
 use Tustin\PlayStation\Factory\GameListFactory;
 
-class GameTitle extends Model
+class UserGameTitle extends Model
 {
-    public function __construct(GameListFactory $gameListFactory, private string $id)
-    {
-        parent::__construct($gameListFactory->getHttpClient());
-    }
+    public function __construct(private string $accountId, private string $npTitleId) {}
 
     /**
      * Creates a new game title from existing data.
      */
-    public static function fromObject(GameListFactory $gameListFactory, object $data): self
+    public static function fromObject(string $accountId, string $npTitleId, object $data): self
     {
-        $game = new static($gameListFactory, $data->titleId);
-        $game->setCache($data);
-
-        return $game;
+        return (new UserGameTitle($accountId, $npTitleId))
+            ->setCache($data);
     }
 
     /**
@@ -29,7 +24,7 @@ class GameTitle extends Model
      */
     public function concept(): Concept
     {
-        return new Concept($this->getHttpClient(), $this->pluck('concept.id'));
+        return new Concept($this->pluck('concept.id'));
     }
 
     /**
@@ -114,7 +109,7 @@ class GameTitle extends Model
      */
     public function id(): string
     {
-        return $this->id ??= $this->pluck('titleId');
+        return $this->npTitleId ??= $this->pluck('titleId');
     }
 
     /**
@@ -147,6 +142,6 @@ class GameTitle extends Model
      */
     public function fetch(): object
     {
-        return $this->get('gamelist/v2/users/' . $this->getFactory()->getUser()->accountId() . '/titles/' . $this->id());
+        return $this->get('gamelist/v2/users/' . $this->accountId . '/titles/' . $this->id());
     }
 }

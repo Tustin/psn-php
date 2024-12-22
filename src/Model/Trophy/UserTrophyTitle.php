@@ -3,6 +3,8 @@
 namespace Tustin\PlayStation\Model\Trophy;
 
 use Tustin\PlayStation\Enums\ConsoleType;
+use Tustin\PlayStation\Enums\TrophyServiceName;
+use Tustin\PlayStation\Enums\TrophyTitlePlatform;
 
 class UserTrophyTitle extends AbstractTrophyTitle
 {
@@ -27,11 +29,11 @@ class UserTrophyTitle extends AbstractTrophyTitle
     /**
      * Gets the detail of the title.
      */
-    public function detail(): string
+    public function detail(): ?string
     {
         // PS5 titles don't seem to have the detail data.
-        if ($this->serviceName() == 'trophy2') {
-            return '';
+        if ($this->serviceName() == TrophyServiceName::Trophy2) {
+            return null;
         }
 
         return $this->pluck('trophyTitleDetail');
@@ -48,14 +50,14 @@ class UserTrophyTitle extends AbstractTrophyTitle
     /**
      * Gets the platform(s) this title is for.
      *
-     * @return array<ConsoleType>
+     * @return array<TrophyTitlePlatform>
      */
     public function platform(): array
     {
         $platforms = [];
 
         foreach (explode(",", $this->pluck('trophyTitlePlatform')) as $platform) {
-            $platforms[] = ConsoleType::tryFrom($platform);
+            $platforms[] = TrophyTitlePlatform::tryFrom($platform);
         }
 
         return $platforms;
@@ -184,14 +186,18 @@ class UserTrophyTitle extends AbstractTrophyTitle
     /**
      * Gets the trophy service name for this trophy.
      */
-    public function serviceName(): string
+    public function serviceName(): TrophyServiceName
     {
-        return $this->serviceName ??= $this->pluck('npServiceName');
+        return $this->serviceName ??= TrophyServiceName::tryFrom($this->pluck('npServiceName'));
     }
 
-    // @TODO: Implement
+    /**
+     * @throws \BadMethodCallException
+     */
     public function fetch(): object
     {
-        throw new \BadMethodCallException();
+        throw new \BadMethodCallException(
+            'This method is not supported for user trophy titles.'
+        );
     }
 }

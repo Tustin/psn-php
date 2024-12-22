@@ -9,20 +9,15 @@ use Tustin\PlayStation\Enums\DescriptionType;
 
 class Concept extends Model
 {
-    public function __construct(Client $client, private string $conceptId)
-    {
-        parent::__construct($client);
-    }
+    public function __construct(private string $conceptId) {}
 
     /**
      * Creates a new concept from existing data.
      */
-    public static function fromObject(Client $client, object $data): self
+    public static function fromObject(string $conceptId, object $data): self
     {
-        $instance = new Concept($client, $data->conceptId);
-        $instance->setCache($data);
-
-        return $instance;
+        return (new Concept($conceptId))
+            ->setCache($data);
     }
 
     /**

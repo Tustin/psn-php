@@ -2,9 +2,7 @@
 
 namespace Tustin\PlayStation\Model\Trophy;
 
-use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Enums\TrophyServiceName;
-use Tustin\PlayStation\Exceptions\NotFoundException;
 use Tustin\PlayStation\Exceptions\NotFoundHttpException;
 use Tustin\PlayStation\Exceptions\TrophyTitle\TrophyTitleNotFound;
 
@@ -12,10 +10,10 @@ class TrophyTitle extends AbstractTrophyTitle
 {
     public function __construct(string $npCommunicationId, TrophyServiceName $serviceName = TrophyServiceName::Trophy)
     {
+        parent::__construct();
+
         $this->setnpCommunicationId($npCommunicationId);
         $this->setServiceName($serviceName);
-
-        parent::__construct();
     }
     /**
      * Gets the NP communication ID (NPWR_) for this trophy title.

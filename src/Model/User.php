@@ -3,11 +3,12 @@
 namespace Tustin\PlayStation\Model;
 
 use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Client;
+use Tustin\PlayStation\Factory\UserGameList;
 use Tustin\PlayStation\Factory\GameListFactory;
+use Tustin\PlayStation\Factory\UserTrophyTitles;
 use Tustin\PlayStation\Factory\FriendsListFactory;
 use Tustin\PlayStation\Model\Trophy\TrophySummary;
-use Tustin\PlayStation\Factory\TrophyTitlesFactory;
+use Tustin\PlayStation\Factory\UserTrophyTitlesFactory;
 
 class User extends Model
 {
@@ -43,17 +44,17 @@ class User extends Model
     /**
      * Get the trophy titles associated with this user's account.
      */
-    public function trophyTitles(): TrophyTitlesFactory
+    public function trophyTitles(int $limit = 100): UserTrophyTitles
     {
-        return new TrophyTitlesFactory($this);
+        return new UserTrophyTitles($this, limit: $limit);
     }
 
     /**
      * Get the game list for this user's account.
      */
-    public function gameList(): GameListFactory
+    public function gameList(): UserGameList
     {
-        return new GameListFactory($this);
+        return new UserGameList($this);
     }
 
     /**

@@ -2,16 +2,21 @@
 
 namespace Tustin\PlayStation\Iterator;
 
+use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Model\GameTitle;
+use Tustin\PlayStation\Model\UserGameTitle;
+use Tustin\PlayStation\Factory\UserGameList;
 use Tustin\PlayStation\Factory\GameListFactory;
 
 class GameListIterator extends AbstractApiIterator
 {
-    public function __construct(private GameListFactory $gameListFactory)
+    public function __construct(private UserGameList $userGameList, int $limit = 100)
     {
-        parent::__construct($gameListFactory->getHttpClient());
+        parent::__construct(
+            Client::getInstance()->getHttpClient(),
+        );
 
-        $this->limit = 100;
+        $this->limit = $limit;
 
         $this->access(0);
     }
@@ -26,7 +31,7 @@ class GameListIterator extends AbstractApiIterator
             'offset' => $cursor,
         ];
 
-        $results = $this->get('gamelist/v2/users/' . $this->gameListFactory->getUser()->accountId() . '/titles', $body);
+        $results = $this->get('gamelist/v2/users/' . $this->userGameList->getUser()->accountId() . '/titles', $body);
 
         $this->update($results->totalItemCount, $results->titles);
     }
@@ -34,11 +39,14 @@ class GameListIterator extends AbstractApiIterator
     /**
      * Gets the current game title in the iterator.
      */
-    public function current(): GameTitle
+    public function current(): UserGameTitle
     {
-        return GameTitle::fromObject(
-            $this->gameListFactory,
-            $this->getFromOffset($this->currentOffset)
+        $data = $this->getFromOffset($this->currentOffset);
+
+        return UserGameTitle::fromObject(
+            $this->userGameList->getUser()->accountId(),
+            $data->titleId,
+            $data
         );
     }
 }
