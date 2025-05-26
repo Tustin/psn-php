@@ -14,7 +14,7 @@ class FriendsListIterator extends AbstractApiIterator
      */
     private array $cachedAccounts = [];
 
-    public function __construct(private string $userAccountId, int $limit = 100)
+    public function __construct(private string $accountId, int $limit = 100)
     {
         parent::__construct(
             Client::getInstance()->getHttpClient(),
@@ -30,7 +30,7 @@ class FriendsListIterator extends AbstractApiIterator
      */
     public function access(mixed $cursor): void
     {
-        $results = $this->get('userProfile/v1/internal/users/' . $this->userAccountId . '/friends', [
+        $results = $this->get('userProfile/v1/internal/users/' . $this->accountId . '/friends', [
             'limit' => $this->limit,
             'offset' => $cursor,
             'order' => 'availability+realName+onlineId'

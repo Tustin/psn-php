@@ -45,7 +45,7 @@ class User extends Model
      */
     public function trophyTitles(int $limit = 100): UserTrophyTitles
     {
-        return new UserTrophyTitles($this, limit: $limit);
+        return new UserTrophyTitles($this->accountId(), limit: $limit);
     }
 
     /**
@@ -53,7 +53,7 @@ class User extends Model
      */
     public function gameList(int $limit = 100): UserGameList
     {
-        return new UserGameList($this, limit: $limit);
+        return new UserGameList($this->accountId(), limit: $limit);
     }
 
     /**
@@ -61,7 +61,7 @@ class User extends Model
      */
     public function friends(int $limit = 100): UserFriendsList
     {
-        return new UserFriendsList($this, limit: $limit);
+        return new UserFriendsList($this->accountId(), limit: $limit);
     }
 
     /**
@@ -259,6 +259,6 @@ class User extends Model
      */
     public function fetch(): object
     {
-        return $this->get('userProfile/v1/internal/users/' . $this->accountId . '/profiles');
+        return $this->get('userProfile/v1/internal/users/' . $this->accountId() . '/profiles');
     }
 }

@@ -10,17 +10,17 @@ use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class MessageThread extends Model
 {
-    public function __construct(private Group $group, private string $threadId)
+    public function __construct(private string $groupId, private string $threadId)
     {
-        parent::__construct($group->getHttpClient());
+        parent::__construct();
     }
 
     /**
      * Creates a new message thread from existing data. 
      */
-    public static function fromObject(Group $group, object $data): self
+    public static function fromObject(string $groupId, string $threadId, object $data): self
     {
-        $instance = new static($group, $data->threadId);
+        $instance = new static($groupId, $threadId);
         $instance->setCache($data);
 
         return $instance;

@@ -3,37 +3,23 @@
 namespace Tustin\PlayStation\Factory;
 
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Model\UserGameTitle;
 use Tustin\PlayStation\Iterator\GameListIterator;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 
+/**
+ * Retrieves the user's game list.
+ */
 class UserGameList extends Api implements \IteratorAggregate, FactoryInterface
 {
-    public function __construct(private User $user, private int $limit = 100) {}
-
-    /**
-     * Gets the current user for the game list.
-     */
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    /**
-     * Checks to see if this factory should be looking at a specific user's game list.
-     */
-    public function hasUser(): bool
-    {
-        return $this->user !== null;
-    }
+    public function __construct(private string $accountId, private int $limit = 100) {}
 
     /**
      * Gets the iterator and applies any filters.
      */
     public function getIterator(): \Iterator
     {
-        $iterator = new GameListIterator($this);
+        $iterator = new GameListIterator($this->accountId, $this->limit);
 
         return $iterator;
     }

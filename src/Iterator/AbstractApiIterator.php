@@ -135,7 +135,7 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
         }
 
         if (!$this->offsetExists($offset)) {
-            throw new \InvalidArgumentException("Offset $offset does not exist.");
+            return null;
         }
 
         if (!array_key_exists($offset, $this->cache)) {
@@ -168,7 +168,7 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
     /**
      * Gets the first item in the iterator.
      */
-    public function first(): object
+    public function first(): ?object
     {
         $this->rewind();
 

@@ -7,7 +7,9 @@ use Tustin\PlayStation\Api;
 use GuzzleHttp\HandlerStack;
 use Tustin\PlayStation\OAuthToken;
 use Tustin\PlayStation\Model\Media;
+use Tustin\PlayStation\Factory\Store;
 use Tustin\PlayStation\Factory\Users;
+use Tustin\PlayStation\Factory\Groups;
 use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Factory\GroupsFactory;
 use Tustin\PlayStation\Enums\TrophyServiceName;
@@ -221,7 +223,7 @@ class Client extends Api
     }
 
     /**
-     * Get trophy title information using an NP Communation ID(NPWRxxxxx_00).
+     * Get trophy title information using an NP Communation ID (NPWRxxxxx_00).
      */
     public function trophies(string $npCommunicationId, TrophyServiceName $serviceName = TrophyServiceName::Trophy): TrophyTitle
     {
@@ -229,19 +231,19 @@ class Client extends Api
     }
 
     /**
-     * Creates a store factory to navigate the PlayStation Store.
+     * Searches the PlayStation Store.
      */
-    public function store(): StoreFactory
+    public function store(string $query = '')
     {
-        return new StoreFactory($this);
+        return Store::search($query);
     }
 
     /**
      * Creates a group factory to query your chat groups (parties and text message groups).
      */
-    public function groups(): GroupsFactory
+    public function groups(): Groups
     {
-        return new GroupsFactory($this);
+        return new Groups;
     }
 
     /**

@@ -3,15 +3,16 @@
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Model\Group;
+use Tustin\PlayStation\Factory\Groups;
 use Tustin\PlayStation\Factory\GroupsFactory;
 
 class GroupsIterator extends AbstractApiIterator
 {
-    public function __construct(private GroupsFactory $groupsFactory)
+    public function __construct(int $limit = 50, private bool $favorited = false)
     {
-        parent::__construct($groupsFactory->getHttpClient());
+        $this->limit = $limit;
 
-        $this->limit = 20;
+        parent::__construct();
 
         $this->access(0);
     }
@@ -22,7 +23,7 @@ class GroupsIterator extends AbstractApiIterator
     public function access(mixed $cursor): void
     {
         $results = $this->get('gamingLoungeGroups/v1/members/me/groups', [
-            'favoriteFilter' => $this->groupsFactory->favorited ? 'favorite' : 'notFavorite',
+            'favoriteFilter' => $this->favorited ? 'favorite' : 'notFavorite',
             'limit' => $this->limit,
             'offset' => $cursor,
             'includeFields' => 'groupName,groupIcon,members,mainThread,joinedTimestamp,modifiedTimestamp,totalGroupCount,isFavorite,existsNewArrival,partySessions'
@@ -36,9 +37,11 @@ class GroupsIterator extends AbstractApiIterator
      */
     public function current(): Group
     {
+        $data = $this->getFromOffset($this->currentOffset);
+
         return Group::fromObject(
-            $this->groupsFactory,
-            $this->getFromOffset($this->currentOffset)
+            $data->groupId,
+            $data
         );
     }
 }

@@ -10,11 +10,9 @@ use Tustin\PlayStation\Factory\GameListFactory;
 
 class GameListIterator extends AbstractApiIterator
 {
-    public function __construct(private UserGameList $userGameList, int $limit = 100)
+    public function __construct(private string $accountId, int $limit = 100)
     {
-        parent::__construct(
-            Client::getInstance()->getHttpClient(),
-        );
+        parent::__construct();
 
         $this->limit = $limit;
 
@@ -31,7 +29,7 @@ class GameListIterator extends AbstractApiIterator
             'offset' => $cursor,
         ];
 
-        $results = $this->get('gamelist/v2/users/' . $this->userGameList->getUser()->accountId() . '/titles', $body);
+        $results = $this->get('gamelist/v2/users/' . $this->accountId . '/titles', $body);
 
         $this->update($results->totalItemCount, $results->titles);
     }
@@ -44,7 +42,7 @@ class GameListIterator extends AbstractApiIterator
         $data = $this->getFromOffset($this->currentOffset);
 
         return UserGameTitle::fromObject(
-            $this->userGameList->getUser()->accountId(),
+            $this->accountId,
             $data->titleId,
             $data
         );

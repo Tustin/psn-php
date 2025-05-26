@@ -2,14 +2,13 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Factory\UserTrophyTitles;
 use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
 
 class UserTrophyTitlesIterator extends AbstractApiIterator
 {
-    public function __construct(private UserTrophyTitles $userTrophyTitles, int $limit = 100)
+    public function __construct(private string $accountId, int $limit = 100)
     {
-        parent::__construct($userTrophyTitles->getHttpClient());
+        parent::__construct();
 
         $this->limit = $limit;
 
@@ -26,7 +25,7 @@ class UserTrophyTitlesIterator extends AbstractApiIterator
             'offset' => $cursor,
         ];
 
-        $results = $this->get('trophy/v1/users/' . $this->userTrophyTitles->getUser()->accountId() . '/trophyTitles', $body);
+        $results = $this->get('trophy/v1/users/' . $this->accountId . '/trophyTitles', $body);
 
         $this->update($results->totalItemCount, $results->trophyTitles);
     }

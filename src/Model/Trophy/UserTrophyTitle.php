@@ -28,6 +28,8 @@ class UserTrophyTitle extends AbstractTrophyTitle
 
     /**
      * Gets the detail of the title.
+     * 
+     * PS5 titles do not have any detail, so they will always return null.
      */
     public function detail(): ?string
     {
@@ -173,6 +175,14 @@ class UserTrophyTitle extends AbstractTrophyTitle
     public function earnedTrophiesPlatinumCount(): int
     {
         return $this->pluck('earnedTrophies.platinum');
+    }
+
+    /**
+     * Gets the amount of total earned trophies for this user.
+     */
+    public function earnedTrophiesCount(): int
+    {
+        return $this->earnedTrophiesBronzeCount() + $this->earnedTrophiesSilverCount() + $this->earnedTrophiesGoldCount() + $this->earnedTrophiesPlatinumCount();
     }
 
     /**

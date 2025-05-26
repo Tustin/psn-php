@@ -10,13 +10,16 @@ use Tustin\PlayStation\Iterator\Filter\User\OnlineIdFilter;
 use Tustin\PlayStation\Iterator\Filter\User\CloseFriendFilter;
 use Tustin\PlayStation\Iterator\Filter\User\VerifiedUserFilter;
 
+/**
+ * Retrieve a user's friends list.
+ */
 class UserFriendsList extends Api implements \IteratorAggregate, FactoryInterface
 {
     private string $onlineId = '';
     private bool $useCloseFriends = false;
     private bool $verified = false;
 
-    public function __construct(private User $user, private int $limit = 100) {}
+    public function __construct(private string $accountId, private int $limit = 100) {}
 
     /**
      * Applies the filter for only querying close friends.
@@ -53,7 +56,7 @@ class UserFriendsList extends Api implements \IteratorAggregate, FactoryInterfac
      */
     public function getIterator(): \Iterator
     {
-        $iterator = new FriendsListIterator($this->user->accountId(), $this->limit);
+        $iterator = new FriendsListIterator($this->accountId, $this->limit);
 
         if ($this->useCloseFriends) {
             $iterator = new CloseFriendFilter($iterator);

@@ -15,6 +15,9 @@ class Users extends Api implements FactoryInterface
         parent::__construct(Client::getInstance()->getHttpClient());
     }
 
+    /**
+     * Search for users matching the given PSN ID.
+     */
     public static function where(string $psn, int $limit = 50): UsersSearchIterator
     {
         return (new static)
@@ -22,7 +25,17 @@ class Users extends Api implements FactoryInterface
     }
 
     /**
-     * begin a search for users matching the given query.
+     * Performs a search for the given PSN and returns the first result.
+     * 
+     * Returns null if no user is found.
+     */
+    public static function firstWhere(string $psnId): ?User
+    {
+        return Users::where($psnId)->first();
+    }
+
+    /**
+     * Search for users matching the given query.
      */
     public function search(string $query, int $limit = 50): UsersSearchIterator
     {
@@ -30,7 +43,7 @@ class Users extends Api implements FactoryInterface
     }
 
     /**
-     * Get a user by account id.
+     * Find a user by their account id.
      */
     public function find(string $accountId): User
     {

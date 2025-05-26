@@ -2,22 +2,21 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Model\Store\Concept;
 
 class StoreSearchIterator extends AbstractApiIterator
 {
     public function __construct(
-        StoreFactory $storeFactory,
         private string $query,
+        int $limit = 20,
         private string $languageCode = 'en',
         private string $countryCode = 'us'
     ) {
-        if (empty($query)) {
-            throw new \InvalidArgumentException('[query] must contain a value.');
-        }
 
-        parent::__construct($storeFactory->getHttpClient());
+        parent::__construct();
+
+        $this->limit = $limit;
+
         $this->access('');
     }
 
@@ -31,10 +30,10 @@ class StoreSearchIterator extends AbstractApiIterator
             'countryCode' => $this->countryCode,
             'domainRequests' => [
                 [
-                    'domain' => 'ConceptGameMobileApp',
+                    'domain' => 'ConceptGameMobileApp', // TODO: Need to find the new domain for this search type (throws an error now)
                     'pagination' => [
                         'cursor' => $cursor,
-                        'pageSize' => '20' // @TODO: Test if this can be altered.
+                        'pageSize' => $this->limit
                     ]
                 ]
             ],
@@ -58,8 +57,12 @@ class StoreSearchIterator extends AbstractApiIterator
      */
     public function current(): Concept
     {
-        $concept = $this->getFromOffset($this->currentOffset)->conceptProductMetadata;
+        $concept = $this->getFromOffset($this->currentOffset);
 
-        return Concept::fromObject($this->getHttpClient(), $concept);
+        dd($concept);
+
+        return Concept::fromObject(
+            $this->getFromOffset($this->currentOffset)->conceptProductMetadata
+        );
     }
 }

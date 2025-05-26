@@ -2,19 +2,18 @@
 
 namespace Tustin\PlayStation\Factory;
 
-use Iterator;
 use Tustin\PlayStation\Api;
-use InvalidArgumentException;
 use Tustin\PlayStation\Client;
-use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Enums\LanguageType;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
-use Tustin\PlayStation\Exceptions\NoTrophiesException;
 use Tustin\PlayStation\Iterator\UserTrophyTitlesIterator;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleNameFilter;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleHasGroupsFilter;
 
+/**
+ * Retrieves the user's trophy titles.
+ */
 class UserTrophyTitles extends Api implements \IteratorAggregate, FactoryInterface
 {
     /**
@@ -35,7 +34,7 @@ class UserTrophyTitles extends Api implements \IteratorAggregate, FactoryInterfa
     private ?bool $hasTrophyGroups = null;
 
 
-    public function __construct(private User $user, private int $limit = 100)
+    public function __construct(private string $accountId, private int $limit = 100)
     {
         parent::__construct(
             Client::getInstance()->getHttpClient(),
@@ -65,9 +64,9 @@ class UserTrophyTitles extends Api implements \IteratorAggregate, FactoryInterfa
     /**
      * Gets the iterator and applies any filters.
      */
-    public function getIterator(): Iterator
+    public function getIterator(): \Iterator
     {
-        $iterator = new UserTrophyTitlesIterator($this, limit: $this->limit);
+        $iterator = new UserTrophyTitlesIterator($this->accountId, limit: $this->limit);
 
         if ($this->withName) {
             $iterator = new TrophyTitleNameFilter($iterator, $this->withName);
@@ -81,15 +80,9 @@ class UserTrophyTitles extends Api implements \IteratorAggregate, FactoryInterfa
     }
 
     /**
-     * Gets the current user to get trophies for.
-     */
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    /**
      * Gets the current platforms passed to this instance.
+     * 
+     * @TODO: What was this used for? Maybe for a filter for trophy titles by platform that wasn't implemented?
      */
     public function getPlatforms(): array
     {
@@ -108,13 +101,11 @@ class UserTrophyTitles extends Api implements \IteratorAggregate, FactoryInterfa
 
     /**
      * Gets the first trophy title in the collection.
+     * 
+     * Returns null if no trophy title is found.
      */
-    public function first(): UserTrophyTitle
+    public function first(): ?UserTrophyTitle
     {
-        try {
-            return $this->getIterator()->current();
-        } catch (InvalidArgumentException $e) {
-            throw new NoTrophiesException("Client has no trophy titles.");
-        }
+        return $this->getIterator()->current();
     }
 }

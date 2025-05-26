@@ -2,35 +2,41 @@
 
 namespace Tustin\PlayStation\Factory;
 
-use Iterator;
-use Carbon\Carbon;
-use IteratorAggregate;
 use Tustin\PlayStation\Api;
+use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Model\Group;
 use Tustin\PlayStation\Model\MessageThread;
 use Tustin\PlayStation\Iterator\GroupsIterator;
+use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\Filter\GroupMembersFilter;
 
-class GroupsFactory extends Api implements IteratorAggregate
+class Groups extends Api implements \IteratorAggregate, FactoryInterface
 {
     private array $with = [];
 
     private bool $only = false;
 
-    private ?Carbon $since = null;
+    private ?\DateTime $since = null;
 
     public bool $favorited = false;
+
+    public function __construct(private int $limit = 50)
+    {
+        parent::__construct(Client::getInstance()->getHttpClient());
+    }
+
+    public static function all(int $limit = 50): self
+    {
+        return new self($limit);
+    }
 
     /**
      * Filters groups that only contain these onlineIds.
      * 
      * Chain this with GroupsFactory::only to ensure you only get threads with these exact users.
-     *
-     * @param string ...$onlineIds
-     * @return GroupsFactory
      */
-    public function with(string ...$onlineIds): GroupsFactory
+    public function with(string ...$onlineIds): self
     {
         $this->with = array_merge($this->with, $onlineIds);
 
@@ -41,10 +47,8 @@ class GroupsFactory extends Api implements IteratorAggregate
      * Should be used with the GroupsFactory::with method.
      * 
      * Will return groups that contain ONLY the users passed to GroupsFactory::with.
-     *
-     * @return GroupsFactory
      */
-    public function only(): GroupsFactory
+    public function only(): self
     {
         $this->only = true;
 
@@ -53,11 +57,8 @@ class GroupsFactory extends Api implements IteratorAggregate
 
     /**
      * Filters groups that have only been active since the given date.
-     *
-     * @param Carbon $date
-     * @return GroupsFactory
      */
-    public function since(Carbon $date): GroupsFactory
+    public function since(\DateTime $date): self
     {
         $this->since = $date;
 
@@ -66,10 +67,8 @@ class GroupsFactory extends Api implements IteratorAggregate
 
     /**
      * Filters groups that are favorited.
-     *
-     * @return GroupsFactory
      */
-    public function favorited(): GroupsFactory
+    public function favorited(): self
     {
         $this->favorited = true;
 
@@ -78,12 +77,10 @@ class GroupsFactory extends Api implements IteratorAggregate
 
     /**
      * Gets the iterator and applies any filters.
-     *
-     * @return Iterator
      */
-    public function getIterator(): Iterator
+    public function getIterator(): \Iterator
     {
-        $iterator = new GroupsIterator($this);
+        $iterator = new GroupsIterator($this->limit, $this->favorited);
 
         if ($this->with) {
             $iterator = new GroupMembersFilter($iterator, $this->with, $this->only);
@@ -106,21 +103,16 @@ class GroupsFactory extends Api implements IteratorAggregate
      * The date to get messages since then.
      * 
      * Returns unix epoch if not set prior.
-     *
-     * @return Carbon
      */
-    public function getSinceDate(): Carbon
+    public function getSinceDate(): \DateTime
     {
-        return $this->since ?? Carbon::createFromTimestamp(0);
+        return $this->since ?? \Carbon\Carbon::createFromTimestamp(0);
     }
 
     /**
      * Creates a new message thread.
      * 
      * Will return an existing message thread if a thread already exists containing the same users you pass to this method.
-     *
-     * @param User ...$users
-     * @return MessageThread
      */
     public function create(User ...$users): MessageThread
     {
