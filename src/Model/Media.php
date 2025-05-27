@@ -6,130 +6,167 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enums\UgcType;
-use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 use Tustin\PlayStation\Enums\CloudStatusType;
+use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 use Tustin\PlayStation\Enums\TranscodeStatusType;
 
 class Media extends Model
 {
-    public function __construct(Client $client, private string $ugcId)
+    public function __construct(private string $ugcId)
     {
-        parent::__construct($client);
+        parent::__construct();
     }
 
     /**
      * Creates a new Media object from existing data.
      */
-    public static function fromObject(Client $client, object $data): self
+    public static function fromObject(object $data): self
     {
-        $media = new static($client, $data->sourceUgcId);
-        $media->setCache($data);
-
-        return $media;
+        return (new static($data->sourceUgcId))
+            ->setCache($data);
     }
 
+    /**
+     * Gets the creator of the media.
+     */
     public function creator(): User
     {
-        return new User($this->getHttpClient(), $this->pluck('sceUserAccountId'));
+        return new User($this->pluck('sceUserAccountId'));
     }
 
+    /**
+     * Gets the trophy title for the media.
+     */
     public function trophyTitle(): TrophyTitle
     {
-        return new TrophyTitle($this->getHttpClient(), $this->npCommunicationId());
+        return new TrophyTitle($this->npCommunicationId());
     }
 
-    public function game(): GameTitle
-    {
-        return new GameTitle($this->getHttpClient(), $this->titleId());
-    }
-
+    /**
+     * Gets the media id.
+     */
     public function id(): string
     {
         return $this->pluck('id');
     }
 
+    /**
+     * Gets if the media is a spoiler or not.
+     */
     public function spoiler(): bool
     {
         return $this->pluck('isSpoiler');
     }
 
+    /**
+     * Gets the language of the media.
+     */
     public function language(): string
     {
         return $this->pluck('language');
     }
 
-    public function type(): UgcType
+    /**
+     * Gets the type of the media.
+     */
+    public function type(): ?UgcType
     {
-        return UgcType::from($this->pluck('ugcType'));
+        return UgcType::tryFrom($this->pluck('ugcType'));
     }
 
+    /**
+     * Gets the title of the media.
+     */
     public function title(): string
     {
         return $this->pluck('title');
     }
 
+    /**
+     * Gets the upload date of the media.
+     */
     public function uploadDate(): Carbon
     {
         return Carbon::parse($this->pluck('uploadDate'));
     }
 
+    /**
+     * Gets the NP communication ID for the media.
+     */
     public function npCommunicationId(): string
     {
         return $this->pluck('npCommId');
     }
 
+    /**
+     * Gets the title name of the media.
+     */
     public function titleName(): string
     {
         return $this->pluck('sceTitleName');
     }
 
+    /**
+     * Gets the title ID of the media.
+     */
     public function titleId(): string
     {
         return $this->pluck('sceTitleId');
     }
 
+    /**
+     * Gets the file size of the media.
+     */
     public function fileSize(): int
     {
         return $this->pluck('fileSize');
     }
 
+    /**
+     * Gets the file type of the media.
+     */
     public function fileType(): string
     {
         return $this->pluck('fileType');
     }
 
-    public function cloudStatus(): CloudStatusType
+    /**
+     * Gets the cloud status of the media.
+     */
+    public function cloudStatus(): ?CloudStatusType
     {
-        return CloudStatusType::from($this->pluck('cloudStatus'));
+        return CloudStatusType::tryFrom($this->pluck('cloudStatus'));
     }
 
-    public function transcodeStatus(): TranscodeStatusType
+    /**
+     * Gets the transcode status of the media.
+     */
+    public function transcodeStatus(): ?TranscodeStatusType
     {
-        return TranscodeStatusType::from($this->pluck('transcodeStatus'));
+        return TranscodeStatusType::tryFrom($this->pluck('transcodeStatus'));
     }
 
     /**
      * Generates a URL with the required parameters to access the asset. 
-
-     * @return string
      */
-    public function url(): string
+    public function url(): ?string
     {
         switch ($this->type()) {
             case UgcType::Video:
-                return $this->generateUrls()->downloadUrl;
+                return $this->generateUrls()?->downloadUrl;
                 break;
 
             case UgcType::Image:
-                return $this->generateUrls()->screenshotUrl;
+                return $this->generateUrls()?->screenshotUrl;
                 break;
+
+            default:
+                return null;
         }
     }
 
     /**
      * Generates parameterized URLs for the media asset.
-     *
-     * @return object
      */
     private function generateUrls(): object
     {

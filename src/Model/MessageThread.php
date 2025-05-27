@@ -4,9 +4,9 @@ namespace Tustin\PlayStation\Model;
 
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Model\Group;
-use Tustin\PlayStation\Model\Message\Sendable;
-use Tustin\PlayStation\Factory\MessagesFactory;
-use Tustin\PlayStation\Model\Message\AbstractMessage;
+use Tustin\PlayStation\Factory\MessagesList;
+use Tustin\PlayStation\Model\Messages\Message;
+use Tustin\PlayStation\Model\Messages\Sendable;
 
 class MessageThread extends Model
 {
@@ -20,16 +20,14 @@ class MessageThread extends Model
      */
     public static function fromObject(string $groupId, string $threadId, object $data): self
     {
-        $instance = new static($groupId, $threadId);
-        $instance->setCache($data);
-
-        return $instance;
+        return (new static($groupId, $threadId))
+            ->setCache($data);
     }
 
     /**
      * Sends a message to the message thread.
      */
-    public function sendMessage(Sendable $message): AbstractMessage
+    public function sendMessage(Sendable $message): Message
     {
         $this->postJson(
             'gamingLoungeGroups/v1/groups/' . $this->group()->id() . '/threads/' . $this->id() . '/messages',
@@ -41,18 +39,14 @@ class MessageThread extends Model
 
     /**
      * Gets all messages in this message thread.
-     *
-     * @return MessagesFactory
      */
-    public function messages(): MessagesFactory
+    public function messages(): MessagesList
     {
-        return new MessagesFactory($this);
+        return new MessagesList($this);
     }
 
     /**
-     * The thread id.
-     *
-     * @return string
+     * Gets the id for the message thread.
      */
     public function id(): string
     {
@@ -60,19 +54,15 @@ class MessageThread extends Model
     }
 
     /**
-     * The message group for this thread.
-     *
-     * @return Group
+     * Gets the group for the message thread.
      */
     public function group(): Group
     {
-        return $this->group;
+        return new Group($this->groupId);
     }
 
     /**
-     * The message count for this thread.
-     *
-     * @return integer
+     * Gets the message count for the message thread.
      */
     public function messageCount(): int
     {

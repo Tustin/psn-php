@@ -9,8 +9,10 @@ enum MessageType: int
     case Video = 210;
     case Audio = 1011;
     case Sticker = 1013;
+    case InvitedGroupToParty = 1202;
     case LeftGroup = 2002;
     case ChangedGroupImage = 2004;
+    case CreatedGroup = 2006;
     case StartedVoiceChat = 2020;
 
         // @TODO: Need to map out all of these events.

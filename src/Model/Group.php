@@ -5,9 +5,9 @@ namespace Tustin\PlayStation\Model;
 use Carbon\Carbon;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Factory\GroupMembers;
-use Tustin\PlayStation\Model\Message\Sendable;
+use Tustin\PlayStation\Model\Messages\Message;
+use Tustin\PlayStation\Model\Messages\Sendable;
 use Tustin\PlayStation\Factory\GroupMembersFactory;
-use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class Group extends Model
 {
@@ -81,10 +81,9 @@ class Group extends Model
     {
         $mainThread = $this->pluck('mainThread');
 
-        return MessageThread::fromObject(
+        return new MessageThread(
             $this->id(),
-            $mainThread->threadId,
-            $mainThread
+            $mainThread['threadId']
         );
     }
 
@@ -96,7 +95,7 @@ class Group extends Model
     /**
      * Sends a message to the group's message thread.
      */
-    public function sendMessage(Sendable $message): AbstractMessage
+    public function sendMessage(Sendable $message): Message
     {
         return $this->messageThread()->sendMessage($message);
     }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Message;
+namespace Tustin\PlayStation\Model\Messages;
 
 use Tustin\PlayStation\Enums\MessageType;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
-class AudioMessage extends AbstractMessage
+class AudioMessage extends Message
 {
     /**
      * Gets the message type.

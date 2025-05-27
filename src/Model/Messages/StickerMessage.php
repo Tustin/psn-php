@@ -1,11 +1,11 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Message;
+namespace Tustin\PlayStation\Model\Messages;
 
 use Tustin\PlayStation\Enums\MessageType;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
-class StickerMessage extends AbstractMessage
+class StickerMessage extends Message
 {
     /**
      * Gets the sticker url.

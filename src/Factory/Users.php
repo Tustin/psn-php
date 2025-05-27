@@ -37,7 +37,7 @@ class Users extends Api implements FactoryInterface
     /**
      * Search for users matching the given query.
      */
-    public function search(string $query, int $limit = 50): UsersSearchIterator
+    public static function search(string $query, int $limit = 50): UsersSearchIterator
     {
         return new UsersSearchIterator($query, limit: $limit);
     }

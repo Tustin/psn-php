@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Message;
+namespace Tustin\PlayStation\Model\Messages;
 
 use Carbon\Carbon;
 use Tustin\PlayStation\Model;
@@ -8,7 +8,7 @@ use Tustin\PlayStation\Model\User;
 use Tustin\PlayStation\Enums\MessageType;
 use Tustin\PlayStation\Model\MessageThread;
 
-abstract class AbstractMessage extends Model
+abstract class Message extends Model
 {
     /**
      * The message thread this message is in.
@@ -17,7 +17,7 @@ abstract class AbstractMessage extends Model
 
     public static function fromObject(MessageThread $thread, object $messageData): self
     {
-        $instance = new static($thread->getHttpClient());
+        $instance = new static();
         $instance->setCache($messageData);
 
         $instance->thread = $thread;
@@ -55,7 +55,7 @@ abstract class AbstractMessage extends Model
     }
 
     /**
-     * Returns the message thread that this message is in.
+     * Gets the message thread that this message is in.
      */
     public function messageThread(): MessageThread
     {
@@ -68,15 +68,14 @@ abstract class AbstractMessage extends Model
     public function sender(): User
     {
         return new User(
-            $this->messageThread()->getHttpClient(),
             $this->pluck('sender.accountId')
         );
     }
 
     /**
-     * Creates a message based on the message type.
+     * Creates a message object based on the message type.
      */
-    public static function create(MessageThread $thread, object $messageData): AbstractMessage
+    public static function create(MessageThread $thread, object $messageData): Message
     {
         switch (MessageType::tryFrom($messageData->messageType)) {
             case MessageType::Audio:

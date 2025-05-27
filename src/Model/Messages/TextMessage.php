@@ -1,14 +1,17 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Message;
+namespace Tustin\PlayStation\Model\Messages;
 
 use Tustin\PlayStation\Enums\MessageType;
-use Tustin\PlayStation\Model\Message\Sendable;
+use Tustin\PlayStation\Model\Messages\Sendable;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
-class TextMessage extends AbstractMessage implements Sendable
+class TextMessage extends Message implements Sendable
 {
-    public function __construct(private string $textMessage) {}
+    public function message(): string
+    {
+        return $this->pluck('body');
+    }
 
     /**
      * Gets the message type.
@@ -27,7 +30,7 @@ class TextMessage extends AbstractMessage implements Sendable
     {
         return [
             'messageType' => $this->type(),
-            'body' => $this->textMessage
+            'body' => $this->message()
         ];
     }
 

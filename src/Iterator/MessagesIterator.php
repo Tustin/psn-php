@@ -4,19 +4,19 @@ namespace Tustin\PlayStation\Iterator;
 
 use InvalidArgumentException;
 use Tustin\PlayStation\Model\MessageThread;
-use Tustin\PlayStation\Model\Message\AbstractMessage;
+use Tustin\PlayStation\Model\Messages\Message;
 
 class MessagesIterator extends AbstractApiIterator
 {
     private int $totalCount = 0;
 
-    public function __construct(private MessageThread $thread, private int $limit = 20)
+    public function __construct(private MessageThread $messageThread, protected ?int $limit = 20)
     {
         if ($limit <= 0) {
             throw new InvalidArgumentException('$limit must be greater than zero.');
         }
 
-        parent::__construct($thread->getHttpClient());
+        parent::__construct();
         $this->access(null);
     }
 
@@ -35,7 +35,7 @@ class MessagesIterator extends AbstractApiIterator
             $params['before'] = $cursor;
         }
 
-        $results = $this->get('gamingLoungeGroups/v1/members/me/groups/' . $this->thread->group()->id() . '/threads/' . $this->thread->id() . '/messages', $params);
+        $results = $this->get('gamingLoungeGroups/v1/members/me/groups/' . $this->messageThread->group()->id() . '/threads/' . $this->messageThread->id() . '/messages', $params);
 
         $this->totalCount += $results->messageCount;
         // if ($results->reachedEndOfPage && $results->messageCount == 0) {
@@ -64,10 +64,10 @@ class MessagesIterator extends AbstractApiIterator
      * 
      * Will automatically convert the message to a specific type of message.
      */
-    public function current(): AbstractMessage
+    public function current(): Message
     {
-        return AbstractMessage::create(
-            $this->thread,
+        return Message::create(
+            $this->messageThread,
             $this->getFromOffset($this->currentOffset)
         );
     }

@@ -1,19 +1,19 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Message;
+namespace Tustin\PlayStation\Model\Messages;
 
 use Tustin\PlayStation\Model\Media;
 use Tustin\PlayStation\Enums\MessageType;
 use Tustin\PlayStation\Model\Message\AbstractMessage;
 
-class ImageMessage extends AbstractMessage
+class ImageMessage extends Message
 {
     /**
      * Gets the image media.
      */
     public function image(): Media
     {
-        return new Media($this->messageThread()->getHttpClient(), $this->pluck('messageDetail.imageMessageDetail.ugcId'));
+        return new Media($this->pluck('messageDetail.imageMessageDetail.ugcId'));
     }
 
     /**

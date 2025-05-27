@@ -5,25 +5,22 @@ namespace Tustin\PlayStation\Factory;
 use Iterator;
 use IteratorAggregate;
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Model\Message;
 use Tustin\PlayStation\Model\MessageThread;
+use Tustin\PlayStation\Model\Messages\Message;
 use Tustin\PlayStation\Iterator\MessagesIterator;
-use Tustin\PlayStation\Model\Message\AbstractMessage;
 use Tustin\PlayStation\Iterator\Filter\MessageTypeFilter;
+use Tustin\PlayStation\Model\Message\Message as MessageMessage;
 
-class MessagesFactory extends Api implements IteratorAggregate
+class MessagesList extends Api implements IteratorAggregate
 {
-    private string $typeFilter;
+    private ?string $typeFilter = null;
 
-    public function __construct(private MessageThread $thread)
-    {
-        parent::__construct($thread->getHttpClient());
-    }
+    public function __construct(private MessageThread $messageThread) {}
 
     /**
      * Gets messages only of a certain type.
      */
-    public function of(string $class): MessagesFactory
+    public function of(string $class): MessagesList
     {
         $this->typeFilter = $class;
 
@@ -35,7 +32,7 @@ class MessagesFactory extends Api implements IteratorAggregate
      */
     public function getIterator(): Iterator
     {
-        $iterator = new MessagesIterator($this->thread);
+        $iterator = new MessagesIterator($this->messageThread);
 
         if ($this->typeFilter && class_exists($this->typeFilter) !== false) {
             $iterator = new MessageTypeFilter($iterator, $this->typeFilter);
@@ -47,7 +44,7 @@ class MessagesFactory extends Api implements IteratorAggregate
     /**
      * Gets the first message in the message thread.
      */
-    public function first(): AbstractMessage
+    public function first(): Message
     {
         return $this->getIterator()->current();
     }

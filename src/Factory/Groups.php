@@ -91,8 +91,6 @@ class Groups extends Api implements \IteratorAggregate, FactoryInterface
 
     /**
      * Gets the first group in the collection.
-     *
-     * @return Group
      */
     public function first(): Group
     {
@@ -119,13 +117,13 @@ class Groups extends Api implements \IteratorAggregate, FactoryInterface
         $invitees = [];
 
         foreach ($users as $user) {
-            $invitees[] = ['accountId' => $user->accountId()]; // TODO: Test if onlineId can still be used here.
+            $invitees[] = ['accountId' => $user->accountId()];
         }
 
         $response = $this->postJson('gamingLoungeGroups/v1/groups', [
             'invitees' => $invitees
         ]);
 
-        return new MessageThread(new Group($this, $response->groupId), $response->mainThread->threadId);
+        return new MessageThread($response->groupId, $response->mainThread->threadId);
     }
 }
