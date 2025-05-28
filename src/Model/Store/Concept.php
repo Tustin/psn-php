@@ -47,6 +47,32 @@ class Concept extends Model
     }
 
     /**
+     * Gets the concept's title id. (ex: PPSA01649_00)
+     */
+    public function titleId(): string
+    {
+        return $this->pluck('defaultProduct.npTitleId');
+    }
+
+    /**
+     * Gets the concept's product SKU. (ex: UP0002-PPSA01649_00-CODBO6CROSSGEN01)
+     */
+    public function sku(): string
+    {
+        return $this->pluck('defaultProduct.id');
+    }
+
+    /**
+     * Gets the concept's platforms.
+     *
+     * @return array<string>
+     */
+    public function platforms(): array
+    {
+        return $this->pluck('platforms');
+    }
+
+    /**
      * Gets the concept's publicher.
      */
     public function publisher(): string
@@ -106,6 +132,14 @@ class Concept extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Gets the concept's media.
+     */
+    public function media(): array
+    {
+        return $this->pluck('media');
     }
 
     /**
