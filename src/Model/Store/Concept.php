@@ -3,13 +3,15 @@
 namespace Tustin\PlayStation\Model\Store;
 
 use Carbon\Carbon;
-use GuzzleHttp\Client;
 use Tustin\PlayStation\Model;
 use Tustin\PlayStation\Enums\DescriptionType;
 
 class Concept extends Model
 {
-    public function __construct(private string $conceptId) {}
+    public function __construct(private string $conceptId)
+    {
+        parent::__construct();
+    }
 
     /**
      * Creates a new concept from existing data.

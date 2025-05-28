@@ -210,6 +210,9 @@ class Api
                     'sha256Hash' => $hashMap[$op]
                 ]
             ])
+        ], [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json'
         ])->data;
     }
 }
