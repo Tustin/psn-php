@@ -8,14 +8,12 @@ class StoreSearchIterator extends AbstractApiIterator
 {
     public function __construct(
         private string $query,
-        int $limit = 20,
+        protected ?int $limit = 20,
         private string $languageCode = 'en',
         private string $countryCode = 'us'
     ) {
 
         parent::__construct();
-
-        $this->limit = $limit;
 
         $this->access('');
     }
@@ -25,12 +23,15 @@ class StoreSearchIterator extends AbstractApiIterator
      */
     public function access(mixed $cursor): void
     {
+        // @TODO: I don't think this endpoint is really used anymore, and it should probably be swapped for the graphql equivalent:
+        // metGetDomainSearchResults
+        // But with the new domain this works for now.
         $results = $this->postJson('search/v1/universalSearch', [
             'age' => '69',
             'countryCode' => $this->countryCode,
             'domainRequests' => [
                 [
-                    'domain' => 'ConceptGameMobileApp', // TODO: Need to find the new domain for this search type (throws an error now)
+                    'domain' => 'MobileGames',
                     'pagination' => [
                         'cursor' => $cursor,
                         'pageSize' => $this->limit
@@ -48,7 +49,7 @@ class StoreSearchIterator extends AbstractApiIterator
     {
         $this->currentOffset++;
         if (($this->currentOffset % $this->limit) == 0) {
-            $this->access($this->maxEventIndexCursor);
+            $this->access($this->customCursor);
         }
     }
 
@@ -59,10 +60,9 @@ class StoreSearchIterator extends AbstractApiIterator
     {
         $concept = $this->getFromOffset($this->currentOffset);
 
-        dd($concept);
-
         return Concept::fromObject(
-            $this->getFromOffset($this->currentOffset)->conceptProductMetadata
+            $concept->id,
+            $this->getFromOffset($this->currentOffset)->conceptMetadata
         );
     }
 }

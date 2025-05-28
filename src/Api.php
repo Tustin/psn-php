@@ -176,7 +176,6 @@ class Api
 
     public function graphql(string $op, array $variables): object
     {
-        // @Temp: This will hopefully be removed at some point for dynamic operation hashing.
         $hashMap = [
             'metGetConceptByProductIdQuery' => '0a4c9f3693b3604df1c8341fdc3e481f42eeecf961a996baaa65e65a657a6433',
             'metGetConceptById' => 'cc90404ac049d935afbd9968aef523da2b6723abfb9d586e5f77ebf7c5289006',
@@ -193,7 +192,9 @@ class Api
             'metGetViews' => '6fd98ff7fecb603006fb5d92db176d5028435be163c8d1ee9f7c598ab4677dd1',
             'metGetWebCheckoutCart' => '2d4165c4de76877a32f3d08c91ce2af0e01d69300131fed0a8022868235e85b1',
             // 'metGetWishlistedItemIds'=> '',
-            'metGetExperience' => '054e61ee68bbeadc21435caebcc4f2bba0919a99b06629d141b0b82dc55f10c4'
+            'metGetExperience' => '054e61ee68bbeadc21435caebcc4f2bba0919a99b06629d141b0b82dc55f10c4',
+            'metGetContextSearchResults' => 'ac5fb2b82c4d086ca0d272fba34418ab327a7762dd2cd620e63f175bbc5aff10',
+            'metGetDomainSearchResults' => '23ece284bf8bdc50bfa30a4d97fd4d733e723beb7a42dff8c1ee883f8461a2e1',
         ];
 
         if (!array_key_exists($op, $hashMap)) {

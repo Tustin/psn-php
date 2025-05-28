@@ -11,8 +11,13 @@ class Store extends Api implements FactoryInterface
     /**
      * Searches for a title on the store.
      */
-    public static function search(string $query): StoreSearchIterator
+    public static function search(string $query, int $limit = 20, string $languageCode = 'en', string $countryCode = 'us'): StoreSearchIterator
     {
-        return new StoreSearchIterator($query);
+        return new StoreSearchIterator(
+            query: $query,
+            limit: $limit,
+            languageCode: $languageCode,
+            countryCode: $countryCode
+        );
     }
 }

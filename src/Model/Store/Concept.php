@@ -95,15 +95,15 @@ class Concept extends Model
     /**
      * Gets a specific description by type.
      */
-    public function descriptionByType(DescriptionType $type): string
+    public function descriptionByType(DescriptionType $type): ?string
     {
         foreach ($this->pluck('descriptions') as $description) {
-            if ($description['type'] === $type->value) {
-                return $description['value'];
+            if (array_key_exists('type', $description) && $description['type'] === $type->value) {
+                return $description['desc'];
             }
         }
 
-        return '';
+        return null;
     }
 
     /**
