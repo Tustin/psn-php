@@ -13,7 +13,14 @@ class ImageMessage extends Message
      */
     public function image(): Media
     {
-        return new Media($this->pluck('messageDetail.imageMessageDetail.ugcId'));
+        return new Media(
+            $this->imageDetails()['ugcId']
+        );
+    }
+
+    public function imageDetails(): ?array
+    {
+        return $this->pluck('messageDetail.imageMessageDetail');
     }
 
     /**

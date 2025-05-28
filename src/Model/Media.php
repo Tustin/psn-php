@@ -9,6 +9,7 @@ use Tustin\PlayStation\Enums\UgcType;
 use Tustin\PlayStation\Enums\CloudStatusType;
 use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 use Tustin\PlayStation\Enums\TranscodeStatusType;
+use Tustin\PlayStation\Exceptions\NotFoundHttpException;
 
 class Media extends Model
 {
@@ -47,7 +48,7 @@ class Media extends Model
      */
     public function id(): string
     {
-        return $this->pluck('id');
+        return $this->ugcId;
     }
 
     /**
@@ -153,12 +154,10 @@ class Media extends Model
     {
         switch ($this->type()) {
             case UgcType::Video:
-                return $this->generateUrls()?->downloadUrl;
-                break;
+                return $this->generateUrls()['downloadUrl'];
 
             case UgcType::Image:
-                return $this->generateUrls()?->screenshotUrl;
-                break;
+                return $this->generateUrls()['screenshotUrl'];
 
             default:
                 return null;
@@ -167,10 +166,12 @@ class Media extends Model
 
     /**
      * Generates parameterized URLs for the media asset.
+     * 
+     * @throws NotFoundHttpException If the media is not found.
      */
-    private function generateUrls(): object
+    public function generateUrls(): array
     {
-        return $this->get('gameMediaService/v2/c2s/ugc/' . $this->id() . '/url');
+        return $this->get('gameMediaService/v2/c2s/ugc/' . $this->id());
     }
 
     public function fetch(): object

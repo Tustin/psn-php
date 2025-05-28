@@ -21,10 +21,7 @@ class Groups extends Api implements \IteratorAggregate, FactoryInterface
 
     public bool $favorited = false;
 
-    public function __construct(private int $limit = 50)
-    {
-        parent::__construct(Client::getInstance()->getHttpClient());
-    }
+    public function __construct(private int $limit = 50) {}
 
     public static function all(int $limit = 50): self
     {

@@ -10,10 +10,7 @@ use Tustin\PlayStation\Iterator\UsersSearchIterator;
 
 class Users extends Api implements FactoryInterface
 {
-    public function __construct()
-    {
-        parent::__construct(Client::getInstance()->getHttpClient());
-    }
+    public function __construct() {}
 
     /**
      * Search for users matching the given PSN ID.
