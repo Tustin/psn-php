@@ -37,6 +37,17 @@ class Api
     }
 
     /**
+     * Sends a GET request and reads the raw response.
+     */
+    public function getRaw(string $path = '', array $body = [], array $headers = []): mixed
+    {
+        return $this->getHttpClient()->get($path, [
+            'query' => $body,
+            'headers' => $headers
+        ])->getBody()->getContents();
+    }
+
+    /**
      * Sends a POST request as form data.
      */
     public function post(string $path, array $body, array $headers = []): mixed

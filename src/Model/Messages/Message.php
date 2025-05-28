@@ -13,9 +13,12 @@ abstract class Message extends Model
     /**
      * The message thread this message is in.
      */
-    private MessageThread $thread;
+    public MessageThread $thread;
 
-    public static function fromObject(MessageThread $thread, object $messageData): self
+    /**
+     * Creates a message object with existing message data.
+     */
+    public static function fromObject(MessageThread $thread, object $messageData): Message
     {
         $instance = new static();
         $instance->setCache($messageData);
@@ -90,5 +93,10 @@ abstract class Message extends Model
                 // We'll just default to a text message because there are certain types of messages (new voice chat, etc) that are basically text messages.
                 return TextMessage::fromObject($thread, $messageData);
         }
+    }
+
+    public function fetch(): object
+    {
+        throw new \BadMethodCallException();
     }
 }

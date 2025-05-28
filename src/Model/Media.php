@@ -171,9 +171,12 @@ class Media extends Model
      */
     public function generateUrls(): array
     {
-        return $this->get('gameMediaService/v2/c2s/ugc/' . $this->id());
+        return $this->get('gameMediaService/v2/c2s/ugc/' . $this->id() . '/url');
     }
 
+    /**
+     * Gets the media info from the PlayStation API.
+     */
     public function fetch(): object
     {
         return $this->get('gameMediaService/v2/c2s/content', [

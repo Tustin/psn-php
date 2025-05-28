@@ -69,9 +69,13 @@ class MessageThread extends Model
         return $this->pluck('messageCount') ?? 0;
     }
 
-    // @TODO: Implement this.
+    /**
+     * Gets the message thread info from the PlayStation API.
+     */
     public function fetch(): object
     {
-        throw new \BadMethodCallException();
+        return $this->get(
+            'gamingLoungeGroups/v1/groups/' . $this->group()->id() . '/threads/' . $this->id()
+        );
     }
 }
