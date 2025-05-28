@@ -4,7 +4,7 @@ namespace Tustin\PlayStation\Factory;
 
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Client;
-use Tustin\PlayStation\Model\User;
+use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\UsersSearchIterator;
 

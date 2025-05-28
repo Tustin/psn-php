@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Messages;
+namespace Tustin\PlayStation\Models\Messages;
 
 use GdImage;
 use Tustin\PlayStation\Enums\MessageType;

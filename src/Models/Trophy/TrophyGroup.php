@@ -1,12 +1,12 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Trophy;
+namespace Tustin\PlayStation\Models\Trophy;
 
-use Tustin\PlayStation\Model;
+use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Enums\TrophyType;
 use Tustin\PlayStation\Factory\TrophyFactory;
 
-class TrophyGroup extends Model
+class TrophyGroup extends ApiModel
 {
     public function __construct(
         private AbstractTrophyTitle $trophyTitle,
@@ -148,6 +148,8 @@ class TrophyGroup extends Model
 
     /**
      * Fetches the trophy group information from the API.
+     * 
+     * @TODO: Clean this up, it's a mess.
      */
     public function fetch(): object
     {

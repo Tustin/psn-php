@@ -3,7 +3,7 @@
 namespace Tests;
 
 use GuzzleHttp\Client;
-use Tustin\PlayStation\Model;
+use Tustin\PlayStation\Models;
 use PHPUnit\Framework\TestCase;
 
 class ModelTest extends TestCase

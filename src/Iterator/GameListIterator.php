@@ -3,8 +3,8 @@
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Client;
-use Tustin\PlayStation\Model\GameTitle;
-use Tustin\PlayStation\Model\UserGameTitle;
+use Tustin\PlayStation\Models\GameTitle;
+use Tustin\PlayStation\Models\UserGameTitle;
 use Tustin\PlayStation\Factory\UserGameList;
 use Tustin\PlayStation\Factory\GameListFactory;
 

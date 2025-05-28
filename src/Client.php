@@ -6,15 +6,13 @@ use GuzzleHttp\Middleware;
 use Tustin\PlayStation\Api;
 use GuzzleHttp\HandlerStack;
 use Tustin\PlayStation\OAuthToken;
-use Tustin\PlayStation\Model\Media;
+use Tustin\PlayStation\Models\Media;
 use Tustin\PlayStation\Factory\Store;
 use Tustin\PlayStation\Factory\Users;
 use Tustin\PlayStation\Factory\Groups;
-use Tustin\PlayStation\Factory\StoreFactory;
-use Tustin\PlayStation\Factory\GroupsFactory;
 use Tustin\PlayStation\Enums\TrophyServiceName;
-use Tustin\PlayStation\Model\Trophy\TrophyTitle;
-use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
+use Tustin\PlayStation\Factory\CloudMediaGallery;
+use Tustin\PlayStation\Models\Trophy\TrophyTitle;
 use Tustin\PlayStation\Http\Middleware\AuthenticationMiddleware;
 use Tustin\PlayStation\Http\Middleware\ResponseHandlerMiddleware;
 
@@ -189,9 +187,6 @@ class Client extends Api
 
     /**
      * Access the PlayStation API using an existing access token.
-     *
-     * @param string $accessToken
-     * @return void
      */
     public function setAccessToken(string $accessToken)
     {
@@ -251,14 +246,14 @@ class Client extends Api
      */
     public function media(string $ugcId): Media
     {
-        return new Media($this->getHttpClient(), $ugcId);
+        return new Media($ugcId);
     }
 
     /**
      * Gets the cloud media gallery for the user.
      */
-    public function cloudMediaGallery(): CloudMediaGalleryFactory
+    public function cloudMediaGallery(): CloudMediaGallery
     {
-        return new CloudMediaGalleryFactory($this);
+        return new CloudMediaGallery;;
     }
 }

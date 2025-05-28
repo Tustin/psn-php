@@ -5,32 +5,30 @@ namespace Tustin\PlayStation\Factory;
 use Iterator;
 use IteratorAggregate;
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Model\Media;
+use Tustin\PlayStation\Models\Media;
 use Tustin\PlayStation\Enums\TranscodeStatusType;
 use Tustin\PlayStation\Exceptions\FilterException;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\CloudMediaGalleryIterator;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TitleIdFilter;
 
-class CloudMediaGalleryFactory extends Api implements IteratorAggregate, FactoryInterface
+class CloudMediaGallery extends Api implements IteratorAggregate, FactoryInterface
 {
     private $title;
 
     private string $titleId = '';
-    private string $npCommId = '';
+    private string $communcationId = '';
     private string $withDetail = '';
     private TranscodeStatusType $transcodeStatus;
 
+    public function __construct() {}
+
     /**
      * Filters media based on title id.
-     *
-     * @param string $titleId PPSAxxxxx_00
-     * @return CloudMediaGalleryFactory
-     * @throws FilterException
      */
-    public function withTitleId(string $titleId): CloudMediaGalleryFactory
+    public function withTitleId(string $titleId): CloudMediaGallery
     {
-        if ($this->npCommId) {
+        if ($this->communcationId) {
             throw new FilterException('Cannot filter by title id when a communication id filter is already set.');
         }
 
@@ -43,18 +41,14 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
      * Filters media based on NP communication id (trophy id).
      * 
      * Cannot be paired with withTitleId.
-     *
-     * @param string $npCommId NPWRxxxxx_00
-     * @return CloudMediaGalleryFactory
-     * @throws FilterException
      */
-    public function withCommunicationId(string $npCommId): CloudMediaGalleryFactory
+    public function withCommunicationId(string $communcationId): CloudMediaGallery
     {
         if ($this->title) {
             throw new FilterException('Cannot filter by communcation id when a title id filter is already set.');
         }
 
-        $this->npCommId = $npCommId;
+        $this->communcationId = $communcationId;
 
         return $this;
     }
@@ -63,11 +57,8 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
      * Filters media based on it's transcoding status.
      * 
      * Useful for filtering out any non-completed media.
-     *
-     * @param TranscodeStatusType $status
-     * @return CloudMediaGalleryFactory
      */
-    public function withStatus(TranscodeStatusType $status): CloudMediaGalleryFactory
+    public function withStatus(TranscodeStatusType $status): CloudMediaGallery
     {
         $this->transcodeStatus = $status;
 
@@ -76,8 +67,6 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
 
     /**
      * Gets the iterator and applies any filters.
-     *
-     * @return Iterator
      */
     public function getIterator(): Iterator
     {
@@ -94,8 +83,6 @@ class CloudMediaGalleryFactory extends Api implements IteratorAggregate, Factory
 
     /**
      * Gets the first media asset in the collection.
-     *
-     * @return Media
      */
     public function first(): Media
     {

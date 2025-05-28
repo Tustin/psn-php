@@ -2,7 +2,7 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Model\Group;
+use Tustin\PlayStation\Models\Group;
 use Tustin\PlayStation\Factory\Groups;
 use Tustin\PlayStation\Factory\GroupsFactory;
 

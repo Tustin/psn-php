@@ -1,17 +1,17 @@
 <?php
 
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Models;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use Tustin\PlayStation\Model;
+use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Enums\UgcType;
 use Tustin\PlayStation\Enums\CloudStatusType;
-use Tustin\PlayStation\Model\Trophy\TrophyTitle;
 use Tustin\PlayStation\Enums\TranscodeStatusType;
+use Tustin\PlayStation\Models\Trophy\TrophyTitle;
 use Tustin\PlayStation\Exceptions\NotFoundHttpException;
 
-class Media extends Model
+class Media extends ApiModel
 {
     public function __construct(private string $ugcId)
     {

@@ -2,9 +2,9 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Model\Trophy\Trophy;
-use Tustin\PlayStation\Model\Trophy\TrophyGroup;
-use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
+use Tustin\PlayStation\Models\Trophy\Trophy;
+use Tustin\PlayStation\Models\Trophy\TrophyGroup;
+use Tustin\PlayStation\Models\Trophy\UserTrophyTitle;
 
 class TrophyIterator extends AbstractApiIterator
 {

@@ -1,10 +1,9 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Messages;
+namespace Tustin\PlayStation\Models\Messages;
 
 use Tustin\PlayStation\Enums\MessageType;
-use Tustin\PlayStation\Model\Messages\Sendable;
-use Tustin\PlayStation\Model\Message\AbstractMessage;
+use Tustin\PlayStation\Models\Messages\Sendable;
 
 class TextMessage extends Message implements Sendable
 {

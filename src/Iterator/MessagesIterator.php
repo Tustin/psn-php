@@ -3,8 +3,8 @@
 namespace Tustin\PlayStation\Iterator;
 
 use InvalidArgumentException;
-use Tustin\PlayStation\Model\MessageThread;
-use Tustin\PlayStation\Model\Messages\Message;
+use Tustin\PlayStation\Models\MessageThread;
+use Tustin\PlayStation\Models\Messages\Message;
 
 class MessagesIterator extends AbstractApiIterator
 {

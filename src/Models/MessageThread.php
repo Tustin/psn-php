@@ -1,14 +1,14 @@
 <?php
 
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Models;
 
-use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Model\Group;
+use Tustin\PlayStation\ApiModel;
+use Tustin\PlayStation\Models\Group;
 use Tustin\PlayStation\Factory\MessagesList;
-use Tustin\PlayStation\Model\Messages\Message;
-use Tustin\PlayStation\Model\Messages\Sendable;
+use Tustin\PlayStation\Models\Messages\Message;
+use Tustin\PlayStation\Models\Messages\Sendable;
 
-class MessageThread extends Model
+class MessageThread extends ApiModel
 {
     public function __construct(private string $groupId, private string $threadId)
     {

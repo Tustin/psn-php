@@ -2,7 +2,7 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Model\Store\Concept;
+use Tustin\PlayStation\Models\Store\Concept;
 
 class StoreSearchIterator extends AbstractApiIterator
 {

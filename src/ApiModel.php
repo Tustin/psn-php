@@ -5,7 +5,7 @@ namespace Tustin\PlayStation;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 
-abstract class Model extends Api
+abstract class ApiModel extends Api
 {
     /**
      * The cache for the model.

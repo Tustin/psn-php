@@ -1,15 +1,14 @@
 <?php
 
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Models;
 
-use Tustin\PlayStation\Model;
+use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Factory\UserGameList;
 use Tustin\PlayStation\Factory\UserFriendsList;
 use Tustin\PlayStation\Factory\UserTrophyTitles;
-use Tustin\PlayStation\Factory\FriendsListFactory;
-use Tustin\PlayStation\Model\Trophy\TrophySummary;
+use Tustin\PlayStation\Models\Trophy\TrophySummary;
 
-class User extends Model
+class User extends ApiModel
 {
     /**
      * The user's country.

@@ -5,11 +5,11 @@ namespace Tustin\PlayStation\Factory;
 use Iterator;
 use IteratorAggregate;
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Model\MessageThread;
-use Tustin\PlayStation\Model\Messages\Message;
+use Tustin\PlayStation\Models\MessageThread;
+use Tustin\PlayStation\Models\Messages\Message;
 use Tustin\PlayStation\Iterator\MessagesIterator;
 use Tustin\PlayStation\Iterator\Filter\MessageTypeFilter;
-use Tustin\PlayStation\Model\Message\Message as MessageMessage;
+use Tustin\PlayStation\Models\Message\Message as MessageMessage;
 
 class MessagesList extends Api implements IteratorAggregate
 {

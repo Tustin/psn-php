@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Trophy;
+namespace Tustin\PlayStation\Models\Trophy;
 
 use Tustin\PlayStation\Enums\TrophyServiceName;
 use Tustin\PlayStation\Exceptions\NotFoundHttpException;

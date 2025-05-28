@@ -3,7 +3,7 @@
 namespace Tustin\PlayStation\Factory;
 
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Model\UserGameTitle;
+use Tustin\PlayStation\Models\UserGameTitle;
 use Tustin\PlayStation\Iterator\GameListIterator;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 

@@ -2,16 +2,14 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Model\Media;
-use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
+use Tustin\PlayStation\Models\Media;
+use Tustin\PlayStation\Factory\CloudMediaGallery;
 
 class CloudMediaGalleryIterator extends AbstractApiIterator
 {
-    public function __construct(private CloudMediaGalleryFactory $cloudMediaGalleryFactory)
+    public function __construct(private CloudMediaGallery $CloudMediaGallery, protected ?int $limit = 20)
     {
-        parent::__construct($cloudMediaGalleryFactory->getHttpClient());
-
-        $this->limit = 20;
+        parent::__construct();
 
         $this->access(0);
     }
@@ -38,7 +36,6 @@ class CloudMediaGalleryIterator extends AbstractApiIterator
     public function current(): Media
     {
         return Media::fromObject(
-            $this->cloudMediaGalleryFactory->getHttpClient(),
             $this->getFromOffset($this->currentOffset)
         );
     }

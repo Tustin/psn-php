@@ -1,14 +1,14 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Messages;
+namespace Tustin\PlayStation\Models\Messages;
 
 use Carbon\Carbon;
-use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Model\User;
+use Tustin\PlayStation\ApiModel;
+use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Enums\MessageType;
-use Tustin\PlayStation\Model\MessageThread;
+use Tustin\PlayStation\Models\MessageThread;
 
-abstract class Message extends Model
+abstract class Message extends ApiModel
 {
     /**
      * The message thread this message is in.

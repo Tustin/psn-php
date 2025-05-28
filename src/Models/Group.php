@@ -1,15 +1,14 @@
 <?php
 
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Models;
 
 use Carbon\Carbon;
-use Tustin\PlayStation\Model;
+use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Factory\GroupMembers;
-use Tustin\PlayStation\Model\Messages\Message;
-use Tustin\PlayStation\Model\Messages\Sendable;
-use Tustin\PlayStation\Factory\GroupMembersFactory;
+use Tustin\PlayStation\Models\Messages\Message;
+use Tustin\PlayStation\Models\Messages\Sendable;
 
-class Group extends Model
+class Group extends ApiModel
 {
     private array $members;
 

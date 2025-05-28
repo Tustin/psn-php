@@ -1,10 +1,9 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Messages;
+namespace Tustin\PlayStation\Models\Messages;
 
-use Tustin\PlayStation\Model\Media;
+use Tustin\PlayStation\Models\Media;
 use Tustin\PlayStation\Enums\MessageType;
-use Tustin\PlayStation\Model\Message\AbstractMessage;
 
 class VideoMessage extends Message
 {

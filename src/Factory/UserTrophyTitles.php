@@ -6,7 +6,7 @@ use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Enums\LanguageType;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
-use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
+use Tustin\PlayStation\Models\Trophy\UserTrophyTitle;
 use Tustin\PlayStation\Iterator\UserTrophyTitlesIterator;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleNameFilter;
 use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleHasGroupsFilter;

@@ -1,12 +1,11 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Trophy;
+namespace Tustin\PlayStation\Models\Trophy;
 
-use ParentIterator;
-use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Model\User;
+use Tustin\PlayStation\ApiModel;
+use Tustin\PlayStation\Models\User;
 
-class TrophySummary extends Model
+class TrophySummary extends ApiModel
 {
     public function __construct(private User $user)
     {

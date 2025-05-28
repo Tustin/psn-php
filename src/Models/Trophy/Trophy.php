@@ -1,11 +1,11 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Trophy;
+namespace Tustin\PlayStation\Models\Trophy;
 
-use Tustin\PlayStation\Model;
+use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Enums\TrophyType;
 
-class Trophy extends Model
+class Trophy extends ApiModel
 {
     public function __construct(private TrophyGroup $trophyGroup, private int $id)
     {

@@ -2,7 +2,7 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Model\User;
+use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Factory\Users;
 
 class UsersSearchIterator extends AbstractApiIterator

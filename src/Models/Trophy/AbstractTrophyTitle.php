@@ -1,8 +1,8 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Trophy;
+namespace Tustin\PlayStation\Models\Trophy;
 
-use Tustin\PlayStation\Model;
+use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Enums\TrophyServiceName;
 use Tustin\PlayStation\Factory\TrophyGroupsFactory;
 
@@ -16,7 +16,7 @@ use Tustin\PlayStation\Factory\TrophyGroupsFactory;
  * 
  * - Tustin, Jan 11, 2021
  */
-abstract class AbstractTrophyTitle extends Model
+abstract class AbstractTrophyTitle extends ApiModel
 {
     protected string $npCommunicationId;
 

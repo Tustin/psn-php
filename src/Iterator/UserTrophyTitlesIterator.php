@@ -2,7 +2,7 @@
 
 namespace Tustin\PlayStation\Iterator;
 
-use Tustin\PlayStation\Model\Trophy\UserTrophyTitle;
+use Tustin\PlayStation\Models\Trophy\UserTrophyTitle;
 
 class UserTrophyTitlesIterator extends AbstractApiIterator
 {

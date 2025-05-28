@@ -1,12 +1,12 @@
 <?php
 
-namespace Tustin\PlayStation\Model\Store;
+namespace Tustin\PlayStation\Models\Store;
 
 use Carbon\Carbon;
-use Tustin\PlayStation\Model;
+use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Enums\DescriptionType;
 
-class Concept extends Model
+class Concept extends ApiModel
 {
     public function __construct(private string $conceptId)
     {

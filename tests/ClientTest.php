@@ -7,12 +7,12 @@ use GuzzleHttp\Psr7\Response;
 use Tustin\Haste\Http\JsonStream;
 use Tustin\PlayStation\Client;
 use PHPUnit\Framework\TestCase;
-use Tustin\PlayStation\Factory\CloudMediaGalleryFactory;
+use Tustin\PlayStation\Factory\CloudMediaGallery;
 use Tustin\PlayStation\Factory\GroupsFactory;
 use Tustin\PlayStation\Factory\StoreFactory;
 use Tustin\PlayStation\Factory\UsersFactory;
-use Tustin\PlayStation\Model\Media;
-use Tustin\PlayStation\Model\Trophy\TrophyTitle;
+use Tustin\PlayStation\Models\Media;
+use Tustin\PlayStation\Models\Trophy\TrophyTitle;
 
 class ClientTest extends TestCase
 {
@@ -202,7 +202,7 @@ class ClientTest extends TestCase
         $this->assertEquals(new StoreFactory($this->httpClient), $this->client->store());
         $this->assertEquals(new GroupsFactory($this->httpClient), $this->client->groups());
         $this->assertEquals(new Media($this->httpClient, 'id'), $this->client->media('id'));
-        $this->assertEquals(new CloudMediaGalleryFactory($this->httpClient), $this->client->cloudMediaGallery());
+        $this->assertEquals(new CloudMediaGallery($this->httpClient), $this->client->cloudMediaGallery());
     }
 
     protected function setUp(): void

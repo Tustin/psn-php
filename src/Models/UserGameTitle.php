@@ -1,12 +1,11 @@
 <?php
 
-namespace Tustin\PlayStation\Model;
+namespace Tustin\PlayStation\Models;
 
-use Tustin\PlayStation\Model;
-use Tustin\PlayStation\Model\Store\Concept;
-use Tustin\PlayStation\Factory\GameListFactory;
+use Tustin\PlayStation\ApiModel;
+use Tustin\PlayStation\Models\Store\Concept;
 
-class UserGameTitle extends Model
+class UserGameTitle extends ApiModel
 {
     public function __construct(private string $accountId, private string $npTitleId) {}
 

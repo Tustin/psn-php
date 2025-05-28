@@ -4,9 +4,9 @@ namespace Tustin\PlayStation\Factory;
 
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Client;
-use Tustin\PlayStation\Model\User;
-use Tustin\PlayStation\Model\Group;
-use Tustin\PlayStation\Model\MessageThread;
+use Tustin\PlayStation\Models\User;
+use Tustin\PlayStation\Models\Group;
+use Tustin\PlayStation\Models\MessageThread;
 use Tustin\PlayStation\Iterator\GroupsIterator;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\Filter\GroupMembersFilter;

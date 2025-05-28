@@ -3,7 +3,7 @@
 namespace Tustin\PlayStation\Iterator;
 
 use Tustin\PlayStation\Client;
-use Tustin\PlayStation\Model\User;
+use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Factory\UserFriendsList;
 use Tustin\PlayStation\Factory\FriendsListFactory;
 

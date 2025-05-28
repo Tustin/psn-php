@@ -2,8 +2,8 @@
 
 namespace Tustin\PlayStation\Factory;
 
-use Tustin\PlayStation\Model\User;
-use Tustin\PlayStation\Model\Group;
+use Tustin\PlayStation\Models\User;
+use Tustin\PlayStation\Models\Group;
 
 class GroupMembers implements \IteratorAggregate, \Countable
 {

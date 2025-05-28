@@ -3,7 +3,7 @@
 namespace Tustin\PlayStation\Factory;
 
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Model\User;
+use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterator\FriendsListIterator;
 use Tustin\PlayStation\Iterator\Filter\User\OnlineIdFilter;
