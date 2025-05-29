@@ -9,8 +9,8 @@ use Tustin\PlayStation\Models\Media;
 use Tustin\PlayStation\Enums\TranscodeStatusType;
 use Tustin\PlayStation\Exceptions\FilterException;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
-use Tustin\PlayStation\Iterator\CloudMediaGalleryIterator;
-use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TitleIdFilter;
+use Tustin\PlayStation\Iterators\CloudMediaGalleryIterator;
+use Tustin\PlayStation\Iterators\Filter\TrophyTitle\TitleIdFilter;
 
 class CloudMediaGallery extends Api implements IteratorAggregate, FactoryInterface
 {

@@ -7,9 +7,9 @@ use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Models\Group;
 use Tustin\PlayStation\Models\MessageThread;
-use Tustin\PlayStation\Iterator\GroupsIterator;
+use Tustin\PlayStation\Iterators\GroupsIterator;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
-use Tustin\PlayStation\Iterator\Filter\GroupMembersFilter;
+use Tustin\PlayStation\Iterators\Filter\GroupMembersFilter;
 
 class Groups extends Api implements \IteratorAggregate, FactoryInterface
 {

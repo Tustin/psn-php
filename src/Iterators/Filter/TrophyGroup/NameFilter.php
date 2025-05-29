@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Iterator\Filter\TrophyGroup;
+namespace Tustin\PlayStation\Iterators\Filter\TrophyGroup;
 
 class NameFilter extends \FilterIterator
 {
@@ -8,7 +8,7 @@ class NameFilter extends \FilterIterator
     {
         parent::__construct($iterator);
     }
-   
+
     /**
      * Checks if the current element of the iterator is acceptable.
      */

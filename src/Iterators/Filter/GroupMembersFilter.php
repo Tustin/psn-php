@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Iterator\Filter;
+namespace Tustin\PlayStation\Iterators\Filter;
 
 class GroupMembersFilter extends \FilterIterator
 {

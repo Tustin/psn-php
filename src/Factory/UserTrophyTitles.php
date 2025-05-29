@@ -7,9 +7,9 @@ use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Enums\LanguageType;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Models\Trophy\UserTrophyTitle;
-use Tustin\PlayStation\Iterator\UserTrophyTitlesIterator;
-use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleNameFilter;
-use Tustin\PlayStation\Iterator\Filter\TrophyTitle\TrophyTitleHasGroupsFilter;
+use Tustin\PlayStation\Iterators\UserTrophyTitlesIterator;
+use Tustin\PlayStation\Iterators\Filter\TrophyTitle\TrophyTitleNameFilter;
+use Tustin\PlayStation\Iterators\Filter\TrophyTitle\TrophyTitleHasGroupsFilter;
 
 /**
  * Retrieves the user's trophy titles.

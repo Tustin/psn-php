@@ -3,10 +3,9 @@
 namespace Tustin\PlayStation\Factory;
 
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
-use Tustin\PlayStation\Iterator\UsersSearchIterator;
+use Tustin\PlayStation\Iterators\UsersSearchIterator;
 
 class Users extends Api implements FactoryInterface
 {

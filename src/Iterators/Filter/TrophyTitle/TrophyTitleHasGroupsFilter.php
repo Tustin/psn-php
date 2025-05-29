@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Iterator\Filter\TrophyTitle;
+namespace Tustin\PlayStation\Iterators\Filter\TrophyTitle;
 
 class TrophyTitleHasGroupsFilter extends \FilterIterator
 {

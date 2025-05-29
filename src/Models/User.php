@@ -3,10 +3,12 @@
 namespace Tustin\PlayStation\Models;
 
 use Tustin\PlayStation\ApiModel;
+use Tustin\PlayStation\Http\ApiHttpClient;
 use Tustin\PlayStation\Factory\UserGameList;
 use Tustin\PlayStation\Factory\UserFriendsList;
 use Tustin\PlayStation\Factory\UserTrophyTitles;
 use Tustin\PlayStation\Models\Trophy\TrophySummary;
+use Tustin\PlayStation\Iterators\UsersSearchIterator;
 
 class User extends ApiModel
 {

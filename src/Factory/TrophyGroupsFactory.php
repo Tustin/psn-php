@@ -8,11 +8,11 @@ use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Enums\TrophyType;
 use Tustin\PlayStation\Models\Trophy\TrophyGroup;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
-use Tustin\PlayStation\Iterator\TrophyGroupsIterator;
+use Tustin\PlayStation\Iterators\TrophyGroupsIterator;
 use Tustin\PlayStation\Models\Trophy\AbstractTrophyTitle;
-use Tustin\PlayStation\Iterator\Filter\TrophyGroup\NameFilter;
-use Tustin\PlayStation\Iterator\Filter\TrophyGroup\DetailFilter;
-use Tustin\PlayStation\Iterator\Filter\TrophyGroup\TrophyTypeFilter;
+use Tustin\PlayStation\Iterators\Filter\TrophyGroup\NameFilter;
+use Tustin\PlayStation\Iterators\Filter\TrophyGroup\DetailFilter;
+use Tustin\PlayStation\Iterators\Filter\TrophyGroup\TrophyTypeFilter;
 
 class TrophyGroupsFactory extends Api implements IteratorAggregate, FactoryInterface
 {

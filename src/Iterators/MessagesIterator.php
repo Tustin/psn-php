@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Iterator;
+namespace Tustin\PlayStation\Iterators;
 
 use InvalidArgumentException;
 use Tustin\PlayStation\Models\MessageThread;

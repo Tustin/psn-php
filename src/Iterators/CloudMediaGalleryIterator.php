@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Iterator;
+namespace Tustin\PlayStation\Iterators;
 
 use Tustin\PlayStation\Models\Media;
 use Tustin\PlayStation\Factory\CloudMediaGallery;

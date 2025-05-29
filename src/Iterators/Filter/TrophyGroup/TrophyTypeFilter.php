@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Iterator\Filter\TrophyGroup;
+namespace Tustin\PlayStation\Iterators\Filter\TrophyGroup;
 
 use Tustin\PlayStation\Enums\TrophyType;
 use Tustin\PlayStation\Traits\OperandParser;

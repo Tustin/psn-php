@@ -7,8 +7,8 @@ use IteratorAggregate;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Models\MessageThread;
 use Tustin\PlayStation\Models\Messages\Message;
-use Tustin\PlayStation\Iterator\MessagesIterator;
-use Tustin\PlayStation\Iterator\Filter\MessageTypeFilter;
+use Tustin\PlayStation\Iterators\MessagesIterator;
+use Tustin\PlayStation\Iterators\Filter\MessageTypeFilter;
 use Tustin\PlayStation\Models\Message\Message as MessageMessage;
 
 class MessagesList extends Api implements IteratorAggregate

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Iterator\Filter\User;
+namespace Tustin\PlayStation\Iterators\Filter\User;
 
 class VerifiedUserFilter extends \FilterIterator
 {

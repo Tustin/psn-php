@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Iterator;
+namespace Tustin\PlayStation\Iterators;
 
 use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Models\User;

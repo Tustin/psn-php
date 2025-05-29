@@ -5,10 +5,10 @@ namespace Tustin\PlayStation\Factory;
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
-use Tustin\PlayStation\Iterator\FriendsListIterator;
-use Tustin\PlayStation\Iterator\Filter\User\OnlineIdFilter;
-use Tustin\PlayStation\Iterator\Filter\User\CloseFriendFilter;
-use Tustin\PlayStation\Iterator\Filter\User\VerifiedUserFilter;
+use Tustin\PlayStation\Iterators\FriendsListIterator;
+use Tustin\PlayStation\Iterators\Filter\User\OnlineIdFilter;
+use Tustin\PlayStation\Iterators\Filter\User\CloseFriendFilter;
+use Tustin\PlayStation\Iterators\Filter\User\VerifiedUserFilter;
 
 /**
  * Retrieve a user's friends list.
