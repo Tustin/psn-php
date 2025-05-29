@@ -6,6 +6,9 @@ use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Iterators\StoreSearchIterator;
 
+/**
+ * Retrieves information about titles on the PlayStation store.
+ */
 class Store extends Api implements FactoryInterface
 {
     /**

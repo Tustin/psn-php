@@ -11,8 +11,9 @@ use Tustin\PlayStation\Factories\Store;
 use Tustin\PlayStation\Factories\Users;
 use Tustin\PlayStation\Factories\Groups;
 use Tustin\PlayStation\Enums\TrophyServiceName;
-use Tustin\PlayStation\Factories\CloudMediaGallery;
 use Tustin\PlayStation\Models\Trophy\TrophyTitle;
+use Tustin\PlayStation\Factories\CloudMediaGallery;
+use Tustin\PlayStation\Iterators\StoreSearchIterator;
 use Tustin\PlayStation\Http\Middleware\AuthenticationMiddleware;
 use Tustin\PlayStation\Http\Middleware\ResponseHandlerMiddleware;
 
@@ -59,11 +60,17 @@ class Client extends Api
         static::$instance = $this;
     }
 
+    /**
+     * Creates a new instance of the Client.
+     */
     public static function create(array $guzzleOptions = []): static
     {
         return static::$instance ?? new static($guzzleOptions);
     }
 
+    /**
+     * Gets the current instance of the Client, or creates a new one if none exists.
+     */
     public static function getInstance(): static
     {
         return static::$instance ?? new static();
@@ -210,7 +217,7 @@ class Client extends Api
     }
 
     /**
-     * Get a user from the API.
+     * Query the PlayStation API for a list of users.
      */
     public function users(): Users
     {
@@ -218,23 +225,23 @@ class Client extends Api
     }
 
     /**
-     * Get trophy title information using an NP Communation ID (NPWRxxxxx_00).
+     * Gets trophy title information using an NP Communation ID (NPWRxxxxx_00).
      */
-    public function trophies(string $npCommunicationId, TrophyServiceName $serviceName = TrophyServiceName::Trophy): TrophyTitle
+    public function trophyTitle(string $npCommunicationId, TrophyServiceName $serviceName = TrophyServiceName::Trophy): TrophyTitle
     {
         return new TrophyTitle($npCommunicationId, $serviceName);
     }
 
     /**
-     * Searches the PlayStation Store.
+     * Performs a search on the PlayStation store.
      */
-    public function store(string $query = '')
+    public function store(string $query = '', int $limit = 20, string $languageCode = 'en', string $countryCode = 'us'): StoreSearchIterator
     {
-        return Store::search($query);
+        return Store::search($query, $limit, $languageCode, $countryCode);
     }
 
     /**
-     * Creates a group factory to query your chat groups (parties and text message groups).
+     * Query the PlayStation API for a list of the logged in user's groups.
      */
     public function groups(): Groups
     {
@@ -242,7 +249,7 @@ class Client extends Api
     }
 
     /**
-     * Get a media object from the API.
+     * Gets media information from the PlayStation API using a UGC id.
      */
     public function media(string $ugcId): Media
     {
