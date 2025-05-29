@@ -3,12 +3,10 @@
 namespace Tustin\PlayStation\Models;
 
 use Tustin\PlayStation\ApiModel;
-use Tustin\PlayStation\Http\ApiHttpClient;
-use Tustin\PlayStation\Factory\UserGameList;
-use Tustin\PlayStation\Factory\UserFriendsList;
-use Tustin\PlayStation\Factory\UserTrophyTitles;
+use Tustin\PlayStation\Factories\UserGameList;
+use Tustin\PlayStation\Factories\UserFriendsList;
+use Tustin\PlayStation\Factories\UserTrophyTitles;
 use Tustin\PlayStation\Models\Trophy\TrophySummary;
-use Tustin\PlayStation\Iterators\UsersSearchIterator;
 
 class User extends ApiModel
 {
@@ -17,10 +15,7 @@ class User extends ApiModel
      */
     private string $country;
 
-    public function __construct(private string $accountId)
-    {
-        parent::__construct();
-    }
+    public function __construct(private string $accountId) {}
 
     /**
      * Creates a new user instance from an object.

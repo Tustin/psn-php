@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Factory;
+namespace Tustin\PlayStation\Factories;
 
 use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Models\Group;
@@ -66,8 +66,11 @@ class GroupMembers implements \IteratorAggregate, \Countable
         return $iterator;
     }
 
+    /**
+     * Gets the number of members in the group.
+     */
     public function count(): int
     {
-        return \count($this->messageThread->membersArray());
+        return \count($this->group->membersArray());
     }
 }

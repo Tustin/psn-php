@@ -4,7 +4,7 @@ namespace Tustin\PlayStation\Models;
 
 use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Models\Group;
-use Tustin\PlayStation\Factory\MessagesList;
+use Tustin\PlayStation\Factories\MessagesList;
 use Tustin\PlayStation\Models\Messages\Message;
 use Tustin\PlayStation\Models\Messages\Sendable;
 

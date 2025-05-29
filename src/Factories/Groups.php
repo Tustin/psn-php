@@ -1,9 +1,8 @@
 <?php
 
-namespace Tustin\PlayStation\Factory;
+namespace Tustin\PlayStation\Factories;
 
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Models\Group;
 use Tustin\PlayStation\Models\MessageThread;

@@ -4,7 +4,7 @@ namespace Tustin\PlayStation\Models;
 
 use Carbon\Carbon;
 use Tustin\PlayStation\ApiModel;
-use Tustin\PlayStation\Factory\GroupMembers;
+use Tustin\PlayStation\Factories\GroupMembers;
 use Tustin\PlayStation\Models\Messages\Message;
 use Tustin\PlayStation\Models\Messages\Sendable;
 

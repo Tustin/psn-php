@@ -4,7 +4,7 @@ namespace Tustin\PlayStation\Models\Trophy;
 
 use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Enums\TrophyServiceName;
-use Tustin\PlayStation\Factory\TrophyGroupsFactory;
+use Tustin\PlayStation\Factories\TrophyGroupsFactory;
 
 /**
  * This class exists because as of today, Sony only gives you useful trophy title information if you get trophy titles from a user's profile.

@@ -5,8 +5,8 @@ namespace Tustin\PlayStation\Iterators;
 use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Models\GameTitle;
 use Tustin\PlayStation\Models\UserGameTitle;
-use Tustin\PlayStation\Factory\UserGameList;
-use Tustin\PlayStation\Factory\GameListFactory;
+use Tustin\PlayStation\Factories\UserGameList;
+use Tustin\PlayStation\Factories\GameListFactory;
 
 class GameListIterator extends AbstractApiIterator
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Factory;
+namespace Tustin\PlayStation\Factories;
 
 use Iterator;
 use IteratorAggregate;

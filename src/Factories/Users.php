@@ -1,6 +1,6 @@
 <?php
 
-namespace Tustin\PlayStation\Factory;
+namespace Tustin\PlayStation\Factories;
 
 use Tustin\PlayStation\Api;
 use Tustin\PlayStation\Models\User;

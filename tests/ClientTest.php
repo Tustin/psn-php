@@ -7,10 +7,10 @@ use GuzzleHttp\Psr7\Response;
 use Tustin\Haste\Http\JsonStream;
 use Tustin\PlayStation\Client;
 use PHPUnit\Framework\TestCase;
-use Tustin\PlayStation\Factory\CloudMediaGallery;
-use Tustin\PlayStation\Factory\GroupsFactory;
-use Tustin\PlayStation\Factory\StoreFactory;
-use Tustin\PlayStation\Factory\UsersFactory;
+use Tustin\PlayStation\Factories\CloudMediaGallery;
+use Tustin\PlayStation\Factories\GroupsFactory;
+use Tustin\PlayStation\Factories\StoreFactory;
+use Tustin\PlayStation\Factories\UsersFactory;
 use Tustin\PlayStation\Models\Media;
 use Tustin\PlayStation\Models\Trophy\TrophyTitle;
 

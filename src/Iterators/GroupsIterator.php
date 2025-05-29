@@ -3,8 +3,8 @@
 namespace Tustin\PlayStation\Iterators;
 
 use Tustin\PlayStation\Models\Group;
-use Tustin\PlayStation\Factory\Groups;
-use Tustin\PlayStation\Factory\GroupsFactory;
+use Tustin\PlayStation\Factories\Groups;
+use Tustin\PlayStation\Factories\GroupsFactory;
 
 class GroupsIterator extends AbstractApiIterator
 {

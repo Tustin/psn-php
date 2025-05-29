@@ -4,7 +4,7 @@ namespace Tustin\PlayStation\Models\Trophy;
 
 use Tustin\PlayStation\ApiModel;
 use Tustin\PlayStation\Enums\TrophyType;
-use Tustin\PlayStation\Factory\TrophyFactory;
+use Tustin\PlayStation\Factories\TrophyFactory;
 
 class TrophyGroup extends ApiModel
 {
