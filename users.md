@@ -2,37 +2,43 @@
 
 ## Getting a user
 
-Grabbing users works a bit differently with the new API. As of right now, you need to search for a user if you want to find their account via their online ID. Once you've found their profile, you can cache their account id which makes lookups a lot quicker and easier in the future.
+Unless you have the account id for the user you want to find, you will need to perform a search.
 
-### Searching for a user
+### Searching for users
 
 ```php
-$query = $client->users()->search('tustin25');
+use Tustin\PlayStation\Factories\Users;
+
+$users = Users::search('tustin25');
 ```
 
-This method should be used when you want to find a user by their online ID, and you don't have their account ID stored already.
-
-The `search` method won't actually return the full list of search results. Instead, this will return an [Iterator](https://www.php.net/manual/en/class.iterator.php) which will only fetch results from the API when the data is needed. This is useful in an instance where you might only want a few of the first search results, but it also allows for you to potentially fetch every user that matches your search while only fetching data when it's needed.
+The `search` method won't immediately return the full list of search results. Instead, this will return an [Iterator](https://www.php.net/manual/en/class.iterator.php) which will only fetch results from the API when the data is needed. This is done for reserving memory, but also to prevent potential API rate-limiting.
 
 ### Finding a user via account ID
 
+If you already have a user's account id saved, you can simply create a `User` model using their account id.
+
 ```php
-$user = $client->users()->find('4421126145254737307');
+use Tustin\PlayStation\Models\User;
+
+$user = new User('4421126145254737307');
 ```
 
-This will return the users' profile with this exact account ID.
+This will allow you to begin querying the API for user information.
 
 ### Getting your user profile
 
 ```php
-$me = $client->users()->me();
+use Tustin\PlayStation\Factories\Users;
+
+$user = Users::me();
 ```
 
-This will return the authenticated user's profile.
+This will return the user of the token you logged in with.
 
 ## Available methods
 
-Once you've obtained a user, you can call many methods on the object for information. psn-php will cache any existing API data and will try to fetch the data from cache first so you don't have to send unnecessary requests to the API.
+Once you've obtained a User, you can call many methods on the object for information. This library will not query the API for any information until one of these methods is called. It will also cache profile information so only one API request will be performed per User model.
 
 <style>
     #collection-method-list > p {
@@ -48,6 +54,7 @@ Once you've obtained a user, you can call many methods on the object for informa
 <div id="collection-method-list">
 
 ### All methods
+
 [aboutMe](#aboutme)
 [accountId](#accountid)
 [avatarUrl](#avatarUrl)
@@ -244,7 +251,6 @@ $user->languages();
 // ['en', 'jp']
 ```
 
-
 ### mutualFriendCount
 
 Gets the amount of mutual friends the authenticated user and this user share.
@@ -258,6 +264,7 @@ $user->mutualFriendCount();
 ### onlineId
 
 Gets the user's online ID.
+
 ```php
 $user->onlineId();
 

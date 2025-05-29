@@ -30,26 +30,28 @@ $refreshToken = $client->getRefreshToken()->getToken(); // Save this code somewh
 Before you begin, copy this JavaScript code:
 
 ```js
-(function(open) {
-    XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
+(function (open) {
+  XMLHttpRequest.prototype.open = function (method, url, async, user, pass) {
+    this.addEventListener(
+      "readystatechange",
+      function () {
+        if (this.readyState == XMLHttpRequest.DONE) {
+          let response = JSON.parse(this.responseText);
 
-        this.addEventListener("readystatechange", function() {
-            if (this.readyState == XMLHttpRequest.DONE) {
-                let response = JSON.parse(this.responseText);
+          if (response && "npsso" in response) {
+            console.log("found npsso", response.npsso);
+          }
+        }
+      },
+      false
+    );
 
-                if (response && "npsso" in response) {
-                    console.log('found npsso', response.npsso);
-                }
-            }
-        }, false);
+    open.call(this, method, url, async, user, pass);
+  };
 
-        open.call(this, method, url, async, user, pass);
-    };
-
-    window.onbeforeunload = function(){
-        return 'Are you sure you want to leave?';
-    };
-
+  window.onbeforeunload = function () {
+    return "Are you sure you want to leave?";
+  };
 })(XMLHttpRequest.prototype.open);
 ```
 
@@ -70,7 +72,6 @@ $client->loginWithNpsso('<64 character npsso code>');
 $refreshToken = $client->getRefreshToken()->getToken(); // Save this code somewhere (database, file, cache) and use this for future logins
 ```
 
-
 ## Future Logins
 
 For future logins, you _can_ continue to login with the NPSSO, but for security reasons, using the refresh token is the preferred method. These tokens can expire but as long as you login frequently and save the new refresh token, you should be fine.
@@ -81,7 +82,7 @@ require_once 'vendor/autoload.php';
 use Tustin\PlayStation\Client;
 
 $client = new Client();
-$client->login('b17b5ce5-xxxx-yyyy-zzzz-5996a213b834');
+$client->loginWithRefreshToken('b17b5ce5-xxxx-yyyy-zzzz-5996a213b834');
 
 $refreshToken = $client->getRefreshToken()->getToken();
 ```
