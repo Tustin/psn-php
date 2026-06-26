@@ -9,8 +9,6 @@ class UsersSearchIterator extends AbstractApiIterator
 {
     public function __construct(private string $query, int $limit = 50, private string $languageCode = 'en', private string $countryCode = 'us')
     {
-        parent::__construct();
-
         $this->limit = $limit;
 
         $this->access('');

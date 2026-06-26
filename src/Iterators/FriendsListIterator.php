@@ -2,7 +2,6 @@
 
 namespace Tustin\PlayStation\Iterators;
 
-use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Models\User;
 use Tustin\PlayStation\Factories\UserFriendsList;
 use Tustin\PlayStation\Factories\FriendsListFactory;
@@ -16,10 +15,6 @@ class FriendsListIterator extends AbstractApiIterator
 
     public function __construct(private string $accountId, int $limit = 100)
     {
-        parent::__construct(
-            Client::getInstance()->getHttpClient(),
-        );
-
         $this->limit = $limit;
 
         $this->access(0);

@@ -35,7 +35,8 @@ class Client extends Api
         $guzzleOptions['headers']['Accept-Language'] = 'en-US';
         $guzzleOptions['base_uri'] = self::BASE_URL;
 
-        $handlerStack = HandlerStack::create();
+        $baseHandler = $guzzleOptions['handler'] ?? null;
+        $handlerStack = HandlerStack::create($baseHandler);
 
         // Push a response handler for handling HTTP errors.
         $handlerStack->push(
@@ -58,6 +59,14 @@ class Client extends Api
         ));
 
         static::$instance = $this;
+    }
+
+    /**
+     * Resets the current singleton instance.
+     */
+    public static function resetInstance(): void
+    {
+        static::$instance = null;
     }
 
     /**

@@ -14,7 +14,6 @@ class Group extends ApiModel
 
     public function __construct(private string $groupId)
     {
-        parent::__construct();
     }
 
     /**

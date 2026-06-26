@@ -8,8 +8,6 @@ class UserTrophyTitlesIterator extends AbstractApiIterator
 {
     public function __construct(private string $accountId, int $limit = 100)
     {
-        parent::__construct();
-
         $this->limit = $limit;
 
         $this->access(0);

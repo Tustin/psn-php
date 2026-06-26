@@ -15,7 +15,6 @@ class Media extends ApiModel
 {
     public function __construct(private string $ugcId)
     {
-        parent::__construct();
     }
 
     /**

@@ -10,8 +10,6 @@ class TrophyIterator extends AbstractApiIterator
 {
     public function __construct(private TrophyGroup $trophyGroup)
     {
-        parent::__construct($trophyGroup->title()->getHttpClient());
-
         $this->access(0);
     }
 

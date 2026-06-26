@@ -12,9 +12,6 @@ class StoreSearchIterator extends AbstractApiIterator
         private string $languageCode = 'en',
         private string $countryCode = 'us'
     ) {
-
-        parent::__construct();
-
         $this->access('');
     }
 

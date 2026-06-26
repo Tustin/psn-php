@@ -3,7 +3,6 @@
 namespace Tustin\PlayStation\Iterators;
 
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Client;
 
 abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
 {
@@ -31,7 +30,6 @@ abstract class AbstractApiIterator extends Api implements \Iterator, \Countable
 
     public function __construct()
     {
-        parent::__construct(Client::getInstance()->getHttpClient());
     }
 
     /**

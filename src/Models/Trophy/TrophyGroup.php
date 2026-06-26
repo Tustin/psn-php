@@ -15,7 +15,6 @@ class TrophyGroup extends ApiModel
         private string $groupIconUrl = '',
         private string $groupDetail = ''
     ) {
-        parent::__construct($trophyTitle->getHttpClient());
     }
 
     /**

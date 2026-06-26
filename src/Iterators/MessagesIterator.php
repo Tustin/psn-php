@@ -16,7 +16,6 @@ class MessagesIterator extends AbstractApiIterator
             throw new InvalidArgumentException('$limit must be greater than zero.');
         }
 
-        parent::__construct();
         $this->access(null);
     }
 

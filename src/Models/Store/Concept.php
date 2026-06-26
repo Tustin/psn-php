@@ -10,7 +10,6 @@ class Concept extends ApiModel
 {
     public function __construct(private string $conceptId)
     {
-        parent::__construct();
     }
 
     /**

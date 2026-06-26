@@ -1,25 +1,57 @@
 <?php
 
-namespace Tests;
+use Tustin\PlayStation\ApiModel;
 
-use GuzzleHttp\Client;
-use Tustin\PlayStation\Models;
-use PHPUnit\Framework\TestCase;
+it('plucks nested values from cache', function (): void {
+    $model = new class extends ApiModel {
+        public function fetch(): object
+        {
+            return (object) [];
+        }
+    };
 
-class ModelTest extends TestCase
-{
-    /** @var Model */
-    private $model;
+    $model->setCache((object) [
+        'profile' => [
+            'name' => 'josh',
+            'meta' => [
+                'level' => 5,
+            ],
+        ],
+    ]);
 
-    public function testItShouldPluck(): void
-    {
-        $this->assertNotEmpty($this->model->pluck('property'));
-    }
+    expect($model->pluck('profile.name'))->toBe('josh');
+    expect($model->pluck('profile.meta.level'))->toBe(5);
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+it('fetches lazily when cache key is missing', function (): void {
+    $model = new class extends ApiModel {
+        public int $fetchCount = 0;
 
-        $this->model = $this->getMockForAbstractClass(Model::class, [$this->createMock(Client::class)]);
-    }
-}
+        public function fetch(): object
+        {
+            $this->fetchCount++;
+
+            return (object) [
+                'value' => 'loaded',
+            ];
+        }
+    };
+
+    expect($model->pluck('value'))->toBe('loaded');
+    expect($model->fetchCount)->toBe(1);
+    expect($model->pluck('value'))->toBe('loaded');
+    expect($model->fetchCount)->toBe(1);
+});
+
+it('returns null when key is still missing after fetch', function (): void {
+    $model = new class extends ApiModel {
+        public function fetch(): object
+        {
+            return (object) [
+                'other' => 'value',
+            ];
+        }
+    };
+
+    expect($model->pluck('missing'))->toBeNull();
+});

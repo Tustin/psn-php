@@ -3,7 +3,6 @@
 namespace Tustin\PlayStation\Factories;
 
 use Tustin\PlayStation\Api;
-use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Enums\LanguageType;
 use Tustin\PlayStation\Interfaces\FactoryInterface;
 use Tustin\PlayStation\Models\Trophy\UserTrophyTitle;
@@ -36,9 +35,6 @@ class UserTrophyTitles extends Api implements \IteratorAggregate, FactoryInterfa
 
     public function __construct(private string $accountId, private int $limit = 100)
     {
-        parent::__construct(
-            Client::getInstance()->getHttpClient(),
-        );
     }
 
     /**

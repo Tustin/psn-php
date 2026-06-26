@@ -24,7 +24,6 @@ abstract class ApiModel extends Api
 
     public function __construct()
     {
-        parent::__construct(Client::getInstance()->getHttpClient());
     }
 
     /**

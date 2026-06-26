@@ -12,7 +12,6 @@ class MessageThread extends ApiModel
 {
     public function __construct(private string $groupId, private string $threadId)
     {
-        parent::__construct();
     }
 
     /**

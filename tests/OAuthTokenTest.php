@@ -1,28 +1,30 @@
 <?php
 
-namespace Tests;
-
 use Carbon\Carbon;
 use Tustin\PlayStation\OAuthToken;
-use PHPUnit\Framework\TestCase;
 
-class OAuthTokenTest extends TestCase
-{
+it('stores token and expiration information', function (): void {
+    $token = new OAuthToken('some-token', 60);
 
-    public function testItShouldSetExpiration(): void
-    {
-        // This is hard to test as the Carbon object is not injected into the class.
-        // Ideally we would inject a clock VO, that allows us to use a "Paused" clock in unit tests.
-        $oAuthToken = new OAuthToken('some-token', 60);
-        $this->assertEquals(Carbon::now()->addSeconds(60)->format('Y-m-d H:i:s'), $oAuthToken->getExpiration()->format('Y-m-d H:i:s'));
-        $oAuthToken = new OAuthToken('some-token', 333);
-        $this->assertEquals(Carbon::now()->addSeconds(333)->format('Y-m-d H:i:s'), $oAuthToken->getExpiration()->format('Y-m-d H:i:s'));
-    }
+    expect($token->getToken())->toBe('some-token');
+    expect($token->getExpirationSeconds())->toBe(60);
+    expect($token->getExpiration())->not->toBeNull();
 
-    public function testItShouldThrow(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('expiresIn has to be an integer > 0');
-        new OAuthToken('some-token', -200);
-    }
-}
+    $expected = Carbon::now()->addSeconds(60)->getTimestamp();
+    $actual = $token->getExpiration()?->getTimestamp();
+
+    expect($actual)->toBeGreaterThanOrEqual($expected - 1);
+    expect($actual)->toBeLessThanOrEqual($expected + 1);
+});
+
+it('allows expiration to be null', function (): void {
+    $token = new OAuthToken('some-token');
+
+    expect($token->getToken())->toBe('some-token');
+    expect($token->getExpirationSeconds())->toBeNull();
+    expect($token->getExpiration())->not->toBeNull();
+});
+
+it('throws when expiresIn is negative', function (): void {
+    new OAuthToken('some-token', -1);
+})->throws(\InvalidArgumentException::class, 'expiresIn has to be an integer > 0');

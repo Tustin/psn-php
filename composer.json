@@ -25,11 +25,11 @@
     "nesbot/carbon": "^3.8.2"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5",
-    "larapack/dd": "^1.1"
+    "larapack/dd": "^1.1",
+    "pestphp/pest": "^4.4"
   },
   "scripts": {
-    "phpunit": "composer dump-autoload && vendor/bin/phpunit"
+    "test": "vendor/bin/pest"
   },
   "config": {
     "allow-plugins": {

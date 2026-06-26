@@ -9,7 +9,6 @@ class Trophy extends ApiModel
 {
     public function __construct(private TrophyGroup $trophyGroup, private int $id)
     {
-        parent::__construct($trophyGroup->getHttpClient());
     }
 
     /**

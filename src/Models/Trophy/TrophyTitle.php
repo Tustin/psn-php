@@ -10,8 +10,6 @@ class TrophyTitle extends AbstractTrophyTitle
 {
     public function __construct(string $npCommunicationId, TrophyServiceName $serviceName = TrophyServiceName::Trophy)
     {
-        parent::__construct();
-
         $this->setnpCommunicationId($npCommunicationId);
         $this->setServiceName($serviceName);
     }

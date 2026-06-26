@@ -9,8 +9,6 @@ class CloudMediaGalleryIterator extends AbstractApiIterator
 {
     public function __construct(private CloudMediaGallery $CloudMediaGallery, protected ?int $limit = 20)
     {
-        parent::__construct();
-
         $this->access(0);
     }
 

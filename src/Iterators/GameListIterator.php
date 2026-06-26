@@ -2,7 +2,6 @@
 
 namespace Tustin\PlayStation\Iterators;
 
-use Tustin\PlayStation\Client;
 use Tustin\PlayStation\Models\GameTitle;
 use Tustin\PlayStation\Models\UserGameTitle;
 use Tustin\PlayStation\Factories\UserGameList;
@@ -12,8 +11,6 @@ class GameListIterator extends AbstractApiIterator
 {
     public function __construct(private string $accountId, int $limit = 100)
     {
-        parent::__construct();
-
         $this->limit = $limit;
 
         $this->access(0);

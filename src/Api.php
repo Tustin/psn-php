@@ -5,6 +5,7 @@ namespace Tustin\PlayStation;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Tustin\PlayStation\Enums\GraphqlOperation;
+use Tustin\PlayStation\Exceptions\GraphQLRequestException;
 use Tustin\PlayStation\Exceptions\UnmappedGraphQLOperationException;
 
 class Api
@@ -21,9 +22,9 @@ class Api
     /**
      * Gets the Guzzle HTTP client.
      */
-    public function getHttpClient(): ?Client
+    public function getHttpClient(): Client
     {
-        return $this->httpClient;
+        return $this->httpClient ??= \Tustin\PlayStation\Client::getInstance()->getHttpClient();
     }
 
     /**
@@ -177,18 +178,38 @@ class Api
 
     public function graphql(GraphqlOperation $operation, array $variables): object
     {
-        return $this->get('graphql/v1/op', [
+        $method = 'get';
+        $mutation = false;
+
+        if (in_array($operation, $operation->getMutationOperations())) {
+            $method = 'postJson';
+            $mutation = true;
+        }
+
+        $extensions = [
+            'persistedQuery' => [
+                'version' => 1,
+                'sha256Hash' => $operation->hash()
+            ]
+        ];
+
+        $response = $this->{$method}('graphql/v1/op', [
             'operationName' => $operation->value,
-            'variables' => json_encode($variables),
-            'extensions' => json_encode([
-                'persistedQuery' => [
-                    'version' => 1,
-                    'sha256Hash' => $operation->hash()
-                ]
-            ])
+            'variables' => $mutation ? $variables : json_encode($variables),
+            'extensions' => $mutation ? $extensions : json_encode($extensions)
         ], [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json'
-        ])->data;
+        ]);
+
+        if ($this->lastResponse->getStatusCode() !== 200) {
+            throw new \Exception('Failed to execute GraphQL operation: ' . $response->getBody()->getContents());
+        }
+
+        if ($response?->errors) {
+            throw new GraphQLRequestException('GraphQL operation failed: ' . $response->errors[0]->message);
+        }
+
+        return $response->data;
     }
 }

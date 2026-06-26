@@ -12,8 +12,6 @@ class GroupsIterator extends AbstractApiIterator
     {
         $this->limit = $limit;
 
-        parent::__construct();
-
         $this->access(0);
     }
 

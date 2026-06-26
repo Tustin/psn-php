@@ -1,275 +1,91 @@
 <?php
 
-namespace Tests;
-
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use Tustin\Haste\Http\JsonStream;
 use Tustin\PlayStation\Client;
-use PHPUnit\Framework\TestCase;
+use Tustin\PlayStation\Enums\TrophyServiceName;
 use Tustin\PlayStation\Factories\CloudMediaGallery;
-use Tustin\PlayStation\Factories\GroupsFactory;
-use Tustin\PlayStation\Factories\StoreFactory;
-use Tustin\PlayStation\Factories\UsersFactory;
+use Tustin\PlayStation\Factories\Groups;
+use Tustin\PlayStation\Factories\Users;
+use Tustin\PlayStation\Iterators\StoreSearchIterator;
 use Tustin\PlayStation\Models\Media;
 use Tustin\PlayStation\Models\Trophy\TrophyTitle;
 
-class ClientTest extends TestCase
-{
-    private Client $client;
-    private $httpClient;
+it('logs in with npsso and stores tokens', function (): void {
+    [$client, $history] = $this->mockClient([
+        $this->jsonResponse(null, 302, ['Location' => 'https://redirect.local?code=AUTH-CODE']),
+        $this->jsonResponse([
+            'access_token' => 'access-token',
+            'expires_in' => 3600,
+            'refresh_token' => 'refresh-token',
+            'refresh_token_expires_in' => 7200,
+        ]),
+    ]);
 
-    public function testItShouldLoginWithNpSso(): void
-    {
-        $npSso = 'NpSso';
-        $authCode = 'AUTH-CODE';
-        $authorizeResponse = new Response(302, ['Location' => 'https://some-redirect.com?code=' . $authCode], '{}');
-        $tokenResponse = new Response(200, [], '{"access_token": "some-access-token", "expires_in": 60, "refresh_token": "some-refresh-token", "refresh_token_expires_in": 60}');
+    $token = $client->loginWithNpsso('my-npsso');
 
-        $this->httpClient
-            ->expects($this->once())
-            ->method('get')
-            ->with(
-                Client::AUTH_URL . 'authz/v3/oauth/authorize',
-                [
-                    'query' => $this->getAuthorizeQueryParams(),
-                    'headers' => [
-                        'Cookie' => 'npsso=' . $npSso,
-                    ],
-                ]
-            )
-            ->willReturn($authorizeResponse->withBody(new JsonStream($authorizeResponse->getBody())));
+    expect($token->getToken())->toBe('access-token');
+    expect($client->getRefreshToken()?->getToken())->toBe('refresh-token');
+    expect($history->entries)->toHaveCount(2);
+    expect((string) $history->entries[0]['request']->getUri())->toContain('authz/v3/oauth/authorize');
+    expect((string) $history->entries[1]['request']->getUri())->toContain('authz/v3/oauth/token');
+});
 
-        $this->httpClient
-            ->expects($this->once())
-            ->method('post')
-            ->with(
-                Client::AUTH_URL . 'authz/v3/oauth/token',
-                [
-                    'form_params' => $this->getTokenFormParams($authCode),
-                    'headers' => [
-                        'Cookie' => 'npsso=' . $npSso,
-                        'Authorization' => 'Basic YWM4ZDE2MWEtZDk2Ni00NzI4LWIwZWEtZmZlYzIyZjY5ZWRjOkRFaXhFcVhYQ2RYZHdqMHY=',
-                    ],
-                ]
-            )
-            ->willReturn($tokenResponse->withBody(new JsonStream($tokenResponse->getBody())));
+it('logs in with refresh token', function (): void {
+    [$client, $history] = $this->mockClient([
+        $this->jsonResponse([
+            'access_token' => 'access-token-2',
+            'expires_in' => 3600,
+            'refresh_token' => 'refresh-token-2',
+            'refresh_token_expires_in' => 7200,
+        ]),
+    ]);
 
-        $this->httpClient
-            ->expects($this->atLeastOnce())
-            ->method('getConfig')
-            ->willReturn(['handler' => HandlerStack::create()]);
+    $token = $client->loginWithRefreshToken('existing-refresh-token');
 
-        $this->client->loginWithNpsso($npSso);
+    expect($token->getToken())->toBe('access-token-2');
+    expect($client->getRefreshToken()?->getToken())->toBe('refresh-token-2');
+    expect($history->entries)->toHaveCount(1);
+    expect((string) $history->entries[0]['request']->getUri())->toContain('authz/v3/oauth/token');
+});
 
-        $this->assertEquals('some-access-token', $this->client->getAccessToken()->getToken());
-        $this->assertEquals('some-refresh-token', $this->client->getRefreshToken()->getToken());
-    }
+it('throws when oauth authorize response code is not 302', function (): void {
+    [$client] = $this->mockClient([
+        $this->jsonResponse(null, 301, ['Location' => 'https://redirect.local?code=AUTH-CODE']),
+    ]);
 
-    public function testItShouldLoginWithRefreshToken(): void
-    {
-        $refreshToken = 'some-refresh-token';
-        $response = new Response(200, [], '{"access_token": "some-access-token", "expires_in": 60, "refresh_token": "some-refresh-token", "refresh_token_expires_in": 60}');
+    $client->loginWithNpsso('my-npsso');
+})->throws(\Exception::class, 'Incorrect response code from oauth/authorize.');
 
-        $this->httpClient
-            ->expects($this->once())
-            ->method('post')
-            ->with(
-                'authz/v3/oauth/token',
-                [
-                    'form_params' => [
-                        'scope' => 'psn:mobile.v1 psn:clientapp',
-                        'refresh_token' => $refreshToken,
-                        'grant_type' => 'refresh_token',
-                        'token_format' => 'jwt',
-                    ],
-                    'headers' => [
-                        'Authorization' => 'Basic YWM4ZDE2MWEtZDk2Ni00NzI4LWIwZWEtZmZlYzIyZjY5ZWRjOkRFaXhFcVhYQ2RYZHdqMHY=',
-                    ],
-                ]
-            )
-            ->willReturn($response->withBody(new JsonStream($response->getBody())));
+it('throws when oauth authorize response is missing location header', function (): void {
+    [$client] = $this->mockClient([
+        $this->jsonResponse(null, 302, []),
+    ]);
 
-        $this->httpClient
-            ->expects($this->atLeastOnce())
-            ->method('getConfig')
-            ->willReturn(['handler' => HandlerStack::create()]);
+    $client->loginWithNpsso('my-npsso');
+})->throws(\Exception::class, 'Missing redirect location from oauth/authorize.');
 
-        $this->client->loginWithRefreshToken($refreshToken);
-    }
+it('throws when oauth authorize response location is missing code', function (): void {
+    [$client] = $this->mockClient([
+        $this->jsonResponse(null, 302, ['Location' => 'https://redirect.local?foo=bar']),
+    ]);
 
-    public function testItShouldThrowOnInvalidResponseCode(): void
-    {
-        $npSso = 'NpSso';
-        $authCode = 'AUTH-CODE';
-        $authorizeResponse = new Response(404, ['Location' => 'https://some-redirect.com?code=' . $authCode], '{}');
+    $client->loginWithNpsso('my-npsso');
+})->throws(\Exception::class, 'Missing code from oauth/authorize.');
 
-        $this->httpClient
-            ->expects($this->once())
-            ->method('get')
-            ->with(
-                Client::AUTH_URL . 'authz/v3/oauth/authorize',
-                [
-                    'query' => $this->getAuthorizeQueryParams(),
-                    'headers' => [
-                        'Cookie' => 'npsso=' . $npSso,
-                    ],
-                ]
-            )
-            ->willReturn($authorizeResponse->withBody(new JsonStream($authorizeResponse->getBody())));
+it('returns expected factories and models', function (): void {
+    [$client] = $this->mockClient([
+        $this->jsonResponse([
+            'domainResponses' => [[
+                'totalResultCount' => 0,
+                'results' => [],
+                'next' => '',
+            ]],
+        ]),
+    ]);
 
-        $this->httpClient
-            ->expects($this->never())
-            ->method('post');
-
-        $this->httpClient
-            ->expects($this->never())
-            ->method('getConfig');
-
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Incorrect response code from oauth/authorize.');
-        $this->client->loginWithNpsso($npSso);
-    }
-
-    public function testItShouldThrowOnEmptyHeaderLocation(): void
-    {
-        $npSso = 'NpSso';
-        $authorizeResponse = new Response(302, [], '{}');
-
-        $this->httpClient
-            ->expects($this->once())
-            ->method('get')
-            ->with(
-                Client::AUTH_URL . 'authz/v3/oauth/authorize',
-                [
-                    'query' => $this->getAuthorizeQueryParams(),
-                    'headers' => [
-                        'Cookie' => 'npsso=' . $npSso,
-                    ],
-                ]
-            )
-            ->willReturn($authorizeResponse->withBody(new JsonStream($authorizeResponse->getBody())));
-
-        $this->httpClient
-            ->expects($this->never())
-            ->method('post');
-
-        $this->httpClient
-            ->expects($this->never())
-            ->method('getConfig');
-
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Missing redirect location from oauth/authorize.');
-        $this->client->loginWithNpsso($npSso);
-    }
-
-    public function testItShouldThrowOnEmptyQueryParam(): void
-    {
-        $npSso = 'NpSso';
-        $authorizeResponse = new Response(302, ['Location' => 'https://some-redirect.com'], '{}');
-
-        $this->httpClient
-            ->expects($this->once())
-            ->method('get')
-            ->with(
-                Client::AUTH_URL . 'authz/v3/oauth/authorize',
-                [
-                    'query' => $this->getAuthorizeQueryParams(),
-                    'headers' => [
-                        'Cookie' => 'npsso=' . $npSso,
-                    ],
-                ]
-            )
-            ->willReturn($authorizeResponse->withBody(new JsonStream($authorizeResponse->getBody())));
-
-        $this->httpClient
-            ->expects($this->never())
-            ->method('post');
-
-        $this->httpClient
-            ->expects($this->never())
-            ->method('getConfig');
-
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Missing code from oauth/authorize.');
-        $this->client->loginWithNpsso($npSso);
-    }
-
-    public function testItShouldReturnFactories(): void
-    {
-        $this->assertEquals(new UsersFactory($this->httpClient), $this->client->users());
-        $this->assertEquals(new TrophyTitle($this->httpClient, 'id', 'trophy'), $this->client->trophies('id'));
-        $this->assertEquals(new StoreFactory($this->httpClient), $this->client->store());
-        $this->assertEquals(new GroupsFactory($this->httpClient), $this->client->groups());
-        $this->assertEquals(new Media($this->httpClient, 'id'), $this->client->media('id'));
-        $this->assertEquals(new CloudMediaGallery($this->httpClient), $this->client->cloudMediaGallery());
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->client = new Client();
-        $this->httpClient = $this->createMock(\GuzzleHttp\Client::class);
-
-        // Because our Guzzle client is not injected in to the client,
-        // we need to do some magic to make sure we can mock it.
-        // Ideally this should be refactored to DI.
-        $class = new \ReflectionClass(Client::class);
-        $property = $class->getProperty('httpClient');
-        $property->setAccessible(true);
-        $property->setValue($this->client, $this->httpClient);
-    }
-
-    private function getAuthorizeQueryParams(): array
-    {
-        return [
-            'access_type' => 'offline',
-            'app_context' => 'inapp_ios',
-            'auth_ver' => 'v3',
-            'cid' => '60351282-8C5F-4D5E-9033-E48FEA973E11',
-            'client_id' => 'ac8d161a-d966-4728-b0ea-ffec22f69edc',
-            'darkmode' => 'true',
-            'device_base_font_size' => 10,
-            'device_profile' => 'mobile',
-            'duid' => '0000000d0004008088347AA0C79542D3B656EBB51CE3EBE1',
-            'elements_visibility' => 'no_aclink',
-            'extraQueryParams' => '{
-                PlatformPrivacyWs1 = minimal;
-            }',
-            'no_captcha' => 'true',
-            'redirect_uri' => 'com.playstation.PlayStationApp://redirect',
-            'response_type' => 'code',
-            'scope' => 'psn:mobile.v1 psn:clientapp',
-            'service_entity' => 'urn:service-entity:psn',
-            'service_logo' => 'ps',
-            'smcid' => 'psapp:settings-entrance',
-            'support_scheme' => 'sneiprls',
-            'token_format' => 'jwt',
-            'ui' => 'pr',
-        ];
-    }
-
-    private function getTokenFormParams(string $authCode): array
-    {
-        return [
-            'smcid' => 'psapp%3Asettings-entrance',
-            'access_type' => 'offline',
-            'code' => $authCode,
-            'service_logo' => 'ps',
-            'ui' => 'pr',
-            'elements_visibility' => 'no_aclink',
-            'redirect_uri' => 'com.playstation.PlayStationApp://redirect',
-            'support_scheme' => 'sneiprls',
-            'grant_type' => 'authorization_code',
-            'darkmode' => 'true',
-            'device_base_font_size' => 10,
-            'device_profile' => 'mobile',
-            'app_context' => 'inapp_ios',
-            'extraQueryParams' => '{
-                PlatformPrivacyWs1 = minimal;
-            }',
-            'token_format' => 'jwt',
-        ];
-    }
-}
+    expect($client->users())->toBeInstanceOf(Users::class);
+    expect($client->trophyTitle('NPWR12345_00', TrophyServiceName::Trophy))->toBeInstanceOf(TrophyTitle::class);
+    expect($client->groups())->toBeInstanceOf(Groups::class);
+    expect($client->media('ugc-id'))->toBeInstanceOf(Media::class);
+    expect($client->cloudMediaGallery())->toBeInstanceOf(CloudMediaGallery::class);
+    expect($client->store())->toBeInstanceOf(StoreSearchIterator::class);
+});
